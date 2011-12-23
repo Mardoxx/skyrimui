@@ -1,0 +1,14 @@
+Builds to ./bin/* to <Skyrim Dir>/Data/Interface/*
+
+./_extras/bin
+    blank build directory, remove ./bin and replace with ./_extras/bin for clean
+    builds
+./_extras/fonts
+    fonts used in fla's
+./_extras/game
+    files that go in <Skyrim Dir>/Data/Interface incase you accidentally delete
+    them.
+./bin
+    build directory
+./src
+    source directory
