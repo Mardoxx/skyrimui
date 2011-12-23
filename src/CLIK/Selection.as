@@ -26,4 +26,5 @@ intrinsic class Selection
 	static function getControllerFocusGroup(arg1:Number):Number;
 	static function findFocus(arg1:String, arg2:Object, arg3:Boolean, arg4:Object, arg5:Boolean, arg6:Number):Object;
 	static function getFocusBitmask(arg1:Object):Number;
+	
 }
