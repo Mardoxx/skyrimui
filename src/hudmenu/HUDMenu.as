@@ -1,77 +1,75 @@
 dynamic class HUDMenu extends Shared.PlatformChangeUser
 {
 	var SavedRolloverText: String = "";
-	var ItemInfoArray = new Array();
-	var CompassMarkerList = new Array();
+	var ItemInfoArray: Array = new Array();
+	var CompassMarkerList: Array = new Array();
 	var METER_PAUSE_FRAME: Number = 40;
-	var ActivateButton_tf;
-	var ArrowInfoInstance;
-	var BottomLeftLockInstance;
-	var BottomRightLockInstance;
-	var BottomRightRefInstance;
-	var BottomRightRefX;
-	var BottomRightRefY;
-	var CompassMarkerEnemy;
-	var CompassMarkerLocations;
-	var CompassMarkerPlayerSet;
-	var CompassMarkerQuest;
-	var CompassMarkerQuestDoor;
-	var CompassMarkerUndiscovered;
-	var CompassRect;
-	var CompassShoutMeterHolder;
-	var CompassTargetDataA;
-	var CompassThreeSixtyX;
-	var CompassZeroX;
-	var Crosshair;
-	var CrosshairAlert;
-	var CrosshairInstance;
-	var EnemyHealthMeter;
-	var EnemyHealth_mc;
-	var FavorBackButtonBase;
-	var FavorBackButton_mc;
-	var FloatingQuestMarkerInstance;
-	var FloatingQuestMarker_mc;
-	var GrayBarInstance;
-	var HUDModes;
-	var Health;
-	var HealthMeterAnim;
-	var HealthMeterLeft;
-	var HudElements;
-	var LeftChargeMeter;
-	var LeftChargeMeterAnim;
-	var LocationLockBase;
-	var Magica;
-	var MagickaMeter;
-	var MagickaMeterAnim;
-	var MessagesBlock;
-	var MessagesInstance;
-	var QuestUpdateBaseInstance;
-	var RightChargeMeter;
-	var RightChargeMeterAnim;
-	var RolloverButton_tf;
-	var RolloverGrayBar_mc;
-	var RolloverInfoInstance;
-	var RolloverInfoText;
-	var RolloverNameInstance;
-	var RolloverText;
-	var ShoutMeter_mc;
-	var Stamina;
-	var StaminaMeter;
-	var StaminaMeterAnim;
-	var StealthMeterInstance;
-	var SubtitleText;
-	var SubtitleTextHolder;
-	var TopLeftRefInstance;
-	var TopLeftRefX;
-	var TopLeftRefY;
-	var TutorialHintsArtHolder;
-	var TutorialHintsText;
-	var TutorialLockInstance;
-	var ValueTranslated;
-	var WeightTranslated;
-	var _currentframe;
-	var bCrosshairEnabled;
-	var gotoAndStop;
+	var ActivateButton_tf: MovieClip;
+	var ArrowInfoInstance: MovieClip;
+	var BottomLeftLockInstance: MovieClip;
+	var BottomRightLockInstance: MovieClip;
+	var BottomRightRefInstance: MovieClip;
+	var BottomRightRefX: Number;
+	var BottomRightRefY: Number;
+	var CompassMarkerEnemy: Number;
+	var CompassMarkerLocations: Number;
+	var CompassMarkerPlayerSet: Number;
+	var CompassMarkerQuest: Number;
+	var CompassMarkerQuestDoor: Number;
+	var CompassMarkerUndiscovered: Number;
+	var CompassRect: MovieClip;
+	var CompassShoutMeterHolder: MovieClip;
+	var CompassTargetDataA: Array;
+	var CompassThreeSixtyX: Number;
+	var CompassZeroX: Number;
+	var Crosshair: MovieClip;
+	var CrosshairAlert: MovieClip;
+	var CrosshairInstance: MovieClip;
+	var EnemyHealthMeter: Object;
+	var EnemyHealth_mc: MovieClip;
+	var FavorBackButtonBase: MovieClip;
+	var FavorBackButton_mc: MovieClip;
+	var FloatingQuestMarkerInstance: MovieClip;
+	var FloatingQuestMarker_mc: MovieClip;
+	var GrayBarInstance: MovieClip;
+	var HUDModes: Array;
+	var Health: MovieClip;
+	var HealthMeterAnim: MovieClip;
+	var HealthMeterLeft: Object;
+	var HudElements: Array;
+	var LeftChargeMeter: Object;
+	var LeftChargeMeterAnim: MovieClip;
+	var LocationLockBasem: MovieClip;
+	var Magica: MovieClip;
+	var MagickaMeter: Object;
+	var MagickaMeterAnim: MovieClip;
+	var MessagesBlock: MovieClip;
+	var MessagesInstance: MovieClip;
+	var QuestUpdateBaseInstance: MovieClip;
+	var RightChargeMeter: Object;
+	var RightChargeMeterAnim: MovieClip;
+	var RolloverButton_tf: MovieClip;
+	var RolloverGrayBar_mc: MovieClip;
+	var RolloverInfoInstance: Object;
+	var RolloverInfoText: Object;
+	var RolloverNameInstance: Object;
+	var RolloverText: Object;
+	var ShoutMeter_mc: Object;
+	var Stamina: MovieClip;
+	var StaminaMeter: Object;
+	var StaminaMeterAnim: MovieClip;
+	var StealthMeterInstance: MovieClip;
+	var SubtitleText: Object;
+	var SubtitleTextHolder: MovieClip;
+	var TopLeftRefInstance: MovieClip;
+	var TopLeftRefX: Number;
+	var TopLeftRefY: Number;
+	var TutorialHintsArtHolder: Object;
+	var TutorialHintsText: Object;
+	var TutorialLockInstance: MovieClip;
+	var ValueTranslated: Object;
+	var WeightTranslated: Object;
+	var bCrosshairEnabled: Boolean;
 
 	function HUDMenu()
 	{
@@ -276,35 +274,35 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 
 	function ShowElements(aMode, abShow)
 	{
-		var __reg4 = "All";
+		var HUDMode = "All";
 		if (abShow) 
 		{
-			__reg3 = this.HUDModes.length - 1;
-			while (__reg3 >= 0) 
+			var aHUDMode = this.HUDModes.length - 1;
+			while (aHUDMode >= 0) 
 			{
-				if (this.HUDModes[__reg3] == aMode) 
+				if (this.HUDModes[aHUDMode] == aMode) 
 				{
-					this.HUDModes.splice(__reg3, 1);
+					this.HUDModes.splice(aHUDMode, 1);
 				}
-				--__reg3;
+				--aHUDMode;
 			}
 			this.HUDModes.push(aMode);
-			__reg4 = aMode;
+			HUDMode = aMode;
 		}
 		else 
 		{
 			if (aMode.length > 0) 
 			{
-				var __reg6 = false;
-				var __reg3 = this.HUDModes.length - 1;
-				while (__reg3 >= 0 && !__reg6) 
+				var ModeFound = false;
+				var aHUDMode = this.HUDModes.length - 1;
+				while (aHUDMode >= 0 && !ModeFound) 
 				{
-					if (this.HUDModes[__reg3] == aMode) 
+					if (this.HUDModes[aHUDMode] == aMode) 
 					{
-						this.HUDModes.splice(__reg3, 1);
-						__reg6 = true;
+						this.HUDModes.splice(aHUDMode, 1);
+						ModeFound = true;
 					}
-					--__reg3;
+					--aHUDMode;
 				}
 			}
 			else 
@@ -313,25 +311,25 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 			}
 			if (this.HUDModes.length > 0) 
 			{
-				__reg4 = String(this.HUDModes[this.HUDModes.length - 1]);
+				HUDMode = String(this.HUDModes[this.HUDModes.length - 1]);
 			}
 		}
-		var __reg2 = 0;
+		var i = 0;
 		for (;;) 
 		{
-			if (__reg2 >= this.HudElements.length) 
+			if (i >= this.HudElements.length) 
 			{
 				return;
 			}
-			if (this.HudElements[__reg2] != undefined) 
+			if (this.HudElements[i] != undefined) 
 			{
-				this.HudElements[__reg2]._visible = this.HudElements[__reg2].hasOwnProperty(__reg4);
-				if (this.HudElements[__reg2].onModeChange != undefined) 
+				this.HudElements[i]._visible = this.HudElements[i].hasOwnProperty(HUDMode);
+				if (this.HudElements[i].onModeChange != undefined) 
 				{
-					this.HudElements[__reg2].onModeChange(__reg4);
+					this.HudElements[i].onModeChange(HUDMode);
 				}
 			}
-			++__reg2;
+			++i;
 		}
 	}
 
@@ -343,17 +341,17 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 
 	function CheckAgainstHudMode(aObj)
 	{
-		var __reg2 = "All";
+		var HUDMode = "All";
 		if (this.HUDModes.length > 0) 
 		{
-			__reg2 = String(this.HUDModes[this.HUDModes.length - 1]);
+			HUDMode = String(this.HUDModes[this.HUDModes.length - 1]);
 		}
-		return __reg2 == "All" || (aObj != undefined && aObj.hasOwnProperty(__reg2));
+		return HUDMode == "All" || (aObj != undefined && aObj.hasOwnProperty(HUDMode));
 	}
 
 	function InitExtensions()
 	{
-		var __reg4 = this.QuestUpdateBaseInstance._y - this.CompassShoutMeterHolder._y;
+		var _yDelta = this.QuestUpdateBaseInstance._y - this.CompassShoutMeterHolder._y;
 		Shared.GlobalFunc.SetLockFunction();
 		this.HealthMeterAnim.Lock("B");
 		this.MagickaMeterAnim.Lock("BL");
@@ -366,18 +364,18 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 		this.FavorBackButton_mc.Lock("BR");
 		this.LocationLockBase.Lock("TR");
 		this.LocationLockBase.LocationNameBase.gotoAndStop(1);
-		var __reg2 = {x: this.TopLeftRefInstance.LocationRefInstance._x, y: this.TopLeftRefInstance.LocationRefInstance._y};
+		var TopLeftRefCoords = {x: this.TopLeftRefInstance.LocationRefInstance._x, y: this.TopLeftRefInstance.LocationRefInstance._y};
 		this.TopLeftRefInstance.localToGlobal(__reg2);
-		this.TopLeftRefX = __reg2.x;
-		this.TopLeftRefY = __reg2.y;
-		var __reg3 = {x: this.BottomRightRefInstance.LocationRefInstance._x, y: this.BottomRightRefInstance.LocationRefInstance._y};
+		this.TopLeftRefX = TopLeftRefCoords.x;
+		this.TopLeftRefY = TopLeftRefCoords.y;
+		var LocationRefCoords = {x: this.BottomRightRefInstance.LocationRefInstance._x, y: this.BottomRightRefInstance.LocationRefInstance._y};
 		this.BottomRightRefInstance.localToGlobal(__reg3);
-		this.BottomRightRefX = __reg3.x;
-		this.BottomRightRefY = __reg3.y;
+		this.BottomRightRefX = LocationRefCoords.x;
+		this.BottomRightRefY = LocationRefCoords.y;
 		this.CompassShoutMeterHolder.Lock("T");
 		this.EnemyHealth_mc.Lock("T");
 		this.MessagesBlock.Lock("TL");
-		this.QuestUpdateBaseInstance._y = this.CompassShoutMeterHolder._y + __reg4;
+		this.QuestUpdateBaseInstance._y = this.CompassShoutMeterHolder._y + _yDelta;
 		this.SubtitleTextHolder.Lock("B");
 		this.SubtitleText._visible = false;
 		this.SubtitleText.enabled = true;
@@ -419,20 +417,20 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 		this.CompassThreeSixtyX = this.CompassRect._x;
 		this.CompassShoutMeterHolder.Compass.gotoAndStop("Zero");
 		this.CompassZeroX = this.CompassRect._x;
-		var __reg2 = this.CompassRect.attachMovie("Compass Marker", "temp", this.CompassRect.getNextHighestDepth());
-		__reg2.gotoAndStop("Quest");
-		this.CompassMarkerQuest = __reg2._currentframe == undefined ? 0 : __reg2._currentframe;
-		__reg2.gotoAndStop("QuestDoor");
-		this.CompassMarkerQuestDoor = __reg2._currentframe == undefined ? 0 : __reg2._currentframe;
-		__reg2.gotoAndStop("PlayerSet");
-		this.CompassMarkerPlayerSet = __reg2._currentframe == undefined ? 0 : __reg2._currentframe;
-		__reg2.gotoAndStop("Enemy");
-		this.CompassMarkerEnemy = __reg2._currentframe == undefined ? 0 : __reg2._currentframe;
-		__reg2.gotoAndStop("LocationMarkers");
-		this.CompassMarkerLocations = __reg2._currentframe == undefined ? 0 : __reg2._currentframe;
-		__reg2.gotoAndStop("UndiscoveredMarkers");
-		this.CompassMarkerUndiscovered = __reg2._currentframe == undefined ? 0 : __reg2._currentframe;
-		__reg2.removeMovieClip();
+		var CompassMarkerTemp = this.CompassRect.attachMovie("Compass Marker", "temp", this.CompassRect.getNextHighestDepth());
+		CompassMarkerTemp.gotoAndStop("Quest");
+		this.CompassMarkerQuest = CompassMarkerTemp._currentframe == undefined ? 0 : CompassMarkerTemp._currentframe;
+		CompassMarkerTemp.gotoAndStop("QuestDoor");
+		this.CompassMarkerQuestDoor = CompassMarkerTemp._currentframe == undefined ? 0 : CompassMarkerTemp._currentframe;
+		CompassMarkerTemp.gotoAndStop("PlayerSet");
+		this.CompassMarkerPlayerSet = CompassMarkerTemp._currentframe == undefined ? 0 : CompassMarkerTemp._currentframe;
+		CompassMarkerTemp.gotoAndStop("Enemy");
+		this.CompassMarkerEnemy = CompassMarkerTemp._currentframe == undefined ? 0 : CompassMarkerTemp._currentframe;
+		CompassMarkerTemp.gotoAndStop("LocationMarkers");
+		this.CompassMarkerLocations = CompassMarkerTemp._currentframe == undefined ? 0 : CompassMarkerTemp._currentframe;
+		CompassMarkerTemp.gotoAndStop("UndiscoveredMarkers");
+		this.CompassMarkerUndiscovered = CompassMarkerTemp._currentframe == undefined ? 0 : CompassMarkerTemp._currentframe;
+		CompassMarkerTemp.removeMovieClip();
 	}
 
 	function RunMeterAnim(aMeter)
@@ -464,23 +462,23 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 
 	function SetChargeMeterPercent(aPercent, abForce, abLeftHand, abShow)
 	{
-		var __reg2 = abLeftHand ? this.LeftChargeMeter : this.RightChargeMeter;
-		var __reg3 = abLeftHand ? this.LeftChargeMeterAnim : this.RightChargeMeterAnim;
+		var ChargeMeter = abLeftHand ? this.LeftChargeMeter : this.RightChargeMeter;
+		var ChargeMeterAnim = abLeftHand ? this.LeftChargeMeterAnim : this.RightChargeMeterAnim;
 		if (!abShow) 
 		{
-			__reg3.gotoAndStop(1);
+			ChargeMeterAnim.gotoAndStop(1);
 			return;
 		}
 		if (abForce) 
 		{
-			this.RunMeterAnim(__reg3);
-			__reg2.SetPercent(aPercent);
-			__reg2.SetPercent(aPercent);
+			this.RunMeterAnim(ChargeMeterAnim);
+			ChargeMeter.SetPercent(aPercent);
+			ChargeMeter.SetPercent(aPercent);
 			return;
 		}
-		this.RunMeterAnim(__reg3);
-		__reg2.SetTargetPercent(aPercent);
-		__reg2.SetTargetPercent(aPercent);
+		this.RunMeterAnim(ChargeMeterAnim);
+		ChargeMeter.SetTargetPercent(aPercent);
+		ChargeMeter.SetTargetPercent(aPercent);
 	}
 
 	function SetHealthMeterPercent(aPercent, abForce)
@@ -541,22 +539,22 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 		this.CompassRect._parent._visible = abShowCompass;
 		if (abShowCompass) 
 		{
-			var __reg2 = Shared.GlobalFunc.Lerp(this.CompassZeroX, this.CompassThreeSixtyX, 0, 360, aCompassAngle);
-			this.CompassRect._x = __reg2;
+			var Compass_x = Shared.GlobalFunc.Lerp(this.CompassZeroX, this.CompassThreeSixtyX, 0, 360, aCompassAngle);
+			this.CompassRect._x = Compass_x;
 			this.UpdateCompassMarkers(aPlayerAngle);
 		}
 	}
 
 	function SetCrosshairTarget(abActivate, aName, abShowButton, abTextOnly, abFavorMode, abShowCrosshair, aWeight, aCost, aFieldValue, aFieldText)
 	{
-		var __reg4 = abFavorMode ? "Favor" : "NoTarget";
-		var __reg6 = abFavorMode ? "Favor" : "Target";
-		var __reg3 = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
-		__reg3._visible = this.CheckAgainstHudMode(__reg3) && abShowCrosshair != false;
-		__reg3._alpha = this.bCrosshairEnabled ? 100 : 0;
+		var FavorModeNoTarget = abFavorMode ? "Favor" : "NoTarget";
+		var FavorModeTarget = abFavorMode ? "Favor" : "Target";
+		var Crosshair_mc = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
+		Crosshair_mc._visible = this.CheckAgainstHudMode(Crosshair_mc) && abShowCrosshair != false;
+		Crosshair_mc._alpha = this.bCrosshairEnabled ? 100 : 0;
 		if (!abActivate && this.SavedRolloverText.length > 0) 
 		{
-			__reg3.gotoAndStop(__reg4);
+			Crosshair_mc.gotoAndStop(FavorModeNoTarget);
 			this.RolloverText.SetText(this.SavedRolloverText, true);
 			this.RolloverText._alpha = 100;
 			this.RolloverButton_tf._alpha = 0;
@@ -565,7 +563,7 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 		{
 			if (!abTextOnly) 
 			{
-				__reg3.gotoAndStop(__reg6);
+				Crosshair_mc.gotoAndStop(FavorModeTarget);
 			}
 			this.RolloverText.SetText(aName, true);
 			this.RolloverText._alpha = 100;
@@ -574,27 +572,27 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 		}
 		else 
 		{
-			__reg3.gotoAndStop(__reg4);
+			Crosshair_mc.gotoAndStop(FavorModeNoTarget);
 			this.RolloverText.SetText(" ", true);
 			this.RolloverText._alpha = 0;
 			this.RolloverButton_tf._alpha = 0;
 		}
-		var __reg2 = "";
+		var TranslateText = "";
 		if (aCost != undefined) 
 		{
-			__reg2 = this.ValueTranslated.text + " <font face=\'$EverywhereBoldFont\' size=\'24\' color=\'#FFFFFF\'>" + Math.round(aCost) + "</font>" + __reg2;
+			TranslateText = this.ValueTranslated.text + " <font face=\'$EverywhereBoldFont\' size=\'24\' color=\'#FFFFFF\'>" + Math.round(aCost) + "</font>" + TranslateText;
 		}
 		if (aWeight != undefined) 
 		{
-			__reg2 = this.WeightTranslated.text + " <font face=\'$EverywhereBoldFont\' size=\'24\' color=\'#FFFFFF\'>" + Shared.GlobalFunc.RoundDecimal(aWeight, 1) + "</font>	  " + __reg2;
+			TranslateText = this.WeightTranslated.text + " <font face=\'$EverywhereBoldFont\' size=\'24\' color=\'#FFFFFF\'>" + Shared.GlobalFunc.RoundDecimal(aWeight, 1) + "</font>	  " + TranslateText;
 		}
 		if (aFieldValue != undefined) 
 		{
-			var __reg5 = new TextField();
-			__reg5.text = aFieldText.toString();
-			__reg2 = __reg5.text + " <font face=\'$EverywhereBoldFont\' size=\'24\' color=\'#FFFFFF\'>" + Math.round(aFieldValue) + "</font>	  " + __reg2;
+			var aTextField = new TextField();
+			aTextField.text = aFieldText.toString();
+			TranslateText = aTextField.text + " <font face=\'$EverywhereBoldFont\' size=\'24\' color=\'#FFFFFF\'>" + Math.round(aFieldValue) + "</font>	  " + TranslateText;
 		}
-		if (__reg2.length > 0) 
+		if (TranslateText.length > 0) 
 		{
 			this.RolloverGrayBar_mc._alpha = 100;
 		}
@@ -602,7 +600,7 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 		{
 			this.RolloverGrayBar_mc._alpha = 0;
 		}
-		this.RolloverInfoText.htmlText = __reg2;
+		this.RolloverInfoText.htmlText = TranslateText;
 	}
 
 	function RefreshActivateButtonArt(astrButtonName)
@@ -612,12 +610,12 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 			this.RolloverButton_tf.SetText(" ", true);
 			return;
 		}
-		var __reg2 = flash.display.BitmapData.loadBitmap(astrButtonName + ".png");
-		if (__reg2 != undefined && __reg2.height > 0) 
+		var ButtonImage = flash.display.BitmapData.loadBitmap(astrButtonName + ".png");
+		if (ButtonImage != undefined && ButtonImage.height > 0) 
 		{
-			var __reg3 = 26;
-			var __reg5 = Math.floor(__reg3 / __reg2.height * __reg2.width);
-			this.RolloverButton_tf.SetText("<img src=\'" + astrButtonName + ".png\' height=\'" + __reg3 + "\' width=\'" + __reg5 + "\'>", true);
+			var MaxHeight = 26;
+			var ScaledWidth = Math.floor(MaxHeight / ButtonImage.height * ButtonImage.width);
+			this.RolloverButton_tf.SetText("<img src=\'" + astrButtonName + ".png\' height=\'" + MaxHeight + "\' width=\'" + ScaledWidth + "\'>", true);
 			return;
 		}
 		this.RolloverButton_tf.SetText(" ", true);
@@ -671,12 +669,12 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 
 	function ShowArrowCount(aCount, abHide, aArrows)
 	{
-		var __reg2 = 15;
+		var HideFrame = 15;
 		if (abHide) 
 		{
-			if (this.ArrowInfoInstance._currentframe > __reg2) 
+			if (this.ArrowInfoInstance._currentframe > HideFrame) 
 			{
-				this.ArrowInfoInstance.gotoAndStop(__reg2);
+				this.ArrowInfoInstance.gotoAndStop(HideFrame);
 			}
 			this.ArrowInfoInstance.PlayReverse();
 			return;
@@ -698,108 +696,108 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 
 	function SetCompassMarkers()
 	{
-		var __reg12 = 0;
-		var __reg13 = 1;
-		var __reg7 = 2;
-		var __reg9 = 3;
-		var __reg6 = 4;
-		while (this.CompassMarkerList.length > this.CompassTargetDataA.length / __reg6) 
+		var headingOffset = 0;
+		var _alphaOffset = 1;
+		var gotoAndStopOffset = 2;
+		var x_scaleOffset = 3;
+		var dataGroupLength = 4;
+		while (this.CompassMarkerList.length > this.CompassTargetDataA.length / dataGroupLength) 
 		{
 			this.CompassMarkerList.pop().movie.removeMovieClip();
 		}
-		var __reg2 = 0;
+		var i = 0;
 		for (;;) 
 		{
-			if (__reg2 >= this.CompassTargetDataA.length / __reg6) 
+			if (i >= this.CompassTargetDataA.length / dataGroupLength) 
 			{
 				return;
 			}
-			var __reg3 = __reg2 * __reg6;
-			if (this.CompassMarkerList[__reg2].movie == undefined) 
+			var dataGroup = i * dataGroupLength;
+			if (this.CompassMarkerList[i].movie == undefined) 
 			{
-				__reg5 = {movie: undefined, heading: 0};
-				if (this.CompassTargetDataA[__reg3 + __reg7] == this.CompassMarkerQuest || this.CompassTargetDataA[__reg3 + __reg7] == this.CompassMarkerQuestDoor) 
+				markerData = {movie: undefined, heading: 0};
+				if (this.CompassTargetDataA[dataGroup + gotoAndStopOffset] == this.CompassMarkerQuest || this.CompassTargetDataA[dataGroup + gotoAndStopOffset] == this.CompassMarkerQuestDoor) 
 				{
-					__reg5.movie = this.CompassRect.QuestHolder.attachMovie("Compass Marker", "CompassMarker" + this.CompassMarkerList.length, this.CompassRect.QuestHolder.getNextHighestDepth());
+					markerData.movie = this.CompassRect.QuestHolder.attachMovie("Compass Marker", "CompassMarker" + this.CompassMarkerList.length, this.CompassRect.QuestHolder.getNextHighestDepth());
 				}
 				else 
 				{
-					__reg5.movie = this.CompassRect.MarkerHolder.attachMovie("Compass Marker", "CompassMarker" + this.CompassMarkerList.length, this.CompassRect.MarkerHolder.getNextHighestDepth());
+					markerData.movie = this.CompassRect.MarkerHolder.attachMovie("Compass Marker", "CompassMarker" + this.CompassMarkerList.length, this.CompassRect.MarkerHolder.getNextHighestDepth());
 				}
-				this.CompassMarkerList.push(__reg5);
+				this.CompassMarkerList.push(markerData);
 			}
 			else 
 			{
-				var __reg4 = this.CompassMarkerList[__reg2].movie._currentframe;
-				if (__reg4 == this.CompassMarkerQuest || __reg4 == this.CompassMarkerQuestDoor) 
+				var compassMarkerFrame = this.CompassMarkerList[i].movie._currentframe;
+				if (compassMarkerFrame == this.CompassMarkerQuest || compassMarkerFrame == this.CompassMarkerQuestDoor) 
 				{
-					if (this.CompassMarkerList[__reg2].movie._parent == this.CompassRect.MarkerHolder) 
+					if (this.CompassMarkerList[i].movie._parent == this.CompassRect.MarkerHolder) 
 					{
-						__reg5 = {movie: undefined, heading: 0};
-						__reg5.movie = this.CompassRect.QuestHolder.attachMovie("Compass Marker", "CompassMarker" + this.CompassMarkerList.length, this.CompassRect.QuestHolder.getNextHighestDepth());
-						__reg8 = this.CompassMarkerList.splice(__reg2, 1, __reg5);
-						__reg8[0].movie.removeMovieClip();
+						markerData = {movie: undefined, heading: 0};
+						markerData.movie = this.CompassRect.QuestHolder.attachMovie("Compass Marker", "CompassMarker" + this.CompassMarkerList.length, this.CompassRect.QuestHolder.getNextHighestDepth());
+						aCompassMarkerList = this.CompassMarkerList.splice(i, 1, markerData);
+						aCompassMarkerList[0].movie.removeMovieClip();
 					}
 				}
-				else if (this.CompassMarkerList[__reg2].movie._parent == this.CompassRect.QuestHolder) 
+				else if (this.CompassMarkerList[i].movie._parent == this.CompassRect.QuestHolder) 
 				{
-					var __reg5 = {movie: undefined, heading: 0};
-					__reg5.movie = this.CompassRect.MarkerHolder.attachMovie("Compass Marker", "CompassMarker" + this.CompassMarkerList.length, this.CompassRect.MarkerHolder.getNextHighestDepth());
-					var __reg8 = this.CompassMarkerList.splice(__reg2, 1, __reg5);
-					__reg8[0].movie.removeMovieClip();
+					var markerData = {movie: undefined, heading: 0};
+					markerData.movie = this.CompassRect.MarkerHolder.attachMovie("Compass Marker", "CompassMarker" + this.CompassMarkerList.length, this.CompassRect.MarkerHolder.getNextHighestDepth());
+					var aCompassMarkerList = this.CompassMarkerList.splice(i, 1, markerData);
+					aCompassMarkerList[0].movie.removeMovieClip();
 				}
 			}
-			this.CompassMarkerList[__reg2].heading = this.CompassTargetDataA[__reg3 + __reg12];
-			this.CompassMarkerList[__reg2].movie._alpha = this.CompassTargetDataA[__reg3 + __reg13];
-			this.CompassMarkerList[__reg2].movie.gotoAndStop(this.CompassTargetDataA[__reg3 + __reg7]);
-			this.CompassMarkerList[__reg2].movie._xscale = this.CompassTargetDataA[__reg3 + __reg9];
-			this.CompassMarkerList[__reg2].movie._yscale = this.CompassTargetDataA[__reg3 + __reg9];
-			++__reg2;
+			this.CompassMarkerList[i].heading = this.CompassTargetDataA[dataGroup + headingOffset];
+			this.CompassMarkerList[i].movie._alpha = this.CompassTargetDataA[dataGroup + _alphaOffset];
+			this.CompassMarkerList[i].movie.gotoAndStop(this.CompassTargetDataA[dataGroup + gotoAndStopOffset]);
+			this.CompassMarkerList[i].movie._xscale = this.CompassTargetDataA[dataGroup + x_scaleOffset];
+			this.CompassMarkerList[i].movie._yscale = this.CompassTargetDataA[dataGroup + x_scaleOffset];
+			++i;
 		}
 	}
 
 	function UpdateCompassMarkers(aiCenterAngle)
 	{
-		var __reg12 = this.CompassShoutMeterHolder.Compass.CompassMask_mc._width;
-		var __reg9 = __reg12 * 180 / Math.abs(this.CompassThreeSixtyX - this.CompassZeroX);
-		var __reg5 = aiCenterAngle - __reg9;
-		var __reg7 = aiCenterAngle + __reg9;
-		var __reg10 = 0 - this.CompassRect._x - __reg12 / 2;
-		var __reg11 = 0 - this.CompassRect._x + __reg12 / 2;
-		var __reg3 = 0;
+		var compassMarkerWidth = this.CompassShoutMeterHolder.Compass.CompassMask_mc._width;
+		var angleDelta = compassMarkerWidth * 180 / Math.abs(this.CompassThreeSixtyX - this.CompassZeroX);
+		var angleDeltaLeft = aiCenterAngle - angleDelta;
+		var angleDeltaRight = aiCenterAngle + angleDelta;
+		var widthDeltaLeft = 0 - this.CompassRect._x - compassMarkerWidth / 2;
+		var widthDeltaRight = 0 - this.CompassRect._x + compassMarkerWidth / 2;
+		var i = 0;
 		for (;;) 
 		{
-			if (__reg3 >= this.CompassMarkerList.length) 
+			if (i >= this.CompassMarkerList.length) 
 			{
 				return;
 			}
-			var __reg2 = this.CompassMarkerList[__reg3].heading;
-			if (__reg5 < 0 && __reg2 > 360 - aiCenterAngle - __reg9) 
+			var heading = this.CompassMarkerList[i].heading;
+			if (angleDeltaLeft < 0 && heading > 360 - aiCenterAngle - angleDelta) 
 			{
-				__reg2 = __reg2 - 360;
+				heading = heading - 360;
 			}
-			if (__reg7 > 360 && __reg2 < __reg9 - (360 - aiCenterAngle)) 
+			if (angleDeltaRight > 360 && heading < angleDelta - (360 - aiCenterAngle)) 
 			{
-				__reg2 = __reg2 + 360;
+				heading = heading + 360;
 			}
-			if (__reg2 > __reg5 && __reg2 < __reg7) 
+			if (heading > angleDeltaLeft && heading < angleDeltaRight) 
 			{
-				this.CompassMarkerList[__reg3].movie._x = Shared.GlobalFunc.Lerp(__reg10, __reg11, __reg5, __reg7, __reg2);
+				this.CompassMarkerList[i].movie._x = Shared.GlobalFunc.Lerp(widthDeltaLeft, widthDeltaRight, angleDeltaLeft, angleDeltaRight, heading);
 			}
 			else 
 			{
-				var __reg4 = this.CompassMarkerList[__reg3].movie._currentframe;
-				if (__reg4 == this.CompassMarkerQuest || __reg4 == this.CompassMarkerQuestDoor) 
+				var markerFrame = this.CompassMarkerList[i].movie._currentframe;
+				if (markerFrame == this.CompassMarkerQuest || markerFrame == this.CompassMarkerQuestDoor) 
 				{
-					var __reg8 = Math.sin((__reg2 - aiCenterAngle) * 3.14159265359 / 180);
-					this.CompassMarkerList[__reg3].movie._x = __reg8 <= 0 ? __reg10 + 2 : __reg11;
+					var angleRadians = Math.sin((heading - aiCenterAngle) * 3.14159265359 / 180);
+					this.CompassMarkerList[i].movie._x = angleRadians <= 0 ? widthDeltaLeft + 2 : widthDeltaRight;
 				}
 				else 
 				{
-					this.CompassMarkerList[__reg3].movie._x = 0;
+					this.CompassMarkerList[i].movie._x = 0;
 				}
 			}
-			++__reg3;
+			++i;
 		}
 	}
 
@@ -808,11 +806,11 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 		if (abShow) 
 		{
 			this.TutorialHintsText.text = astrHint;
-			var __reg2 = this.TutorialHintsArtHolder.CreateButtonArt(this.TutorialHintsText);
-			if (__reg2 != undefined) 
+			var buttonHtmlText = this.TutorialHintsArtHolder.CreateButtonArt(this.TutorialHintsText);
+			if (buttonHtmlText != undefined) 
 			{
 				this.TutorialHintsText.html = true;
-				this.TutorialHintsText.htmlText = __reg2;
+				this.TutorialHintsText.htmlText = buttonHtmlText;
 			}
 		}
 		if (abShow) 
@@ -826,14 +824,14 @@ dynamic class HUDMenu extends Shared.PlatformChangeUser
 	function SetCrosshairEnabled(abFlag)
 	{
 		this.bCrosshairEnabled = abFlag;
-		var __reg2 = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
-		__reg2._alpha = this.bCrosshairEnabled ? 100 : 0;
+		var crosshairMode = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
+		crosshairMode._alpha = this.bCrosshairEnabled ? 100 : 0;
 	}
 
 	function ValidateCrosshair()
 	{
-		var __reg2 = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
-		__reg2._visible = this.CheckAgainstHudMode(__reg2);
+		var crosshairMode = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
+		crosshairMode._visible = this.CheckAgainstHudMode(crosshairMode);
 		this.StealthMeterInstance._visible = this.CheckAgainstHudMode(this.StealthMeterInstance);
 	}
 

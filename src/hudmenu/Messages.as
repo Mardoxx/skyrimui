@@ -4,14 +4,11 @@ dynamic class Messages extends MovieClip
 	static var Y_SPACING: Number = 15;
 	static var END_ANIM_FRAME: Number = 80;
 	static var InstanceCounter: Number = 0;
-	var MessageArray;
-	var ShownCount;
-	var ShownMessageArray;
-	var attachMovie;
-	var bAnimating;
-	var getNextHighestDepth;
-	var onEnterFrame;
-	var ySpacing;
+	var MessageArray: Array;
+	var ShownCount: Number;
+	var ShownMessageArray: Array;
+	var bAnimating: Boolean;
+	var ySpacing: Number;
 
 	function Messages()
 	{
@@ -33,15 +30,16 @@ dynamic class Messages extends MovieClip
 			this.ShownMessageArray[this.ShownMessageArray.length - 1].TextFieldClip.tf1.htmlText = this.MessageArray.shift();
 			this.bAnimating = true;
 			this.ySpacing = 0;
+			
 			this.onEnterFrame = function ()
 			{
 				if (this.ySpacing < Messages.Y_SPACING) 
 				{
-					var __reg2 = 0;
-					while (__reg2 < this.ShownMessageArray.length - 1) 
+					var i = 0;
+					while (i < this.ShownMessageArray.length - 1) 
 					{
-						this.ShownMessageArray[__reg2]._y = this.ShownMessageArray[__reg2]._y + 2;
-						++__reg2;
+						this.ShownMessageArray[i]._y = this.ShownMessageArray[i]._y + 2;
+						++i;
 					}
 					++this.ySpacing;
 					return;
@@ -56,17 +54,17 @@ dynamic class Messages extends MovieClip
 			;
 			++this.ShownCount;
 		}
-		var __reg2 = 0;
-		while (__reg2 < this.ShownMessageArray.length) 
+		var i = 0;
+		while (i < this.ShownMessageArray.length) 
 		{
-			if (this.ShownMessageArray[__reg2]._currentFrame >= Messages.END_ANIM_FRAME) 
+			if (this.ShownMessageArray[i]._currentFrame >= Messages.END_ANIM_FRAME) 
 			{
-				var __reg3 = this.ShownMessageArray.splice(__reg2, 1);
-				__reg3[0].removeMovieClip();
+				var aShownMessageArray = this.ShownMessageArray.splice(i, 1);
+				aShownMessageArray[0].removeMovieClip();
 				--this.ShownCount;
 				this.bAnimating = false;
 			}
-			++__reg2;
+			++i;
 		}
 		if (!bqueuedMessage && !this.bAnimating && this.ShownMessageArray.length > 0) 
 		{

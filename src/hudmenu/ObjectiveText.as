@@ -2,8 +2,7 @@ dynamic class ObjectiveText extends MovieClip
 {
 	static var ClipCount: Number = 0;
 	static var ArraySize: Number = 0;
-	var MovieClipsA;
-	var _parent;
+	var MovieClipsA: Array;
 
 	function ObjectiveText()
 	{
@@ -25,26 +24,26 @@ dynamic class ObjectiveText extends MovieClip
 
 	function DuplicateObjective(aObjectiveArrayA)
 	{
-		var __reg2 = String(aObjectiveArrayA.shift());
-		var __reg4 = String(aObjectiveArrayA.shift());
-		var __reg5 = undefined;
-		if (__reg2 != "undefined") 
+		var aPrimaryObjective = String(aObjectiveArrayA.shift());
+		var aSecondaryObjective = String(aObjectiveArrayA.shift());
+		var aObjectiveText = undefined;
+		if (aPrimaryObjective != "undefined") 
 		{
-			if (__reg4.length > 0) 
+			if (aSecondaryObjective.length > 0) 
 			{
-				var __reg6 = new TextField();
-				__reg6.SetText(__reg4);
-				__reg5 = __reg6.text + ": " + __reg2;
+				var aTextField = new TextField();
+				aTextField.SetText(aSecondaryObjective);
+				aObjectiveText = aTextField.text + ": " + aPrimaryObjective;
 			}
 			else 
 			{
-				__reg5 = __reg2;
+				aObjectiveText = aPrimaryObjective;
 			}
 			ObjectiveText.ObjectiveLine_mc = this._parent.ObjectiveLineInstance;
-			var __reg3 = ObjectiveText.ObjectiveLine_mc.duplicateMovieClip("objective" + ObjectiveText.ClipCount++, this._parent.GetDepth());
+			var aObjectiveLine_mc = ObjectiveText.ObjectiveLine_mc.duplicateMovieClip("objective" + ObjectiveText.ClipCount++, this._parent.GetDepth());
 			++QuestNotification.AnimationCount;
-			__reg3.ObjectiveTextFieldInstance.TextFieldInstance.SetText(__reg5);
-			this.MovieClipsA.push(__reg3);
+			aObjectiveLine_mc.ObjectiveTextFieldInstance.TextFieldInstance.SetText(aObjectiveText);
+			this.MovieClipsA.push(aObjectiveLine_mc);
 		}
 		--ObjectiveText.ArraySize;
 		if (ObjectiveText.ArraySize == 0) 
@@ -63,13 +62,13 @@ dynamic class ObjectiveText extends MovieClip
 		{
 			delete eval(this.MovieClipsA.shift());
 		}
-		var __reg3 = Math.min(aObjectiveArrayA.length, Math.min(aCount, 3));
+		var aMaxObjectives = Math.min(aObjectiveArrayA.length, Math.min(aCount, 3)); // Shows a max of 3 objectives
 		ObjectiveText.ArraySize = aCount;
-		var __reg2 = 0;
-		while (__reg2 < __reg3) 
+		var aObjectivesShown = 0;
+		while (aObjectivesShown < aMaxObjectives) 
 		{
 			this.DuplicateObjective(aObjectiveArrayA);
-			++__reg2;
+			++aObjectivesShown;
 		}
 		this.MovieClipsA[0].gotoAndPlay("OutToPositionOne");
 		this.MovieClipsA[1].gotoAndPlay("OutToPositionTwo");

@@ -2,22 +2,23 @@ dynamic class QuestNotification extends MovieClip
 {
 	static var QuestNotificationIntervalIndex: Number = 0;
 	static var AnimationCount: Number = 0;
-	var ShowNotifications: Boolean = true;
 	static var QUEST_UPDATE: Number = 0;
 	static var SKILL_LEVEL_UPDATE: Number = 1;
 	static var PLAYER_LEVEL_UPDATE: Number = 2;
 	static var SHOUT_UPDATE: Number = 3;
 	static var bPlayerLeveled: Boolean = false;
 	static var PlayerLevel: Number = 0;
-	var AnimatedLetter_mc;
-	var LevelMeterBaseInstance;
-	var LevelUpMeter;
-	var ObjText;
-	var ObjectiveLineInstance;
-	var ObjectivesA;
-	var ObjectivesCount;
-	var ShoutAnimatedLetter;
-	var getNextHighestDepth;
+	
+	var ShowNotifications: Boolean = true;
+	
+	var AnimatedLetter_mc: MovieClip;
+	var LevelMeterBaseInstance: MovieClip;
+	var LevelUpMeter: Object;
+	var ObjText: MovieClip;
+	var ObjectiveLineInstance: MovieClip;
+	var ObjectivesA: Array;
+	var ObjectivesCount: Number;
+	var ShoutAnimatedLetter: MovieClip;
 
 	function QuestNotification()
 	{
@@ -147,12 +148,12 @@ dynamic class QuestNotification extends MovieClip
 
 	static function RestartAnimations()
 	{
-		var __reg1 = QuestNotification.Instance.AnimLetter._parent;
-		for (var __reg2 in __reg1) 
+		var aQuestUpdateBase = QuestNotification.Instance.AnimLetter._parent;
+		for (var aMovieClip in aQuestUpdateBase) 
 		{
-			if (__reg1[__reg2] instanceof AnimatedLetter && __reg1[__reg2] != QuestNotification.Instance.AnimLetter) 
+			if (aQuestUpdateBase[aMovieClip] instanceof AnimatedLetter && aQuestUpdateBase[aMovieClip] != QuestNotification.Instance.AnimLetter) 
 			{
-				__reg1[__reg2].gotoAndPlay(__reg1[__reg2]._currentFrame);
+				aQuestUpdateBase[aMovieClip].gotoAndPlay(aQuestUpdateBase[aMovieClip]._currentFrame);
 			}
 		}
 	}

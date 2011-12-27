@@ -1,9 +1,9 @@
-dynamic class ShoutMeter
+class ShoutMeter
 {
-	var FlashClip;
-	var MeterEmtpy;
-	var MeterFull;
-	var ProgressClip;
+	var FlashClip: MovieClip;
+	var MeterEmtpy: Number;
+	var MeterFull: Number;
+	var ProgressClip: MovieClip;
 
 	function ShoutMeter(aProgressClip, aFlashClip)
 	{
@@ -24,9 +24,9 @@ dynamic class ShoutMeter
 			this.ProgressClip.gotoAndStop("Normal");
 			return;
 		}
-		var __reg2 = Math.min(100, Math.max(aPercent, 0));
-		var __reg3 = Math.floor(Shared.GlobalFunc.Lerp(this.MeterEmtpy, this.MeterFull, 0, 100, __reg2));
-		this.ProgressClip.gotoAndStop(__reg3);
+		var aPercent = Math.min(100, Math.max(aPercent, 0));
+		var aPercentFrame = Math.floor(Shared.GlobalFunc.Lerp(this.MeterEmtpy, this.MeterFull, 0, 100, aPercent));
+		this.ProgressClip.gotoAndStop(aPercentFrame);
 	}
 
 	function FlashMeter()
