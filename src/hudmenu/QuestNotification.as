@@ -1,4 +1,4 @@
-dynamic class QuestNotification extends MovieClip
+class QuestNotification extends MovieClip
 {
 	static var QuestNotificationIntervalIndex: Number = 0;
 	static var AnimationCount: Number = 0;
@@ -19,6 +19,12 @@ dynamic class QuestNotification extends MovieClip
 	var ObjectivesA: Array;
 	var ObjectivesCount: Number;
 	var ShoutAnimatedLetter: MovieClip;
+	
+	static var Instance: Object;
+	static var AnimLetter: MovieClip;
+	static var ShoutLetter: MovieClip;
+	static var LevelUpMeterIntervalIndex: Number;
+	static var LevelUpMeterKillIntervalIndex: Number;
 
 	function QuestNotification()
 	{

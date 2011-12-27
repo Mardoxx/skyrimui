@@ -1,4 +1,4 @@
-dynamic class Messages extends MovieClip
+class Messages extends MovieClip
 {
 	static var MAX_SHOWN: Number = 4;
 	static var Y_SPACING: Number = 15;

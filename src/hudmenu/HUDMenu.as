@@ -1,4 +1,4 @@
-dynamic class HUDMenu extends Shared.PlatformChangeUser
+class HUDMenu extends Shared.PlatformChangeUser
 {
 	var SavedRolloverText: String = "";
 	var ItemInfoArray: Array = new Array();

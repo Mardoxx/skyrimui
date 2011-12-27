@@ -1,4 +1,4 @@
-dynamic class AnimatedLetter extends MovieClip {
+class AnimatedLetter extends MovieClip {
 	
 	static var SpaceWidth: Number = 15;
 	static var EndPosition: Number = 104;

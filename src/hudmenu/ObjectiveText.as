@@ -1,7 +1,8 @@
-dynamic class ObjectiveText extends MovieClip
+class ObjectiveText extends MovieClip
 {
 	static var ClipCount: Number = 0;
 	static var ArraySize: Number = 0;
+	static var ObjectiveLine_mc: MovieClip;
 	var MovieClipsA: Array;
 
 	function ObjectiveText()
