@@ -1,9 +1,9 @@
 class ShoutMeter
 {
-	var FlashClip: MovieClip;
+	var FlashClip;
 	var MeterEmtpy: Number;
 	var MeterFull: Number;
-	var ProgressClip: MovieClip;
+	var ProgressClip
 
 	function ShoutMeter(aProgressClip, aFlashClip)
 	{

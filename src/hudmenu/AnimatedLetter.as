@@ -3,7 +3,7 @@ class AnimatedLetter extends MovieClip {
 	static var SpaceWidth: Number = 15;
 	static var EndPosition: Number = 104;
 	
-	var AnimationBase_mc: MovieClip;
+	var AnimationBase_mc;
 	var QuestName: String;
 	var QuestNameIndex: Number = 0;
 	var Start: Number = 0;

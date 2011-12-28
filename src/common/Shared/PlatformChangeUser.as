@@ -1,6 +1,6 @@
-dynamic class Shared.PlatformChangeUser extends MovieClip
+class Shared.PlatformChangeUser extends MovieClip
 {
-
+	static var PlatformChange: Shared.ButtonChange;
 	function PlatformChangeUser()
 	{
 		super();

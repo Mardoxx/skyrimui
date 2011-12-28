@@ -2,7 +2,7 @@ class ObjectiveText extends MovieClip
 {
 	static var ClipCount: Number = 0;
 	static var ArraySize: Number = 0;
-	static var ObjectiveLine_mc: MovieClip;
+	static var ObjectiveLine_mc;
 	var MovieClipsA: Array;
 
 	function ObjectiveText()

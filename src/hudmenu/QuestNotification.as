@@ -11,18 +11,18 @@ class QuestNotification extends MovieClip
 	
 	var ShowNotifications: Boolean = true;
 	
-	var AnimatedLetter_mc: MovieClip;
-	var LevelMeterBaseInstance: MovieClip;
-	var LevelUpMeter: Object;
-	var ObjText: MovieClip;
-	var ObjectiveLineInstance: MovieClip;
+	var AnimatedLetter_mc;
+	var LevelMeterBaseInstance;
+	var LevelUpMeter;
+	var ObjText;
+	var ObjectiveLineInstance;
 	var ObjectivesA: Array;
 	var ObjectivesCount: Number;
-	var ShoutAnimatedLetter: MovieClip;
+	var ShoutAnimatedLetter;
 	
 	static var Instance: Object;
-	static var AnimLetter: MovieClip;
-	static var ShoutLetter: MovieClip;
+	static var AnimLetter;
+	static var ShoutLetter;
 	static var LevelUpMeterIntervalIndex: Number;
 	static var LevelUpMeterKillIntervalIndex: Number;
 
