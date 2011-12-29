@@ -19,9 +19,9 @@ class Messages extends MovieClip
 		this.bAnimating = false;
 	}
 
-	function Update()
+	function Update(): Void
 	{
-		var bqueuedMessage = this.MessageArray.length > 0;
+		var bqueuedMessage: Boolean = this.MessageArray.length > 0;
 		if (bqueuedMessage && !this.bAnimating && this.ShownCount < Messages.MAX_SHOWN) 
 		{
 			this.ShownMessageArray.push(this.attachMovie("MessageText", "Text" + Messages.InstanceCounter++, this.getNextHighestDepth(), {_x: 0, _y: 0}));
@@ -31,11 +31,11 @@ class Messages extends MovieClip
 			this.bAnimating = true;
 			this.ySpacing = 0;
 			
-			this.onEnterFrame = function ()
+			this.onEnterFrame = function (): Void
 			{
 				if (this.ySpacing < Messages.Y_SPACING) 
 				{
-					var i = 0;
+					var i: Number = 0;
 					while (i < this.ShownMessageArray.length - 1) 
 					{
 						this.ShownMessageArray[i]._y = this.ShownMessageArray[i]._y + 2;
@@ -54,12 +54,12 @@ class Messages extends MovieClip
 			;
 			++this.ShownCount;
 		}
-		var i = 0;
+		var i: Number = 0;
 		while (i < this.ShownMessageArray.length) 
 		{
 			if (this.ShownMessageArray[i]._currentFrame >= Messages.END_ANIM_FRAME) 
 			{
-				var aShownMessageArray = this.ShownMessageArray.splice(i, 1);
+				var aShownMessageArray: Array = this.ShownMessageArray.splice(i, 1);
 				aShownMessageArray[0].removeMovieClip();
 				--this.ShownCount;
 				this.bAnimating = false;

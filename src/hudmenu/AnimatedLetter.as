@@ -1,21 +1,21 @@
-class AnimatedLetter extends MovieClip {
+﻿class AnimatedLetter extends MovieClip {
 	
 	static var SpaceWidth: Number = 15;
-	static var EndPosition: Number = 104;
 	
-	var AnimationBase_mc;
+	var AnimationBase_mc: MovieClip;
 	var QuestName: String;
 	var QuestNameIndex: Number = 0;
 	var Start: Number = 0;
 	var LetterSpacing: Number = 0;
 	var OldWidth: Number = 0;
+    var EndPosition: Number = 104;
 	
 	function AnimatedLetter() {
 		super();
 		Shared.GlobalFunc.MaintainTextFormat();
 	}
 
-	function ShowQuestUpdate(aQuestName, aQuestStatus) {
+	function ShowQuestUpdate(aQuestName: String, aQuestStatus: String): Void {
 		if (aQuestName.length > 0 && aQuestStatus.length > 0) {
 			var QuestStatus: Object = new TextField();
 			QuestStatus.text = aQuestStatus + ": ";
@@ -34,7 +34,7 @@ class AnimatedLetter extends MovieClip {
 			++LetterIndex;
 		}
 		this.Start = this.Start * -0.5;
-		this.Start = this.Start - AnimatedLetter.EndPosition;
+		this.Start = this.Start - this.EndPosition;
 		
 		this.QuestNameIndex = 0;
 		this.LetterSpacing = 0;
@@ -43,7 +43,7 @@ class AnimatedLetter extends MovieClip {
 		this.AnimationBase_mc.onEnterFrame = this.AnimationBase_mc.ShowLetter;
 	}
 
-	function ShowLetter() {
+	function ShowLetter(): Void {
 		var LastLetterIndex: Number = this.QuestName.length;
 		var LetterIndex: Number = this.QuestNameIndex++;
 		

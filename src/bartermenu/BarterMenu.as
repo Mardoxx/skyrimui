@@ -1,16 +1,16 @@
-dynamic class BarterMenu extends ItemMenu
+class BarterMenu extends ItemMenu
 {
 	var bPCControlsReady: Boolean = true;
-	var BottomBar_mc;
-	var InventoryLists_mc;
-	var ItemCard_mc;
-	var PlayerInfoObj;
-	var fBuyMult;
-	var fSellMult;
-	var iConfirmAmount;
-	var iPlayerGold;
-	var iSelectedCategory;
-	var iVendorGold;
+	var BottomBar_mc: MovieClip;
+	var InventoryLists_mc: MovieClip;
+	var ItemCard_mc: MovieClip;
+	var PlayerInfoObj: Object;
+	var fBuyMult: Number;
+	var fSellMult: Number;
+	var iConfirmAmount: Number;
+	var iPlayerGold: Number;
+	var iSelectedCategory: Number;
+	var iVendorGold: Number;
 
 	function BarterMenu()
 	{
@@ -22,7 +22,7 @@ dynamic class BarterMenu extends ItemMenu
 		this.iConfirmAmount = 0;
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
 		super.InitExtensions();
 		gfx.io.GameDelegate.addCallBack("SetBarterMultipliers", this, "SetBarterMultipliers");
@@ -33,19 +33,19 @@ dynamic class BarterMenu extends ItemMenu
 		this.BottomBar_mc.Button1.disabled = false;
 	}
 
-	function onExitButtonPress()
+	function onExitButtonPress(): Void
 	{
 		gfx.io.GameDelegate.call("CloseMenu", []);
 	}
 
-	function SetBarterMultipliers(afBuyMult, afSellMult)
+	function SetBarterMultipliers(afBuyMult: Number, afSellMult: Number): Void
 	{
 		this.fBuyMult = afBuyMult;
 		this.fSellMult = afSellMult;
 		this.BottomBar_mc.SetButtonsText("", "$Exit");
 	}
 
-	function onShowItemsList(event)
+	function onShowItemsList(event: Object): Void
 	{
 		this.iSelectedCategory = this.InventoryLists_mc.CategoriesList.selectedIndex;
 		if (this.IsViewingVendorItems()) 
@@ -59,47 +59,47 @@ dynamic class BarterMenu extends ItemMenu
 		super.onShowItemsList(event);
 	}
 
-	function onHideItemsList(event)
+	function onHideItemsList(event: Object): Void
 	{
 		super.onHideItemsList(event);
 		this.BottomBar_mc.SetButtonsText("", "$Exit");
 	}
 
-	function IsViewingVendorItems()
+	function IsViewingVendorItems(): Boolean
 	{
-		var __reg2 = this.InventoryLists_mc.CategoriesList.dividerIndex;
-		return __reg2 != undefined && this.iSelectedCategory < __reg2;
+		var dividerIndex = this.InventoryLists_mc.CategoriesList.dividerIndex;
+		return dividerIndex != undefined && this.iSelectedCategory < dividerIndex;
 	}
 
-	function onQuantityMenuSelect(event)
+	function onQuantityMenuSelect(event: Object): Void
 	{
-		var __reg2 = event.amount * this.ItemCard_mc.itemInfo.value;
-		if (__reg2 > this.iVendorGold && !this.IsViewingVendorItems()) 
+		var iItemValue = event.amount * this.ItemCard_mc.itemInfo.value;
+		if (iItemValue > this.iVendorGold && !this.IsViewingVendorItems()) 
 		{
 			this.iConfirmAmount = event.amount;
-			gfx.io.GameDelegate.call("GetRawDealWarningString", [__reg2], this, "ShowRawDealWarning");
+			gfx.io.GameDelegate.call("GetRawDealWarningString", [iItemValue], this, "ShowRawDealWarning");
 			return;
 		}
 		this.doTransaction(event.amount);
 	}
 
-	function ShowRawDealWarning(strWarning)
+	function ShowRawDealWarning(strWarning: String): Void
 	{
 		this.ItemCard_mc.ShowConfirmMessage(strWarning);
 	}
 
-	function onTransactionConfirm()
+	function onTransactionConfirm(): Void
 	{
 		this.doTransaction(this.iConfirmAmount);
 		this.iConfirmAmount = 0;
 	}
 
-	function doTransaction(aiAmount)
+	function doTransaction(aiAmount: Number): Void
 	{
 		gfx.io.GameDelegate.call("ItemSelect", [aiAmount, this.ItemCard_mc.itemInfo.value, this.IsViewingVendorItems()]);
 	}
 
-	function UpdateItemCardInfo(aUpdateObj)
+	function UpdateItemCardInfo(aUpdateObj: Object): Void
 	{
 		if (this.IsViewingVendorItems()) 
 		{
@@ -115,7 +115,7 @@ dynamic class BarterMenu extends ItemMenu
 		this.BottomBar_mc.SetBarterPerItemInfo(aUpdateObj, this.PlayerInfoObj);
 	}
 
-	function UpdatePlayerInfo(aiPlayerGold, aiVendorGold, astrVendorName, aUpdateObj)
+	function UpdatePlayerInfo(aiPlayerGold: Number, aiVendorGold: Number, astrVendorName: String, aUpdateObj: Object): Void
 	{
 		this.iVendorGold = aiVendorGold;
 		this.iPlayerGold = aiPlayerGold;
@@ -123,17 +123,17 @@ dynamic class BarterMenu extends ItemMenu
 		this.PlayerInfoObj = aUpdateObj;
 	}
 
-	function onQuantitySliderChange(event)
+	function onQuantitySliderChange(event: Object): Void
 	{
-		var __reg2 = this.ItemCard_mc.itemInfo.value * event.value;
+		var iCombinedValue = this.ItemCard_mc.itemInfo.value * event.value;
 		if (this.IsViewingVendorItems()) 
 		{
-			__reg2 = __reg2 * -1;
+			iCombinedValue = iCombinedValue * -1;
 		}
-		this.BottomBar_mc.SetBarterInfo(this.iPlayerGold, this.iVendorGold, __reg2);
+		this.BottomBar_mc.SetBarterInfo(this.iPlayerGold, this.iVendorGold, iCombinedValue);
 	}
 
-	function onItemCardSubMenuAction(event)
+	function onItemCardSubMenuAction(event: Object): Void
 	{
 		super.onItemCardSubMenuAction(event);
 		if (event.menu == "quantity") 

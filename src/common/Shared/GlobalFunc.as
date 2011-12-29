@@ -1,35 +1,23 @@
-dynamic class Shared.GlobalFunc
+class Shared.GlobalFunc
 {
-	static var RegisteredTextFields = new Object();
-	static var RegisteredMovieClips = new Object();
-	var _currentframe;
-	var _name;
-	var _parent;
-	var _x;
-	var _y;
-	var getTextFormat;
-	var gotoAndPlay;
-	var gotoAndStop;
-	var htmlText;
-	var onEnterFrame;
-	var setTextFormat;
-	var text;
+	static var RegisteredTextFields: Object = new Object();
+	static var RegisteredMovieClips: Object = new Object();
 
 	function GlobalFunc()
 	{
 	}
 
-	static function Lerp(aTargetMin, aTargetMax, aSourceMin, aSourceMax, aSource, abClamp)
+	static function Lerp(aTargetMin: Number, aTargetMax: Number, aSourceMin: Number, aSourceMax: Number, aSource: Number, abClamp: Boolean): Number
 	{
-		var __reg1 = aTargetMin + (aSource - aSourceMin) / (aSourceMax - aSourceMin) * (aTargetMax - aTargetMin);
+		var normVal: Number = aTargetMin + (aSource - aSourceMin) / (aSourceMax - aSourceMin) * (aTargetMax - aTargetMin);
 		if (abClamp) 
 		{
-			__reg1 = Math.min(Math.max(__reg1, aTargetMin), aTargetMax);
+			normVal = Math.min(Math.max(normVal, aTargetMin), aTargetMax);
 		}
-		return __reg1;
+		return normVal;
 	}
 
-	static function IsKeyPressed(aInputInfo, abProcessKeyHeldDown)
+	static function IsKeyPressed(aInputInfo: Object, abProcessKeyHeldDown: Boolean): Boolean
 	{
 		if (abProcessKeyHeldDown == undefined) 
 		{
@@ -38,99 +26,102 @@ dynamic class Shared.GlobalFunc
 		return aInputInfo.value == "keyDown" || (abProcessKeyHeldDown && aInputInfo.value == "keyHold");
 	}
 
-	static function RoundDecimal(aNumber, aPrecision)
+	static function RoundDecimal(aNumber: Number, aPrecision: Number): Number
 	{
-		var __reg1 = Math.pow(10, aPrecision);
-		return Math.round(__reg1 * aNumber) / __reg1;
+		var significantFigures = Math.pow(10, aPrecision);
+		return Math.round(significantFigures * aNumber) / significantFigures;
 	}
 
-	static function MaintainTextFormat()
+	static function MaintainTextFormat(): Void
 	{
-		TextField.prototype.SetText = function (aText, abHTMLText)
+		TextField.prototype.SetText = function (aText: String, abHTMLText: String)
 		{
 			if (aText == undefined || aText == "") 
 			{
 				aText = " ";
 			}
+			var textFormat: Object = this.getTextFormat();
 			if (abHTMLText) 
 			{
-				var __reg4 = this.getTextFormat();
-				var __reg3 = __reg4.letterSpacing;
-				var __reg5 = __reg4.kerning;
+				var letterSpacing: Number = textFormat.letterSpacing;
+				var kerning: Number = textFormat.kerning;
 				this.htmlText = aText;
-				__reg4 = this.getTextFormat();
-				__reg4.letterSpacing = __reg3;
-				__reg4.kerning = __reg5;
-				this.setTextFormat(__reg4);
+				textFormat = this.getTextFormat();
+				textFormat.letterSpacing = letterSpacing;
+				textFormat.kerning = kerning;
+				this.setTextFormat(textFormat);
 				return;
 			}
-			__reg4 = this.getTextFormat();
 			this.text = aText;
-			this.setTextFormat(__reg4);
+			this.setTextFormat(textFormat);
+			return;
 		}
-		;
 	}
 
-	static function SetLockFunction()
+	static function SetLockFunction(): Void
 	{
-		MovieClip.prototype.Lock = function (aPosition)
+		MovieClip.prototype.Lock = function (aPosition: String)
 		{
-			var __reg4 = {x: Stage.visibleRect.x + Stage.safeRect.x, y: Stage.visibleRect.y + Stage.safeRect.y};
-			var __reg3 = {x: Stage.visibleRect.x + Stage.visibleRect.width - Stage.safeRect.x, y: Stage.visibleRect.y + Stage.visibleRect.height - Stage.safeRect.y};
-			this._parent.globalToLocal(__reg4);
-			this._parent.globalToLocal(__reg3);
+			var maxXY: Object = {x: Stage.visibleRect.x + Stage.safeRect.x, y: Stage.visibleRect.y + Stage.safeRect.y};
+			var minXY: Object = {x: Stage.visibleRect.x + Stage.visibleRect.width - Stage.safeRect.x, y: Stage.visibleRect.y + Stage.visibleRect.height - Stage.safeRect.y};
+			this._parent.globalToLocal(maxXY);
+			this._parent.globalToLocal(minXY);
+			
+			//  (maxXY.x, maxXY.y) _____________ (minXY.x, maxXY.y)
+			//                    |             |
+			//                    |     THE     |
+			//                    |    STAGE    |
+			//  (maxXY.x, minXY.y)|_____________|(minXY.x, minXY.y)
+			
 			if (aPosition == "T" || aPosition == "TL" || aPosition == "TR") 
 			{
-				this._y = __reg4.y;
+				this._y = maxXY.y;
 			}
 			if (aPosition == "B" || aPosition == "BL" || aPosition == "BR") 
 			{
-				this._y = __reg3.y;
+				this._y = minXY.y;
 			}
 			if (aPosition == "L" || aPosition == "TL" || aPosition == "BL") 
 			{
-				this._x = __reg4.x;
+				this._x = maxXY.x;
 			}
 			if (aPosition == "R" || aPosition == "TR" || aPosition == "BR") 
 			{
-				this._x = __reg3.x;
+				this._x = minXY.x;
 			}
 		}
-		;
 	}
 
-	static function AddMovieExploreFunctions()
+	static function AddMovieExploreFunctions(): Void
 	{
-		MovieClip.prototype.getMovieClips = function ()
+		MovieClip.prototype.getMovieClips = function (): Array
 		{
-			var __reg2 = new Array();
-			for (var __reg3 in this) 
+			var movieClips: Array = new Array();
+			for (var i: String in this) 
 			{
-				if (this[__reg3] instanceof MovieClip && this[__reg3] != this) 
+				if (this[i] instanceof MovieClip && this[i] != this) 
 				{
-					__reg2.push(this[__reg3]);
+					movieClips.push(this[i]);
 				}
 			}
-			return __reg2;
+			return movieClips;
 		}
-		;
-		MovieClip.prototype.showMovieClips = function ()
+		MovieClip.prototype.showMovieClips = function (): Void
 		{
-			for (var __reg2 in this) 
+			for (var i: String in this) 
 			{
-				if (this[__reg2] instanceof MovieClip && this[__reg2] != this) 
+				if (this[i] instanceof MovieClip && this[i] != this) 
 				{
-					trace(this[__reg2]);
-					this[__reg2].showMovieClips();
+					trace(this[i]);
+					this[i].showMovieClips();
 				}
 			}
 		}
-		;
 	}
 
-	static function AddReverseFunctions()
+	static function AddReverseFunctions(): Void
 	{
-		MovieClip.prototype.PlayReverse = function ()
+		MovieClip.prototype.PlayReverse = function (): Void
 		{
 			if (this._currentframe > 1) 
 			{
@@ -144,27 +135,24 @@ dynamic class Shared.GlobalFunc
 					}
 					delete (this.onEnterFrame);
 				}
-				;
 				return;
 			}
 			this.gotoAndStop(1);
 		}
-		;
-		MovieClip.prototype.PlayForward = function (aFrameLabel)
+		MovieClip.prototype.PlayForward = function (aFrameLabel: String): Void
 		{
 			delete (this.onEnterFrame);
 			this.gotoAndPlay(aFrameLabel);
 		}
 		;
-		MovieClip.prototype.PlayForward = function (aFrame)
+		MovieClip.prototype.PlayForward = function (aFrame: Number): Void
 		{
 			delete (this.onEnterFrame);
 			this.gotoAndPlay(aFrame);
 		}
-		;
 	}
 
-	static function GetTextField(aParentClip, aName)
+	static function GetTextField(aParentClip: MovieClip, aName: String): TextField
 	{
 		if (Shared.GlobalFunc.RegisteredTextFields[aName + aParentClip._name] != undefined) 
 		{
@@ -173,7 +161,7 @@ dynamic class Shared.GlobalFunc
 		trace(aName + " is not registered a TextField name.");
 	}
 
-	static function GetMovieClip(aParentClip, aName)
+	static function GetMovieClip(aParentClip: MovieClip, aName: String): MovieClip
 	{
 		if (Shared.GlobalFunc.RegisteredMovieClips[aName + aParentClip._name] != undefined) 
 		{
@@ -182,9 +170,9 @@ dynamic class Shared.GlobalFunc
 		trace(aName + " is not registered a MovieClip name.");
 	}
 
-	static function AddRegisterTextFields()
+	static function AddRegisterTextFields(): Void
 	{
-		TextField.prototype.RegisterTextField = function (aStartingClip)
+		TextField.prototype.RegisterTextField = function (aStartingClip): Void
 		{
 			if (Shared.GlobalFunc.RegisteredTextFields[this._name + aStartingClip._name] == undefined) 
 			{
@@ -194,103 +182,102 @@ dynamic class Shared.GlobalFunc
 		;
 	}
 
-	static function RegisterTextFields(aStartingClip)
+	static function RegisterTextFields(aStartingClip: MovieClip) : Void
 	{
-		for (var __reg2 in aStartingClip) 
+		for (var i: String in aStartingClip) 
 		{
-			if (aStartingClip[__reg2] instanceof TextField) 
+			if (aStartingClip[i] instanceof TextField) 
 			{
-				aStartingClip[__reg2].RegisterTextField(aStartingClip);
+				aStartingClip[i].RegisterTextField(aStartingClip);
 			}
 		}
 	}
 
-	static function RegisterAllTextFieldsInTimeline(aStartingClip)
+	static function RegisterAllTextFieldsInTimeline(aStartingClip: MovieClip): Void
 	{
-		var __reg2 = 1;
+		var i: Number = 1;
 		for (;;) 
 		{
-			if (!(aStartingClip._totalFrames && __reg2 <= aStartingClip._totalFrames)) 
+			if (!(aStartingClip._totalFrames && i <= aStartingClip._totalFrames)) 
 			{
 				return;
 			}
-			aStartingClip.gotoAndStop(__reg2);
+			aStartingClip.gotoAndStop(i);
 			Shared.GlobalFunc.RegisterTextFields(aStartingClip);
-			++__reg2;
+			++i;
 		}
 	}
 
-	static function AddRegisterMovieClips()
+	static function AddRegisterMovieClips(): Void
 	{
-		MovieClip.prototype.RegisterMovieClip = function (aStartingClip)
+		MovieClip.prototype.RegisterMovieClip = function (aStartingClip): Void
 		{
 			if (Shared.GlobalFunc.RegisteredMovieClips[this._name + aStartingClip._name] == undefined) 
 			{
 				Shared.GlobalFunc.RegisteredMovieClips[this._name + aStartingClip._name] = this;
 			}
 		}
-		;
 	}
 
-	static function RegisterMovieClips(aStartingClip)
+	static function RegisterMovieClips(aStartingClip: MovieClip): Void
 	{
-		for (var __reg2 in aStartingClip) 
+		for (var i: String in aStartingClip) 
 		{
-			if (aStartingClip[__reg2] instanceof MovieClip) 
+			if (aStartingClip[i] instanceof MovieClip) 
 			{
-				aStartingClip[__reg2].RegisterMovieClip(aStartingClip);
+				aStartingClip[i].RegisterMovieClip(aStartingClip);
 			}
 		}
 	}
 
-	static function RecursiveRegisterMovieClips(aStartingClip, aRootClip)
+	static function RecursiveRegisterMovieClips(aStartingClip: MovieClip, aRootClip: MovieClip): Void
 	{
-		for (var __reg3 in aStartingClip) 
+		for (var i: String in aStartingClip) 
 		{
-			if (aStartingClip[__reg3] instanceof MovieClip) 
+			if (aStartingClip[i] instanceof MovieClip) 
 			{
-				if (aStartingClip[__reg3] != aStartingClip) 
+				if (aStartingClip[i] != aStartingClip) 
 				{
-					Shared.GlobalFunc.RecursiveRegisterMovieClips(aStartingClip[__reg3], aRootClip);
+					Shared.GlobalFunc.RecursiveRegisterMovieClips(aStartingClip[i], aRootClip);
 				}
-				aStartingClip[__reg3].RegisterMovieClip(aRootClip);
+				aStartingClip[i].RegisterMovieClip(aRootClip);
 			}
 		}
 	}
 
-	static function RegisterAllMovieClipsInTimeline(aStartingClip)
+	static function RegisterAllMovieClipsInTimeline(aStartingClip: MovieClip): Void
 	{
-		var __reg2 = 1;
+		var i: Number = 1;
 		for (;;) 
 		{
-			if (!(aStartingClip._totalFrames && __reg2 <= aStartingClip._totalFrames)) 
+			if (!(aStartingClip._totalFrames && i <= aStartingClip._totalFrames)) 
 			{
 				return;
 			}
-			aStartingClip.gotoAndStop(__reg2);
+			aStartingClip.gotoAndStop(i);
 			Shared.GlobalFunc.RegisterMovieClips(aStartingClip);
-			++__reg2;
+			++i;
 		}
 	}
 
-	static function StringTrim(astrText)
+	static function StringTrim(astrText: String): String
 	{
-		var __reg2 = 0;
-		var __reg1 = 0;
-		var __reg5 = astrText.length;
-		var __reg3 = undefined;
-		while (astrText.charAt(__reg2) == " " || astrText.charAt(__reg2) == "\n" || astrText.charAt(__reg2) == "\r" || astrText.charAt(__reg2) == "\t") 
+		var i: Number = 0;
+		var j: Number = 0;
+		var strLength: Number = astrText.length;
+		var trimStr: String = undefined;
+		while (astrText.charAt(i) == " " || astrText.charAt(i) == "\n" || astrText.charAt(i) == "\r" || astrText.charAt(i) == "\t") 
 		{
-			++__reg2;
+			++i;
 		}
-		__reg3 = astrText.substring(__reg2);
-		__reg1 = __reg3.length - 1;
-		while (__reg3.charAt(__reg1) == " " || __reg3.charAt(__reg1) == "\n" || __reg3.charAt(__reg1) == "\r" || __reg3.charAt(__reg1) == "\t") 
+		trimStr = astrText.substring(i);
+		j = trimStr.length - 1;
+		while (trimStr.charAt(j) == " " || trimStr.charAt(j) == "\n" || trimStr.charAt(j) == "\r" || trimStr.charAt(j) == "\t") 
 		{
-			--__reg1;
+			--j;
 		}
-		__reg3 = __reg3.substring(0, __reg1 + 1);
-		return __reg3;
+		trimStr = trimStr.substring(0, j + 1);
+		return trimStr;
 	}
 
 }

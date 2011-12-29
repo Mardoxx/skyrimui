@@ -11,18 +11,17 @@ class QuestNotification extends MovieClip
 	
 	var ShowNotifications: Boolean = true;
 	
-	var AnimatedLetter_mc;
-	var LevelMeterBaseInstance;
-	var LevelUpMeter;
-	var ObjText;
-	var ObjectiveLineInstance;
+	var AnimatedLetter_mc: AnimatedLetter;
+	var LevelMeterBaseInstance: MovieClip;
+	var LevelUpMeter: Components.Meter;
+	var ObjText: ObjectiveText;
+	var ObjectiveLineInstance: ObjectiveText;
 	var ObjectivesA: Array;
 	var ObjectivesCount: Number;
-	var ShoutAnimatedLetter;
-	
+	var ShoutAnimatedLetter: AnimatedLetter;
 	static var Instance: Object;
-	static var AnimLetter;
-	static var ShoutLetter;
+	static var AnimLetter: AnimatedLetter;
+	static var ShoutLetter: AnimatedLetter;
 	static var LevelUpMeterIntervalIndex: Number;
 	static var LevelUpMeterKillIntervalIndex: Number;
 
@@ -43,12 +42,12 @@ class QuestNotification extends MovieClip
 		QuestNotification.LevelUpMeterKillIntervalIndex = 0;
 	}
 
-	static function Update()
+	static function Update(): Void
 	{
 		QuestNotification.Instance.ObjText.UpdateObjectives(QuestNotification.Instance.ObjectivesA);
 	}
 
-	function EvaluateNotifications()
+	function EvaluateNotifications(): Void
 	{
 		if (QuestNotification.AnimationCount == 0 || QuestNotification.AnimationCount == QuestNotification.AnimLetter.QuestName.length) 
 		{
@@ -58,7 +57,7 @@ class QuestNotification extends MovieClip
 		}
 	}
 
-	static function DecAnimCount()
+	static function DecAnimCount(): Void
 	{
 		--QuestNotification.AnimationCount;
 		if (QuestNotification.AnimationCount == 0) 
@@ -67,18 +66,18 @@ class QuestNotification extends MovieClip
 		}
 	}
 
-	static function CheckContinue()
+	static function CheckContinue(): Boolean
 	{
 		QuestNotification.Instance.EvaluateNotifications();
 		return true;
 	}
 
-	function CanShowNotification()
+	function CanShowNotification(): Boolean
 	{
 		return this.ShowNotifications && QuestNotification.AnimationCount == 0;
 	}
 
-	function ShowNotification(aNotificationText, aStatus, aSoundID, aObjectiveCount, aNotificationType, aLevel, aStartPercent, aEndPercent, aDragonText)
+	function ShowNotification(aNotificationText: String, aStatus: String, aSoundID: String, aObjectiveCount: Number, aNotificationType: Number, aLevel: Number, aStartPercent: Number, aEndPercent: Number, aDragonText: String): Void
 	{
 		this.ShowNotifications = false;
 		if (aSoundID.length > 0) 
@@ -119,12 +118,12 @@ class QuestNotification extends MovieClip
 		QuestNotification.LevelUpMeterKillIntervalIndex = setInterval(QuestNotification.KillLevelUpMeter, 1000);
 	}
 
-	static function UpdateLevelUpMeter()
+	static function UpdateLevelUpMeter(): Void
 	{
 		QuestNotification.Instance.LevelUpMeter.Update();
 	}
 
-	static function KillLevelUpMeter()
+	static function KillLevelUpMeter(): Void
 	{
 		if (QuestNotification.AnimationCount == 0) 
 		{
@@ -141,21 +140,21 @@ class QuestNotification extends MovieClip
 		}
 	}
 
-	function ShowObjectives(aObjectiveCount)
+	function ShowObjectives(aObjectiveCount: Number): Void
 	{
 		this.ObjText.ShowObjectives(aObjectiveCount, this.ObjectivesA);
 		this.ShowNotifications = true;
 	}
 
-	function GetDepth()
+	function GetDepth(): Number
 	{
 		return this.getNextHighestDepth();
 	}
 
-	static function RestartAnimations()
+	static function RestartAnimations(): Void
 	{
-		var aQuestUpdateBase = QuestNotification.Instance.AnimLetter._parent;
-		for (var aMovieClip in aQuestUpdateBase) 
+		var aQuestUpdateBase: MovieClip = QuestNotification.Instance.AnimLetter._parent;
+		for (var aMovieClip: String in aQuestUpdateBase) 
 		{
 			if (aQuestUpdateBase[aMovieClip] instanceof AnimatedLetter && aQuestUpdateBase[aMovieClip] != QuestNotification.Instance.AnimLetter) 
 			{

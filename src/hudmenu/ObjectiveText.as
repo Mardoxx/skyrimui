@@ -11,7 +11,7 @@ class ObjectiveText extends MovieClip
 		this.MovieClipsA = new Array();
 	}
 
-	function UpdateObjectives(aObjectiveArrayA)
+	function UpdateObjectives(aObjectiveArrayA: Array): Boolean
 	{
 		if (ObjectiveText.ArraySize > 0) 
 		{
@@ -23,16 +23,16 @@ class ObjectiveText extends MovieClip
 		return false;
 	}
 
-	function DuplicateObjective(aObjectiveArrayA)
+	function DuplicateObjective(aObjectiveArrayA: Array): Void
 	{
-		var aPrimaryObjective = String(aObjectiveArrayA.shift());
-		var aSecondaryObjective = String(aObjectiveArrayA.shift());
-		var aObjectiveText = undefined;
+		var aPrimaryObjective: String = String(aObjectiveArrayA.shift());
+		var aSecondaryObjective: String = String(aObjectiveArrayA.shift());
+		var aObjectiveText: String = undefined;
 		if (aPrimaryObjective != "undefined") 
 		{
 			if (aSecondaryObjective.length > 0) 
 			{
-				var aTextField = new TextField();
+				var aTextField: TextField = new TextField();
 				aTextField.SetText(aSecondaryObjective);
 				aObjectiveText = aTextField.text + ": " + aPrimaryObjective;
 			}
@@ -41,7 +41,7 @@ class ObjectiveText extends MovieClip
 				aObjectiveText = aPrimaryObjective;
 			}
 			ObjectiveText.ObjectiveLine_mc = this._parent.ObjectiveLineInstance;
-			var aObjectiveLine_mc = ObjectiveText.ObjectiveLine_mc.duplicateMovieClip("objective" + ObjectiveText.ClipCount++, this._parent.GetDepth());
+			var aObjectiveLine_mc: MovieClip = ObjectiveText.ObjectiveLine_mc.duplicateMovieClip("objective" + ObjectiveText.ClipCount++, this._parent.GetDepth());
 			++QuestNotification.AnimationCount;
 			aObjectiveLine_mc.ObjectiveTextFieldInstance.TextFieldInstance.SetText(aObjectiveText);
 			this.MovieClipsA.push(aObjectiveLine_mc);
@@ -53,7 +53,7 @@ class ObjectiveText extends MovieClip
 		}
 	}
 
-	function ShowObjectives(aCount, aObjectiveArrayA)
+	function ShowObjectives(aCount: Number, aObjectiveArrayA: Array): Void
 	{
 		if (aObjectiveArrayA.length > 0) 
 		{
@@ -63,9 +63,9 @@ class ObjectiveText extends MovieClip
 		{
 			delete eval(this.MovieClipsA.shift());
 		}
-		var aMaxObjectives = Math.min(aObjectiveArrayA.length, Math.min(aCount, 3)); // Shows a max of 3 objectives
+		var aMaxObjectives: Number = Math.min(aObjectiveArrayA.length, Math.min(aCount, 3)); // Shows a max of 3 objectives
 		ObjectiveText.ArraySize = aCount;
-		var aObjectivesShown = 0;
+		var aObjectivesShown: Number = 0;
 		while (aObjectivesShown < aMaxObjectives) 
 		{
 			this.DuplicateObjective(aObjectiveArrayA);
@@ -75,5 +75,4 @@ class ObjectiveText extends MovieClip
 		this.MovieClipsA[1].gotoAndPlay("OutToPositionTwo");
 		this.MovieClipsA[2].gotoAndPlay("OutToPositionThree");
 	}
-
 }

@@ -6,11 +6,11 @@ class HUDMenu extends Shared.PlatformChangeUser
 	var METER_PAUSE_FRAME: Number = 40;
 	
 	
-	var ActivateButton_tf;
-	var ArrowInfoInstance;
-	var BottomLeftLockInstance;
-	var BottomRightLockInstance;
-	var BottomRightRefInstance;
+	var ActivateButton_tf: TextField;
+	var ArrowInfoInstance: MovieClip;
+	var BottomLeftLockInstance: MovieClip;
+	var BottomRightLockInstance: MovieClip;
+	var BottomRightRefInstance: MovieClip;
 	var BottomRightRefX: Number;
 	var BottomRightRefY: Number;
 	var CompassMarkerEnemy: Number;
@@ -19,58 +19,58 @@ class HUDMenu extends Shared.PlatformChangeUser
 	var CompassMarkerQuest: Number;
 	var CompassMarkerQuestDoor: Number;
 	var CompassMarkerUndiscovered: Number;
-	var CompassRect;
-	var CompassShoutMeterHolder;
+	var CompassRect: MovieClip;
+	var CompassShoutMeterHolder: MovieClip;
 	var CompassTargetDataA: Array;
 	var CompassThreeSixtyX: Number;
 	var CompassZeroX: Number;
-	var Crosshair;
-	var CrosshairAlert;
-	var CrosshairInstance;
+	var Crosshair: MovieClip;
+	var CrosshairAlert: MovieClip;
+	var CrosshairInstance: MovieClip;
 	var EnemyHealthMeter: Components.Meter;
-	var EnemyHealth_mc;
-	var FavorBackButtonBase;
-	var FavorBackButton_mc;
-	var FloatingQuestMarkerInstance;
-	var FloatingQuestMarker_mc;
-	var GrayBarInstance;
+	var EnemyHealth_mc: MovieClip;
+	var FavorBackButtonBase: MovieClip;
+	var FavorBackButton_mc: MovieClip;
+	var FloatingQuestMarkerInstance: MovieClip;
+	var FloatingQuestMarker_mc: MovieClip;
+	var GrayBarInstance: MovieClip;
 	var HUDModes: Array;
-	var Health;
-	var HealthMeterAnim;
+	var Health: MovieClip;
+	var HealthMeterAnim: MovieClip;
 	var HealthMeterLeft: Components.BlinkOnEmptyMeter;
 	var HudElements: Array;
 	var LeftChargeMeter: Components.Meter;
-	var LeftChargeMeterAnim;
-	var LocationLockBase;
-	var Magica;
+	var LeftChargeMeterAnim: MovieClip;
+	var LocationLockBase: MovieClip;
+	var Magica: MovieClip;
 	var MagickaMeter: Components.BlinkOnDemandMeter;
-	var MagickaMeterAnim;
-	var MessagesBlock;
-	var MessagesInstance;
-	var QuestUpdateBaseInstance;
+	var MagickaMeterAnim: MovieClip;
+	var MessagesBlock: MovieClip;
+	var MessagesInstance: MovieClip;
+	var QuestUpdateBaseInstance: MovieClip;
 	var RightChargeMeter: Components.Meter;
-	var RightChargeMeterAnim;
-	var RolloverButton_tf;
-	var RolloverGrayBar_mc;
+	var RightChargeMeterAnim: MovieClip;
+	var RolloverButton_tf: TextField;
+	var RolloverGrayBar_mc: MovieClip;
 	var RolloverInfoInstance: TextField;
 	var RolloverInfoText: TextField;
-	var RolloverNameInstance;
-	var RolloverText;
-	var ShoutMeter_mc;
-	var Stamina;
+	var RolloverNameInstance: TextField;
+	var RolloverText: TextField;
+	var ShoutMeter_mc: ShoutMeter;
+	var Stamina: MovieClip;
 	var StaminaMeter: Components.BlinkOnDemandMeter;
-	var StaminaMeterAnim;
-	var StealthMeterInstance;
+	var StaminaMeterAnim: MovieClip;
+	var StealthMeterInstance: MovieClip;
 	var SubtitleText: TextField;
 	var SubtitleTextHolder: MovieClip;
 	var TopLeftRefInstance: MovieClip;
 	var TopLeftRefX: Number;
 	var TopLeftRefY: Number;
-	var TutorialHintsArtHolder;
-	var TutorialHintsText;
-	var TutorialLockInstance;
-	var ValueTranslated;
-	var WeightTranslated;
+	var TutorialHintsArtHolder: MovieClip;
+	var TutorialHintsText: TextField;
+	var TutorialLockInstance: MovieClip;
+	var ValueTranslated: TextField;
+	var WeightTranslated: TextField;
 	var bCrosshairEnabled: Boolean;
 
 	function HUDMenu()
@@ -127,17 +127,17 @@ class HUDMenu extends Shared.PlatformChangeUser
 		this.StealthMeterInstance.gotoAndStop("FadedOut");
 	}
 
-	function RegisterComponents()
+	function RegisterComponents(): Void
 	{
 		gfx.io.GameDelegate.call("RegisterHUDComponents", [this, this.HudElements, this.QuestUpdateBaseInstance, this.EnemyHealthMeter, this.StealthMeterInstance, this.StealthMeterInstance.SneakAnimInstance, this.EnemyHealth_mc.BracketsInstance, this.EnemyHealth_mc.BracketsInstance.RolloverNameInstance, this.StealthMeterInstance.SneakTextHolder, this.StealthMeterInstance.SneakTextHolder.SneakTextClip.SneakTextInstance]);
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
 		this.FavorBackButton_mc.FavorBackButtonInstance.SetPlatform(aiPlatform, abPS3Switch);
 	}
 
-	function SetModes()
+	function SetModes(): Void
 	{
 		this.HudElements = new Array();
 		this.HUDModes = new Array();
@@ -274,12 +274,12 @@ class HUDMenu extends Shared.PlatformChangeUser
 		this.TutorialLockInstance.CartMode = true;
 	}
 
-	function ShowElements(aMode, abShow)
+	function ShowElements(aMode: String, abShow: Boolean): Void
 	{
-		var HUDMode = "All";
+		var HUDMode: String = "All";
+		var aHUDMode = this.HUDModes.length - 1;
 		if (abShow) 
 		{
-			var aHUDMode = this.HUDModes.length - 1;
 			while (aHUDMode >= 0) 
 			{
 				if (this.HUDModes[aHUDMode] == aMode) 
@@ -296,7 +296,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 			if (aMode.length > 0) 
 			{
 				var ModeFound = false;
-				var aHUDMode = this.HUDModes.length - 1;
+				
 				while (aHUDMode >= 0 && !ModeFound) 
 				{
 					if (this.HUDModes[aHUDMode] == aMode) 
@@ -316,7 +316,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 				HUDMode = String(this.HUDModes[this.HUDModes.length - 1]);
 			}
 		}
-		var i = 0;
+		var i: Number = 0;
 		for (;;) 
 		{
 			if (i >= this.HudElements.length) 
@@ -335,15 +335,15 @@ class HUDMenu extends Shared.PlatformChangeUser
 		}
 	}
 
-	function SetLocationName(aLocation)
+	function SetLocationName(aLocation: String): Void
 	{
 		this.LocationLockBase.LocationNameBase.LocationTextBase.LocationTextInstance.SetText(aLocation);
 		this.LocationLockBase.LocationNameBase.gotoAndPlay(1);
 	}
 
-	function CheckAgainstHudMode(aObj)
+	function CheckAgainstHudMode(aObj: Object): Boolean
 	{
-		var HUDMode = "All";
+		var HUDMode: String = "All";
 		if (this.HUDModes.length > 0) 
 		{
 			HUDMode = String(this.HUDModes[this.HUDModes.length - 1]);
@@ -351,9 +351,9 @@ class HUDMenu extends Shared.PlatformChangeUser
 		return HUDMode == "All" || (aObj != undefined && aObj.hasOwnProperty(HUDMode));
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
-		var _yDelta = this.QuestUpdateBaseInstance._y - this.CompassShoutMeterHolder._y;
+		var _yDelta: Number = this.QuestUpdateBaseInstance._y - this.CompassShoutMeterHolder._y;
 		Shared.GlobalFunc.SetLockFunction();
 		this.HealthMeterAnim.Lock("B");
 		this.MagickaMeterAnim.Lock("BL");
@@ -413,13 +413,13 @@ class HUDMenu extends Shared.PlatformChangeUser
 		gfx.io.GameDelegate.addCallBack("ValidateCrosshair", this, "ValidateCrosshair");
 	}
 
-	function InitCompass()
+	function InitCompass(): Void
 	{
 		this.CompassShoutMeterHolder.Compass.gotoAndStop("ThreeSixty");
 		this.CompassThreeSixtyX = this.CompassRect._x;
 		this.CompassShoutMeterHolder.Compass.gotoAndStop("Zero");
 		this.CompassZeroX = this.CompassRect._x;
-		var CompassMarkerTemp = this.CompassRect.attachMovie("Compass Marker", "temp", this.CompassRect.getNextHighestDepth());
+		var CompassMarkerTemp: MovieClip = this.CompassRect.attachMovie("Compass Marker", "temp", this.CompassRect.getNextHighestDepth());
 		CompassMarkerTemp.gotoAndStop("Quest");
 		this.CompassMarkerQuest = CompassMarkerTemp._currentframe == undefined ? 0 : CompassMarkerTemp._currentframe;
 		CompassMarkerTemp.gotoAndStop("QuestDoor");
@@ -435,12 +435,12 @@ class HUDMenu extends Shared.PlatformChangeUser
 		CompassMarkerTemp.removeMovieClip();
 	}
 
-	function RunMeterAnim(aMeter)
+	function RunMeterAnim(aMeter: MovieClip): Void
 	{
 		aMeter.PlayForward(aMeter._currentframe);
 	}
 
-	function FadeOutMeter(aMeter)
+	function FadeOutMeter(aMeter: MovieClip): Void
 	{
 		if (aMeter._currentframe > this.METER_PAUSE_FRAME) 
 		{
@@ -449,23 +449,23 @@ class HUDMenu extends Shared.PlatformChangeUser
 		aMeter.PlayReverse();
 	}
 
-	function FadeOutStamina(aPercent)
+	function FadeOutStamina(aPercent: Number): Void
 	{
 		this.FadeOutMeter(this.Stamina);
 		this.StaminaMeter.CurrentPercent = aPercent;
 		this.StaminaMeter.TargetPercent = aPercent;
 	}
 
-	function FadeOutChargeMeters()
+	function FadeOutChargeMeters(): Void
 	{
 		this.FadeOutMeter(this.LeftChargeMeterAnim);
 		this.FadeOutMeter(this.RightChargeMeterAnim);
 	}
 
-	function SetChargeMeterPercent(aPercent, abForce, abLeftHand, abShow)
+	function SetChargeMeterPercent(aPercent: Number, abForce: Boolean, abLeftHand: Boolean, abShow: Boolean): Void
 	{
-		var ChargeMeter = abLeftHand ? this.LeftChargeMeter : this.RightChargeMeter;
-		var ChargeMeterAnim = abLeftHand ? this.LeftChargeMeterAnim : this.RightChargeMeterAnim;
+		var ChargeMeter: Components.Meter = abLeftHand ? this.LeftChargeMeter : this.RightChargeMeter;
+		var ChargeMeterAnim: MovieClip = abLeftHand ? this.LeftChargeMeterAnim : this.RightChargeMeterAnim;
 		if (!abShow) 
 		{
 			ChargeMeterAnim.gotoAndStop(1);
@@ -483,7 +483,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 		ChargeMeter.SetTargetPercent(aPercent);
 	}
 
-	function SetHealthMeterPercent(aPercent, abForce)
+	function SetHealthMeterPercent(aPercent: Number, abForce: Boolean): Void
 	{
 		if (abForce) 
 		{
@@ -494,7 +494,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 		this.HealthMeterLeft.SetTargetPercent(aPercent);
 	}
 
-	function SetMagickaMeterPercent(aPercent, abForce)
+	function SetMagickaMeterPercent(aPercent: Number, abForce: Boolean): Void
 	{
 		if (abForce) 
 		{
@@ -505,7 +505,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 		this.MagickaMeter.SetTargetPercent(aPercent);
 	}
 
-	function SetStaminaMeterPercent(aPercent, abForce)
+	function SetStaminaMeterPercent(aPercent: Number, abForce: Boolean): Void
 	{
 		if (abForce) 
 		{
@@ -516,27 +516,27 @@ class HUDMenu extends Shared.PlatformChangeUser
 		this.StaminaMeter.SetTargetPercent(aPercent);
 	}
 
-	function SetShoutMeterPercent(aPercent, abForce)
+	function SetShoutMeterPercent(aPercent: Number, abForce: Boolean): Void
 	{
 		this.ShoutMeter_mc.SetPercent(aPercent);
 	}
 
-	function FlashShoutMeter()
+	function FlashShoutMeter(): Void
 	{
 		this.ShoutMeter_mc.FlashMeter();
 	}
 
-	function StartMagickaBlinking()
+	function StartMagickaBlinking(): Void
 	{
 		this.MagickaMeter.StartBlinking();
 	}
 
-	function StartStaminaBlinking()
+	function StartStaminaBlinking(): Void
 	{
 		this.StaminaMeter.StartBlinking();
 	}
 
-	function SetCompassAngle(aPlayerAngle, aCompassAngle, abShowCompass)
+	function SetCompassAngle(aPlayerAngle: Number, aCompassAngle: Number, abShowCompass: Boolean)
 	{
 		this.CompassRect._parent._visible = abShowCompass;
 		if (abShowCompass) 
@@ -547,11 +547,11 @@ class HUDMenu extends Shared.PlatformChangeUser
 		}
 	}
 
-	function SetCrosshairTarget(abActivate, aName, abShowButton, abTextOnly, abFavorMode, abShowCrosshair, aWeight, aCost, aFieldValue, aFieldText)
+	function SetCrosshairTarget(abActivate: Boolean, aName: String, abShowButton: Boolean, abTextOnly: Boolean, abFavorMode: Boolean, abShowCrosshair: Boolean, aWeight: Number, aCost: Number, aFieldValue: Number, aFieldText): Void // Unknown type aFieldText, possibly Number
 	{
-		var FavorModeNoTarget = abFavorMode ? "Favor" : "NoTarget";
-		var FavorModeTarget = abFavorMode ? "Favor" : "Target";
-		var Crosshair_mc = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
+		var FavorModeNoTarget: String = abFavorMode ? "Favor" : "NoTarget";
+		var FavorModeTarget: String = abFavorMode ? "Favor" : "Target";
+		var Crosshair_mc: MovieClip = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
 		Crosshair_mc._visible = this.CheckAgainstHudMode(Crosshair_mc) && abShowCrosshair != false;
 		Crosshair_mc._alpha = this.bCrosshairEnabled ? 100 : 0;
 		if (!abActivate && this.SavedRolloverText.length > 0) 
@@ -579,7 +579,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 			this.RolloverText._alpha = 0;
 			this.RolloverButton_tf._alpha = 0;
 		}
-		var TranslateText = "";
+		var TranslateText: String = "";
 		if (aCost != undefined) 
 		{
 			TranslateText = this.ValueTranslated.text + " <font face=\'$EverywhereBoldFont\' size=\'24\' color=\'#FFFFFF\'>" + Math.round(aCost) + "</font>" + TranslateText;
@@ -590,7 +590,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 		}
 		if (aFieldValue != undefined) 
 		{
-			var aTextField = new TextField();
+			var aTextField: TextField = new TextField();
 			aTextField.text = aFieldText.toString();
 			TranslateText = aTextField.text + " <font face=\'$EverywhereBoldFont\' size=\'24\' color=\'#FFFFFF\'>" + Math.round(aFieldValue) + "</font>	  " + TranslateText;
 		}
@@ -605,25 +605,25 @@ class HUDMenu extends Shared.PlatformChangeUser
 		this.RolloverInfoText.htmlText = TranslateText;
 	}
 
-	function RefreshActivateButtonArt(astrButtonName)
+	function RefreshActivateButtonArt(astrButtonName: String): Void
 	{
 		if (astrButtonName == undefined) 
 		{
 			this.RolloverButton_tf.SetText(" ", true);
 			return;
 		}
-		var ButtonImage = flash.display.BitmapData.loadBitmap(astrButtonName + ".png");
+		var ButtonImage: flash.display.BitmapData = flash.display.BitmapData.loadBitmap(astrButtonName + ".png");
 		if (ButtonImage != undefined && ButtonImage.height > 0) 
 		{
-			var MaxHeight = 26;
-			var ScaledWidth = Math.floor(MaxHeight / ButtonImage.height * ButtonImage.width);
+			var MaxHeight: Number = 26;
+			var ScaledWidth: Number = Math.floor(MaxHeight / ButtonImage.height * ButtonImage.width);
 			this.RolloverButton_tf.SetText("<img src=\'" + astrButtonName + ".png\' height=\'" + MaxHeight + "\' width=\'" + ScaledWidth + "\'>", true);
 			return;
 		}
 		this.RolloverButton_tf.SetText(" ", true);
 	}
 
-	function SetLoadDoorInfo(abShow, aDoorName)
+	function SetLoadDoorInfo(abShow: Boolean, aDoorName: String): Void
 	{
 		if (abShow) 
 		{
@@ -635,7 +635,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 		this.SetCrosshairTarget(false, this.SavedRolloverText, false, false, false);
 	}
 
-	function SetSubtitlesEnabled(abEnable)
+	function SetSubtitlesEnabled(abEnable: Boolean): Void
 	{
 		this.SubtitleText.enabled = abEnable;
 		if (!abEnable) 
@@ -649,12 +649,12 @@ class HUDMenu extends Shared.PlatformChangeUser
 		}
 	}
 
-	function ShowMessage(asMessage)
+	function ShowMessage(asMessage): Void //Unknown what type asMessage is
 	{
 		this.MessagesInstance.MessageArray.push(asMessage);
 	}
 
-	function ShowSubtitle(astrText)
+	function ShowSubtitle(astrText: String): Void
 	{
 		this.SubtitleText.SetText(astrText, true);
 		if (this.SubtitleText.enabled) 
@@ -663,15 +663,15 @@ class HUDMenu extends Shared.PlatformChangeUser
 		}
 	}
 
-	function HideSubtitle()
+	function HideSubtitle(): Void
 	{
 		this.SubtitleText.SetText(" ", true);
 		this.SubtitleText._visible = false;
 	}
 
-	function ShowArrowCount(aCount, abHide, aArrows)
+	function ShowArrowCount(aCount: Number, abHide: Boolean, aArrows: Number): Void
 	{
-		var HideFrame = 15;
+		var HideFrame: Number = 15;
 		if (abHide) 
 		{
 			if (this.ArrowInfoInstance._currentframe > HideFrame) 
@@ -685,7 +685,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 		this.ArrowInfoInstance.ArrowCountInstance.ArrowNumInstance.SetText(aArrows + " (" + aCount.toString() + ")");
 	}
 
-	function onEnterFrame()
+	function onEnterFrame(): Void
 	{
 		this.MagickaMeter.Update();
 		this.HealthMeterLeft.Update();
@@ -696,25 +696,25 @@ class HUDMenu extends Shared.PlatformChangeUser
 		this.MessagesInstance.Update();
 	}
 
-	function SetCompassMarkers()
+	function SetCompassMarkers(): Void
 	{
-		var headingOffset = 0;
-		var _alphaOffset = 1;
-		var gotoAndStopOffset = 2;
-		var x_scaleOffset = 3;
-		var dataGroupLength = 4;
+		var headingOffset: Number = 0;
+		var _alphaOffset: Number = 1;
+		var gotoAndStopOffset: Number = 2;
+		var x_scaleOffset: Number = 3;
+		var dataGroupLength: Number = 4;
 		while (this.CompassMarkerList.length > this.CompassTargetDataA.length / dataGroupLength) 
 		{
 			this.CompassMarkerList.pop().movie.removeMovieClip();
 		}
-		var i = 0;
+		var i: Number = 0;
 		for (;;) 
 		{
 			if (i >= this.CompassTargetDataA.length / dataGroupLength) 
 			{
 				return;
 			}
-			var dataGroup = i * dataGroupLength;
+			var dataGroup: Number = i * dataGroupLength;
 			if (this.CompassMarkerList[i].movie == undefined) 
 			{
 				markerData = {movie: undefined, heading: 0};
@@ -730,7 +730,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 			}
 			else 
 			{
-				var compassMarkerFrame = this.CompassMarkerList[i].movie._currentframe;
+				var compassMarkerFrame: Number = this.CompassMarkerList[i].movie._currentframe;
 				if (compassMarkerFrame == this.CompassMarkerQuest || compassMarkerFrame == this.CompassMarkerQuestDoor) 
 				{
 					if (this.CompassMarkerList[i].movie._parent == this.CompassRect.MarkerHolder) 
@@ -743,9 +743,9 @@ class HUDMenu extends Shared.PlatformChangeUser
 				}
 				else if (this.CompassMarkerList[i].movie._parent == this.CompassRect.QuestHolder) 
 				{
-					var markerData = {movie: undefined, heading: 0};
+					var markerData: Object = {movie: undefined, heading: 0};
 					markerData.movie = this.CompassRect.MarkerHolder.attachMovie("Compass Marker", "CompassMarker" + this.CompassMarkerList.length, this.CompassRect.MarkerHolder.getNextHighestDepth());
-					var aCompassMarkerList = this.CompassMarkerList.splice(i, 1, markerData);
+					var aCompassMarkerList: Array = this.CompassMarkerList.splice(i, 1, markerData);
 					aCompassMarkerList[0].movie.removeMovieClip();
 				}
 			}
@@ -758,22 +758,22 @@ class HUDMenu extends Shared.PlatformChangeUser
 		}
 	}
 
-	function UpdateCompassMarkers(aiCenterAngle)
+	function UpdateCompassMarkers(aiCenterAngle: Number): Void
 	{
-		var compassMarkerWidth = this.CompassShoutMeterHolder.Compass.CompassMask_mc._width;
-		var angleDelta = compassMarkerWidth * 180 / Math.abs(this.CompassThreeSixtyX - this.CompassZeroX);
-		var angleDeltaLeft = aiCenterAngle - angleDelta;
-		var angleDeltaRight = aiCenterAngle + angleDelta;
-		var widthDeltaLeft = 0 - this.CompassRect._x - compassMarkerWidth / 2;
-		var widthDeltaRight = 0 - this.CompassRect._x + compassMarkerWidth / 2;
-		var i = 0;
+		var compassMarkerWidth: Number = this.CompassShoutMeterHolder.Compass.CompassMask_mc._width;
+		var angleDelta: Number = compassMarkerWidth * 180 / Math.abs(this.CompassThreeSixtyX - this.CompassZeroX);
+		var angleDeltaLeft: Number = aiCenterAngle - angleDelta;
+		var angleDeltaRight: Number = aiCenterAngle + angleDelta;
+		var widthDeltaLeft: Number = 0 - this.CompassRect._x - compassMarkerWidth / 2;
+		var widthDeltaRight: Number = 0 - this.CompassRect._x + compassMarkerWidth / 2;
+		var i: Number = 0;
 		for (;;) 
 		{
 			if (i >= this.CompassMarkerList.length) 
 			{
 				return;
 			}
-			var heading = this.CompassMarkerList[i].heading;
+			var heading: Number = this.CompassMarkerList[i].heading;
 			if (angleDeltaLeft < 0 && heading > 360 - aiCenterAngle - angleDelta) 
 			{
 				heading = heading - 360;
@@ -788,7 +788,7 @@ class HUDMenu extends Shared.PlatformChangeUser
 			}
 			else 
 			{
-				var markerFrame = this.CompassMarkerList[i].movie._currentframe;
+				var markerFrame: Number = this.CompassMarkerList[i].movie._currentframe;
 				if (markerFrame == this.CompassMarkerQuest || markerFrame == this.CompassMarkerQuestDoor) 
 				{
 					var angleRadians = Math.sin((heading - aiCenterAngle) * 3.14159265359 / 180);
@@ -803,12 +803,12 @@ class HUDMenu extends Shared.PlatformChangeUser
 		}
 	}
 
-	function ShowTutorialHintText(astrHint, abShow)
+	function ShowTutorialHintText(astrHint: String, abShow: Boolean): Void
 	{
 		if (abShow) 
 		{
 			this.TutorialHintsText.text = astrHint;
-			var buttonHtmlText = this.TutorialHintsArtHolder.CreateButtonArt(this.TutorialHintsText);
+			var buttonHtmlText: String = this.TutorialHintsArtHolder.CreateButtonArt(this.TutorialHintsText);
 			if (buttonHtmlText != undefined) 
 			{
 				this.TutorialHintsText.html = true;
@@ -823,16 +823,16 @@ class HUDMenu extends Shared.PlatformChangeUser
 		this.TutorialLockInstance.TutorialHintsInstance.gotoAndPlay("FadeOut");
 	}
 
-	function SetCrosshairEnabled(abFlag)
+	function SetCrosshairEnabled(abFlag: Boolean): Void
 	{
 		this.bCrosshairEnabled = abFlag;
-		var crosshairMode = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
+		var crosshairMode: MovieClip = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
 		crosshairMode._alpha = this.bCrosshairEnabled ? 100 : 0;
 	}
 
-	function ValidateCrosshair()
+	function ValidateCrosshair(): Void
 	{
-		var crosshairMode = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
+		var crosshairMode: MovieClip = this._currentframe == 1 ? this.CrosshairInstance : this.CrosshairAlert;
 		crosshairMode._visible = this.CheckAgainstHudMode(crosshairMode);
 		this.StealthMeterInstance._visible = this.CheckAgainstHudMode(this.StealthMeterInstance);
 	}
