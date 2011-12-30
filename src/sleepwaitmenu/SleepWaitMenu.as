@@ -31,7 +31,7 @@ dynamic class SleepWaitMenu extends MovieClip
 		this.ButtonRect.CancelMouseButton.SetPlatform(0, false);
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg3 = false;
 		if (!this.disableControls && pathToFocus != undefined && pathToFocus.length > 0) 
@@ -153,7 +153,7 @@ dynamic class SleepWaitMenu extends MovieClip
 		this.QuestionInstance.SetText(__reg2);
 	}
 
-	function SetPlatform(aiPlatformIndex, abPS3Switch)
+	function SetPlatform(aiPlatformIndex: Number, abPS3Switch: Boolean)
 	{
 		this.ButtonRect.AcceptGamepadButton._visible = aiPlatformIndex != 0;
 		this.ButtonRect.CancelGamepadButton._visible = aiPlatformIndex != 0;

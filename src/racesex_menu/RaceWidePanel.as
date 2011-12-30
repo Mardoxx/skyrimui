@@ -16,7 +16,7 @@ dynamic class RaceWidePanel extends FilteredList
 		super();
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg5 = false;
 		super.handleInput(details, pathToFocus);

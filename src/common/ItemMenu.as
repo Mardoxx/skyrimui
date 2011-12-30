@@ -1,16 +1,15 @@
-dynamic class ItemMenu extends MovieClip
+﻿class ItemMenu extends MovieClip
 {
-	var BottomBar_mc;
-	var ExitMenuRect;
-	var InventoryLists_mc;
-	var ItemCardFadeHolder_mc;
-	var ItemCard_mc;
-	var ItemsListInputCatcher;
-	var MouseRotationRect;
-	var RestoreCategoryRect;
-	var _parent;
-	var bFadedIn;
-	var iPlatform;
+	var BottomBar_mc: MovieClip;
+	var ExitMenuRect: MovieClip;
+	var InventoryLists_mc: MovieClip;
+	var ItemCardFadeHolder_mc: MovieClip;
+	var ItemCard_mc: MovieClip;
+	var ItemsListInputCatcher: MovieClip;
+	var MouseRotationRect: MovieClip;
+	var RestoreCategoryRect: MovieClip;
+	var bFadedIn: Boolean;
+	var iPlatform: Number;
 
 	function ItemMenu()
 	{
@@ -22,7 +21,7 @@ dynamic class ItemMenu extends MovieClip
 		Mouse.addListener(this);
 	}
 
-	function InitExtensions(abPlayBladeSound)
+	function InitExtensions(abPlayBladeSound: Boolean): Void
 	{
 		gfx.io.GameDelegate.addCallBack("UpdatePlayerInfo", this, "UpdatePlayerInfo");
 		gfx.io.GameDelegate.addCallBack("UpdateItemCardInfo", this, "UpdateItemCardInfo");
@@ -46,7 +45,6 @@ dynamic class ItemMenu extends MovieClip
 				this._parent.onItemsListInputCatcherClick();
 			}
 		}
-		;
 		this.RestoreCategoryRect.onRollOver = function ()
 		{
 			if (this._parent.bFadedIn == true && this._parent.InventoryLists_mc.currentState == InventoryLists.TWO_PANELS) 
@@ -54,7 +52,6 @@ dynamic class ItemMenu extends MovieClip
 				this._parent.InventoryLists_mc.RestoreCategoryIndex();
 			}
 		}
-		;
 		this.ExitMenuRect.onMouseDown = function ()
 		{
 			if (this._parent.bFadedIn == true && Mouse.getTopMostEntity() == this) 
@@ -62,18 +59,17 @@ dynamic class ItemMenu extends MovieClip
 				this._parent.onExitMenuRectClick();
 			}
 		}
-		;
 	}
 
-	function PositionElements()
+	function PositionElements(): Void
 	{
 		Shared.GlobalFunc.SetLockFunction();
 		MovieClip(this.InventoryLists_mc).Lock("L");
 		this.InventoryLists_mc._x = this.InventoryLists_mc._x - 20;
-		var __reg4 = Stage.visibleRect.x + Stage.safeRect.x;
-		var __reg3 = Stage.visibleRect.x + Stage.visibleRect.width - Stage.safeRect.x;
-		this.BottomBar_mc.PositionElements(__reg4, __reg3);
-		this.ItemCard_mc._parent._x = (__reg3 + this.InventoryLists_mc._x + this.InventoryLists_mc._width) / 2 - this.ItemCard_mc._parent._width / 2 - 85;
+		var iLeftOffset: Number = Stage.visibleRect.x + Stage.safeRect.x;
+		var iRightOffset: Number = Stage.visibleRect.x + Stage.visibleRect.width - Stage.safeRect.x;
+		this.BottomBar_mc.PositionElements(iLeftOffset, iRightOffset);
+		this.ItemCard_mc._parent._x = (iRightOffset + this.InventoryLists_mc._x + this.InventoryLists_mc._width) / 2 - this.ItemCard_mc._parent._width / 2 - 85;
 		MovieClip(this.ExitMenuRect).Lock("TL");
 		this.ExitMenuRect._x = this.ExitMenuRect._x - Stage.safeRect.x;
 		this.ExitMenuRect._y = this.ExitMenuRect._y - Stage.safeRect.y;
@@ -89,7 +85,7 @@ dynamic class ItemMenu extends MovieClip
 		}
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
 		this.iPlatform = aiPlatform;
 		this.InventoryLists_mc.SetPlatform(aiPlatform, abPS3Switch);
@@ -102,7 +98,7 @@ dynamic class ItemMenu extends MovieClip
 		return this.InventoryLists_mc.ItemsList;
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		if (this.bFadedIn) 
 		{
@@ -117,20 +113,20 @@ dynamic class ItemMenu extends MovieClip
 		return true;
 	}
 
-	function onMouseWheel(delta)
+	function onMouseWheel(delta: Object): Void
 	{
-		var __reg2 = Mouse.getTopMostEntity();
+		var topMostEntity: Object = Mouse.getTopMostEntity();
 		for (;;) 
 		{
-			if (!(__reg2 && __reg2 != undefined)) 
+			if (!(topMostEntity && topMostEntity != undefined)) 
 			{
 				return;
 			}
-			if ((__reg2 == this.MouseRotationRect && this.ShouldProcessItemsListInput(false)) || (!this.bFadedIn && delta == -1)) 
+			if ((topMostEntity == this.MouseRotationRect && this.ShouldProcessItemsListInput(false)) || (!this.bFadedIn && delta == -1)) 
 			{
 				gfx.io.GameDelegate.call("ZoomItemModel", [delta]);
 			}
-			else if (__reg2 == this.ItemsListInputCatcher && this.ShouldProcessItemsListInput(false)) 
+			else if (topMostEntity == this.ItemsListInputCatcher && this.ShouldProcessItemsListInput(false)) 
 			{
 				if (delta == 1) 
 				{
@@ -141,20 +137,20 @@ dynamic class ItemMenu extends MovieClip
 					this.InventoryLists_mc.ItemsList.moveSelectionDown();
 				}
 			}
-			__reg2 = __reg2._parent;
+			topMostEntity = topMostEntity._parent;
 		}
 	}
 
-	function onExitMenuRectClick()
+	function onExitMenuRectClick(): Void
 	{
 		gfx.io.GameDelegate.call("CloseMenu", []);
 	}
 
-	function onCategoryChange(event)
+	function onCategoryChange(event: Object): Void
 	{
 	}
 
-	function onItemHighlightChange(event)
+	function onItemHighlightChange(event: Object): Void
 	{
 		if (event.index != -1) 
 		{
@@ -165,7 +161,7 @@ dynamic class ItemMenu extends MovieClip
 		this.onHideItemsList();
 	}
 
-	function onShowItemsList(event)
+	function onShowItemsList(event: Object): Void
 	{
 		if (event.index != -1) 
 		{
@@ -176,14 +172,14 @@ dynamic class ItemMenu extends MovieClip
 		}
 	}
 
-	function onHideItemsList(event)
+	function onHideItemsList(event: Object): Void
 	{
 		gfx.io.GameDelegate.call("UpdateItem3D", [false]);
 		this.ItemCard_mc.FadeOutCard();
 		this.BottomBar_mc.HideButtons();
 	}
 
-	function onItemSelect(event)
+	function onItemSelect(event: Object): Void
 	{
 		if (event.entry.enabled) 
 		{
@@ -200,23 +196,23 @@ dynamic class ItemMenu extends MovieClip
 		gfx.io.GameDelegate.call("DisabledItemSelect", []);
 	}
 
-	function onQuantityMenuSelect(event)
+	function onQuantityMenuSelect(event: Object): Void
 	{
 		gfx.io.GameDelegate.call("ItemSelect", [event.amount]);
 	}
 
-	function UpdatePlayerInfo(aUpdateObj)
+	function UpdatePlayerInfo(aUpdateObj: Object): Void
 	{
 		this.BottomBar_mc.UpdatePlayerInfo(aUpdateObj, this.ItemCard_mc.itemInfo);
 	}
 
-	function UpdateItemCardInfo(aUpdateObj)
+	function UpdateItemCardInfo(aUpdateObj: Object): Void
 	{
 		this.ItemCard_mc.itemInfo = aUpdateObj;
 		this.BottomBar_mc.UpdatePerItemInfo(aUpdateObj);
 	}
 
-	function onItemCardSubMenuAction(event)
+	function onItemCardSubMenuAction(event: Object): Void
 	{
 		if (event.opening == true) 
 		{
@@ -235,41 +231,41 @@ dynamic class ItemMenu extends MovieClip
 		}
 	}
 
-	function ShouldProcessItemsListInput(abCheckIfOverRect)
+	function ShouldProcessItemsListInput(abCheckIfOverRect: Boolean): Boolean
 	{
-		var __reg4 = this.bFadedIn == true && this.InventoryLists_mc.currentState == InventoryLists.TWO_PANELS && this.InventoryLists_mc.ItemsList.numUnfilteredItems > 0 && !this.InventoryLists_mc.ItemsList.disableSelection && !this.InventoryLists_mc.ItemsList.disableInput;
-		if (__reg4 && this.iPlatform == 0 && abCheckIfOverRect) 
+		var bInTwoPanelsWithItems: Boolean = this.bFadedIn == true && this.InventoryLists_mc.currentState == InventoryLists.TWO_PANELS && this.InventoryLists_mc.ItemsList.numUnfilteredItems > 0 && !this.InventoryLists_mc.ItemsList.disableSelection && !this.InventoryLists_mc.ItemsList.disableInput;
+		if (bInTwoPanelsWithItems && this.iPlatform == 0 && abCheckIfOverRect) 
 		{
-			var __reg2 = Mouse.getTopMostEntity();
-			var __reg3 = false;
-			while (!__reg3 && __reg2 && __reg2 != undefined) 
+			var topMostEntity: Object = Mouse.getTopMostEntity();
+			var bFoundInputRect: Boolean = false;
+			while (!bFoundInputRect && topMostEntity && topMostEntity != undefined) 
 			{
-				if (__reg2 == this.ItemsListInputCatcher || __reg2 == this.InventoryLists_mc.ItemsList) 
+				if (topMostEntity == this.ItemsListInputCatcher || topMostEntity == this.InventoryLists_mc.ItemsList) 
 				{
-					__reg3 = true;
+					bFoundInputRect = true;
 				}
-				__reg2 = __reg2._parent;
+				topMostEntity = topMostEntity._parent;
 			}
-			__reg4 = __reg4 && __reg3;
+			bInTwoPanelsWithItems = bInTwoPanelsWithItems && bFoundInputRect;
 		}
-		return __reg4;
+		return bInTwoPanelsWithItems;
 	}
 
-	function onMouseRotationStart()
+	function onMouseRotationStart(): Void
 	{
 		gfx.io.GameDelegate.call("StartMouseRotation", []);
 		this.InventoryLists_mc.CategoriesList.disableSelection = true;
 		this.InventoryLists_mc.ItemsList.disableSelection = true;
 	}
 
-	function onMouseRotationStop()
+	function onMouseRotationStop(): Void
 	{
 		gfx.io.GameDelegate.call("StopMouseRotation", []);
 		this.InventoryLists_mc.CategoriesList.disableSelection = false;
 		this.InventoryLists_mc.ItemsList.disableSelection = false;
 	}
 
-	function onItemsListInputCatcherClick()
+	function onItemsListInputCatcherClick(): Void
 	{
 		if (this.ShouldProcessItemsListInput(false)) 
 		{
@@ -277,12 +273,12 @@ dynamic class ItemMenu extends MovieClip
 		}
 	}
 
-	function onMouseRotationFastClick()
+	function onMouseRotationFastClick(): Void
 	{
 		this.onItemsListInputCatcherClick();
 	}
 
-	function ToggleMenuFade()
+	function ToggleMenuFade(): Void
 	{
 		if (this.bFadedIn) 
 		{
@@ -297,7 +293,7 @@ dynamic class ItemMenu extends MovieClip
 		this._parent.gotoAndPlay("fadeIn");
 	}
 
-	function SetFadedIn()
+	function SetFadedIn(): Void
 	{
 		this.bFadedIn = true;
 		this.InventoryLists_mc.ItemsList.disableSelection = false;
@@ -306,29 +302,29 @@ dynamic class ItemMenu extends MovieClip
 		this.InventoryLists_mc.CategoriesList.disableInput = false;
 	}
 
-	function RestoreIndices()
+	function RestoreIndices(): Void
 	{
 		this.InventoryLists_mc.CategoriesList.RestoreScrollPosition(arguments[0], true);
-		var __reg3 = 1;
-		while (__reg3 < arguments.length) 
+		var i: Number = 1;
+		while (i < arguments.length) 
 		{
-			this.InventoryLists_mc.CategoriesList.entryList[__reg3 - 1].savedItemIndex = arguments[__reg3];
-			++__reg3;
+			this.InventoryLists_mc.CategoriesList.entryList[i - 1].savedItemIndex = arguments[i];
+			++i;
 		}
 		this.InventoryLists_mc.CategoriesList.UpdateList();
 	}
 
-	function SaveIndices()
+	function SaveIndices(): Void
 	{
-		var __reg3 = new Array();
-		__reg3.push(this.InventoryLists_mc.CategoriesList.scrollPosition);
-		var __reg2 = 0;
-		while (__reg2 < this.InventoryLists_mc.CategoriesList.entryList.length) 
+		var Indices: Array = new Array();
+		Indices.push(this.InventoryLists_mc.CategoriesList.scrollPosition);
+		var i: Number = 0;
+		while (i < this.InventoryLists_mc.CategoriesList.entryList.length) 
 		{
-			__reg3.push(this.InventoryLists_mc.CategoriesList.entryList[__reg2].savedItemIndex);
-			++__reg2;
+			Indices.push(this.InventoryLists_mc.CategoriesList.entryList[i].savedItemIndex);
+			++i;
 		}
-		gfx.io.GameDelegate.call("SaveIndices", [__reg3]);
+		gfx.io.GameDelegate.call("SaveIndices", [Indices]);
 	}
 
 }

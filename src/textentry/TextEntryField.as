@@ -23,7 +23,7 @@ dynamic class TextEntryField extends MovieClip
 		this.CancelButton.addEventListener("click", this, "onCancel");
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.AcceptButton.SetPlatform(aiPlatform, abPS3Switch);
 		this.CancelButton.SetPlatform(aiPlatform, abPS3Switch);

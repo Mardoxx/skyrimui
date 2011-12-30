@@ -162,7 +162,7 @@ dynamic class TweenMenu extends MovieClip
 		gfx.io.GameDelegate.call("CloseMenu", []);
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		if (!this.bClosing && Shared.GlobalFunc.IsKeyPressed(details)) 
 		{

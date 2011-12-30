@@ -166,7 +166,7 @@ dynamic class StartMenu extends MovieClip
 		this.ChangeStateFocus(strNewState);
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		if (this.currentState == StartMenu.PRESS_START_STATE) 
 		{
@@ -416,7 +416,7 @@ dynamic class StartMenu extends MovieClip
 		}
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.ButtonRect.AcceptGamepadButton._visible = aiPlatform != 0;
 		this.ButtonRect.CancelGamepadButton._visible = aiPlatform != 0;

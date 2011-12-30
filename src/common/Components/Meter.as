@@ -1,14 +1,14 @@
-dynamic class Components.Meter
+class Components.Meter
 {
-	var CurrentPercent;
-	var Empty;
-	var EmptySpeed;
-	var FillSpeed;
-	var Full;
-	var TargetPercent;
-	var meterMovieClip;
+	var CurrentPercent: Number;
+	var Empty: Number;
+	var EmptySpeed: Number;
+	var FillSpeed: Number;
+	var Full: Number;
+	var TargetPercent: Number;
+	var meterMovieClip: MovieClip;
 
-	function Meter(aMovieClip)
+	function Meter(aMovieClip: MovieClip)
 	{
 		this.Empty = 0;
 		this.Full = 0;
@@ -23,38 +23,38 @@ dynamic class Components.Meter
 		this.Full = this.meterMovieClip._currentframe;
 	}
 
-	function SetPercent(aPercent)
+	function SetPercent(aPercent: Number): Void
 	{
 		this.CurrentPercent = Math.min(100, Math.max(aPercent, 0));
 		this.TargetPercent = this.CurrentPercent;
-		var __reg2 = Math.floor(Shared.GlobalFunc.Lerp(this.Empty, this.Full, 0, 100, this.CurrentPercent));
-		this.meterMovieClip.gotoAndStop(__reg2);
+		var iMeterFrame: Number = Math.floor(Shared.GlobalFunc.Lerp(this.Empty, this.Full, 0, 100, this.CurrentPercent));
+		this.meterMovieClip.gotoAndStop(iMeterFrame);
 	}
 
-	function SetTargetPercent(aPercent)
+	function SetTargetPercent(aPercent: Number): Void
 	{
 		this.TargetPercent = Math.min(100, Math.max(aPercent, 0));
 	}
 
-	function SetFillSpeed(aSpeed)
+	function SetFillSpeed(aSpeed: Number): Void
 	{
 		this.FillSpeed = aSpeed;
 	}
 
-	function SetEmptySpeed(aSpeed)
+	function SetEmptySpeed(aSpeed: Number): Void
 	{
 		this.EmptySpeed = aSpeed;
 	}
 
-	function Update()
+	function Update(): Void
 	{
 		if (this.TargetPercent > 0 && this.TargetPercent > this.CurrentPercent) 
 		{
 			if (this.TargetPercent - this.CurrentPercent > this.FillSpeed) 
 			{
 				this.CurrentPercent = this.CurrentPercent + this.FillSpeed;
-				var __reg3 = Shared.GlobalFunc.Lerp(this.Empty, this.Full, 0, 100, this.CurrentPercent);
-				this.meterMovieClip.gotoAndStop(__reg3);
+				var iMeterFrame: Number = Shared.GlobalFunc.Lerp(this.Empty, this.Full, 0, 100, this.CurrentPercent);
+				this.meterMovieClip.gotoAndStop(iMeterFrame);
 			}
 			else 
 			{
@@ -64,10 +64,10 @@ dynamic class Components.Meter
 		}
 		if (this.TargetPercent <= this.CurrentPercent) 
 		{
-			var __reg2 = this.CurrentPercent - this.TargetPercent > this.EmptySpeed;
-			if ((this.TargetPercent > 0 && __reg2) || this.CurrentPercent > this.EmptySpeed) 
+			var bUnknown: Boolean = this.CurrentPercent - this.TargetPercent > this.EmptySpeed; // Unknown Boolean
+			if ((this.TargetPercent > 0 && bUnknown) || this.CurrentPercent > this.EmptySpeed) 
 			{
-				if (__reg2) 
+				if (bUnknown) 
 				{
 					this.CurrentPercent = this.CurrentPercent - this.EmptySpeed;
 				}
@@ -75,8 +75,8 @@ dynamic class Components.Meter
 				{
 					this.CurrentPercent = this.TargetPercent;
 				}
-				__reg3 = Shared.GlobalFunc.Lerp(this.Empty, this.Full, 0, 100, this.CurrentPercent);
-				this.meterMovieClip.gotoAndStop(__reg3);
+				var iMeterFrame: Number = Shared.GlobalFunc.Lerp(this.Empty, this.Full, 0, 100, this.CurrentPercent);
+				this.meterMovieClip.gotoAndStop(iMeterFrame);
 				return;
 			}
 			if (this.CurrentPercent >= 0) 

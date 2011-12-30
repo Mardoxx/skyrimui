@@ -131,7 +131,7 @@ dynamic class SettingsOptionItem extends MovieClip
 		this.CheckBox_mc._alpha = abSelected ? 100 : 30;
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg3 = false;
 		if (Shared.GlobalFunc.IsKeyPressed(details)) 

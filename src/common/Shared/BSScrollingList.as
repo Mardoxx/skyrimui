@@ -60,7 +60,6 @@ dynamic class Shared.BSScrollingList extends MovieClip
 					this._parent.bMouseDrivenNav = true;
 				}
 			}
-			;
 			__reg3.onPress = function (aiMouseIndex, aiKeyboardOrMouse)
 			{
 				if (this.itemIndex != undefined) 
@@ -72,7 +71,6 @@ dynamic class Shared.BSScrollingList extends MovieClip
 					}
 				}
 			}
-			;
 			__reg3.onPressAux = function (aiMouseIndex, aiKeyboardOrMouse, aiButtonIndex)
 			{
 				if (this.itemIndex != undefined) 
@@ -80,7 +78,6 @@ dynamic class Shared.BSScrollingList extends MovieClip
 					this._parent.onItemPressAux(aiKeyboardOrMouse, aiButtonIndex);
 				}
 			}
-			;
 			__reg3 = this.GetClipByIndex(++this.iMaxItemsShown);
 		}
 	}
@@ -104,7 +101,7 @@ dynamic class Shared.BSScrollingList extends MovieClip
 		return this["Entry" + aiIndex];
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg2 = false;
 		if (!this.bDisableInput) 
@@ -503,7 +500,7 @@ dynamic class Shared.BSScrollingList extends MovieClip
 		}
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.iPlatform = aiPlatform;
 		this.bMouseDrivenNav = this.iPlatform == 0;

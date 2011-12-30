@@ -72,7 +72,7 @@ dynamic class Quest_Journal extends MovieClip
 		this.BottomBar_mc.SetMode(this.iCurrentTab);
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg4 = false;
 		if (pathToFocus != undefined && pathToFocus.length > 0) 
@@ -175,7 +175,7 @@ dynamic class Quest_Journal extends MovieClip
 		}
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		for (var __reg4 in this.PageArray) 
 		{

@@ -1,24 +1,24 @@
-dynamic class Components.BlinkOnEmptyMeter extends Components.Meter
+﻿class Components.BlinkOnEmptyMeter extends Components.Meter
 {
-	var CurrentPercent;
-	var Empty;
-	var meterMovieClip;
+	var iCurrentPercent: Number;
+	var iEmpty: Number;
+	var meterMovieClip: MovieClip;
 
-	function BlinkOnEmptyMeter(aMeterClip)
+	function BlinkOnEmptyMeter(aMeterClip: MovieClip)
 	{
 		super(aMeterClip);
 	}
 
-	function Update()
+	function Update(): Void
 	{
 		super.Update();
-		var __reg3 = this.meterMovieClip._currentframe;
-		if (this.CurrentPercent <= 0) 
+		var iCurrentFrame = this.meterMovieClip._currentframe;
+		if (this.iCurrentPercent <= 0) 
 		{
-			if (__reg3 == this.Empty) 
+			if (iCurrentFrame == this.iEmpty) 
 			{
-				this.meterMovieClip.gotoAndPlay(this.Empty + 1);
-				var __reg4 = this.meterMovieClip._currentframe;
+				this.meterMovieClip.gotoAndPlay(this.iEmpty + 1);
+				var iCurrentFrame1: Number = this.meterMovieClip._currentframe;
 			}
 		}
 	}

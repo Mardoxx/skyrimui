@@ -413,7 +413,7 @@ dynamic class CraftingMenu extends MovieClip
 		return true;
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.Platform = aiPlatform;
 		this.BottomBarInfo.SetPlatform(aiPlatform, abPS3Switch);

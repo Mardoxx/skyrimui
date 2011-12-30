@@ -235,7 +235,7 @@ dynamic class gfx.controls.Button extends gfx.core.UIComponent
 		super.setSize(width, height);
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		if ((__reg0 = details.navEquivalent) === gfx.ui.NavigationCode.ENTER) 
 		{

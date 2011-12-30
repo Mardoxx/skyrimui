@@ -73,7 +73,7 @@ dynamic class QuestsPage extends MovieClip
 		return this.TitleList.entryList.length <= 0 ? undefined : this.TitleList.centeredEntry.instance;
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg2 = false;
 		if (Shared.GlobalFunc.IsKeyPressed(details)) 
@@ -398,7 +398,7 @@ dynamic class QuestsPage extends MovieClip
 		this.ObjectiveList.moveSelectionUp();
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.iPlatform = aiPlatform;
 		this.TitleList.SetPlatform(aiPlatform, abPS3Switch);

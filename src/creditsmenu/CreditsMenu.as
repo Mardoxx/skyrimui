@@ -34,7 +34,7 @@ dynamic class CreditsMenu extends MovieClip
 		}
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		if (Shared.GlobalFunc.IsKeyPressed(details)) 
 		{

@@ -150,7 +150,7 @@ dynamic class gfx.controls.OptionStepper extends gfx.core.UIComponent
 		this._dataProvider.requestItemAt(this._selectedIndex, this, "populateText");
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg2 = details.value == "keyDown" || details.value == "keyHold";
 		if ((__reg0 = details.navEquivalent) === gfx.ui.NavigationCode.RIGHT) 

@@ -46,7 +46,7 @@ dynamic class Shared.CenteredList extends MovieClip
 		this.EntriesA.splice(0, this.EntriesA.length);
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg2 = false;
 		if (Shared.GlobalFunc.IsKeyPressed(details)) 

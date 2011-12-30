@@ -15,7 +15,7 @@ dynamic class Components.CrossPlatformButtons extends gfx.controls.Button
 		this.SetPlatform({aPlatform: Shared.ButtonChange.PLATFORM_360, aSwapPS3: false});
 	}
 
-	function SetPlatform(aObj, aSwapPS3)
+	function SetPlatform(aObj: Object, aSwapPS3: Boolean)
 	{
 		if (undefined != this.ButtonArt_mc) 
 		{

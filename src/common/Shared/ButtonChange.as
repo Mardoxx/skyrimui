@@ -23,7 +23,7 @@ dynamic class Shared.ButtonChange extends gfx.events.EventDispatcher
 		return this.iCurrPlatform == Shared.ButtonChange.PLATFORM_PC_GAMEPAD || this.iCurrPlatform == Shared.ButtonChange.PLATFORM_360 || this.iCurrPlatform == Shared.ButtonChange.PLATFORM_PS3;
 	}
 
-	function SetPlatform(aSetPlatform, aSetSwapPS3)
+	function SetPlatform(aSetPlatform: Number, aSetSwapPS3: Boolean)
 	{
 		this.iCurrPlatform = aSetPlatform;
 		this.dispatchEvent({target: this, type: "platformChange", aPlatform: aSetPlatform, aSwapPS3: aSetSwapPS3});

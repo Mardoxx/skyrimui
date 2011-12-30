@@ -1,16 +1,16 @@
-dynamic class QuantitySlider extends gfx.controls.Slider
+class QuantitySlider extends gfx.controls.Slider
 {
-	var dispatchEvent;
+	var dispatchEvent: Function;
 
 	function QuantitySlider()
 	{
 		super();
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
-		var __reg4 = super.handleInput(details, pathToFocus);
-		if (!__reg4) 
+		var bHandledInput: Boolean = super.handleInput(details, pathToFocus);
+		if (!bHandledInput) 
 		{
 			if (Shared.GlobalFunc.IsKeyPressed(details)) 
 			{
@@ -18,17 +18,17 @@ dynamic class QuantitySlider extends gfx.controls.Slider
 				{
 					this.value = Math.floor(this.value - this.maximum / 4);
 					this.dispatchEvent({type: "change"});
-					__reg4 = true;
+					bHandledInput = true;
 				}
 				else if (details.navEquivalent == gfx.ui.NavigationCode.PAGE_UP || details.navEquivalent == gfx.ui.NavigationCode.GAMEPAD_R1) 
 				{
 					this.value = Math.ceil(this.value + this.maximum / 4);
 					this.dispatchEvent({type: "change"});
-					__reg4 = true;
+					bHandledInput = true;
 				}
 			}
 		}
-		return __reg4;
+		return bHandledInput;
 	}
 
 }

@@ -1,4 +1,4 @@
-class QuestNotification extends MovieClip
+﻿class QuestNotification extends MovieClip
 {
 	static var QuestNotificationIntervalIndex: Number = 0;
 	static var AnimationCount: Number = 0;
@@ -13,7 +13,7 @@ class QuestNotification extends MovieClip
 	
 	var AnimatedLetter_mc: AnimatedLetter;
 	var LevelMeterBaseInstance: MovieClip;
-	var LevelUpMeter: Components.Meter;
+	var LevelUpMeter: Components.UniformTimeMeter;
 	var ObjText: ObjectiveText;
 	var ObjectiveLineInstance: ObjectiveText;
 	var ObjectivesA: Array;

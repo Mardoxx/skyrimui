@@ -39,7 +39,7 @@ dynamic class InventoryMenu extends ItemMenu
 		this.ItemCard_mc.addEventListener("itemPress", this, "onItemCardListPress");
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		if (this.bFadedIn && !pathToFocus[0].handleInput(details, pathToFocus.slice(1))) 
 		{
@@ -224,7 +224,7 @@ dynamic class InventoryMenu extends ItemMenu
 		}
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.InventoryLists_mc.ZoomButtonHolderInstance.gotoAndStop(1);
 		this.InventoryLists_mc.ZoomButtonHolderInstance.ZoomButton._visible = aiPlatform != 0;

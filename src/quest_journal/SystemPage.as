@@ -157,7 +157,7 @@ dynamic class SystemPage extends MovieClip
 		this.UpdateStateFocus(aiNewState);
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg3 = false;
 		if (this.bRemapMode || this.bMenuClosing || this.bSavingSettings || this.iCurrentState == SystemPage.TRANSITIONING) 
@@ -1084,7 +1084,7 @@ dynamic class SystemPage extends MovieClip
 		return;
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.ConfirmPanel.ButtonRect.AcceptGamepadButton._visible = aiPlatform != 0;
 		this.ConfirmPanel.ButtonRect.CancelGamepadButton._visible = aiPlatform != 0;

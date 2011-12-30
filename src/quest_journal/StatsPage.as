@@ -114,7 +114,7 @@ dynamic class StatsPage extends MovieClip
 		this._StatsList.moveSelectionUp();
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.CategoryList.SetPlatform(aiPlatform, abPS3Switch);
 		this._StatsList.SetPlatform(aiPlatform, abPS3Switch);

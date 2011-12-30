@@ -27,7 +27,7 @@ dynamic class FavoritesMenu extends MovieClip
 		this._parent.gotoAndPlay("startFadeIn");
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		if (!pathToFocus[0].handleInput(details, pathToFocus.slice(1))) 
 		{
@@ -105,7 +105,7 @@ dynamic class FavoritesMenu extends MovieClip
 		gfx.io.GameDelegate.call("FadeDone", [this.selectedIndex]);
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.ItemList.SetPlatform(aiPlatform, abPS3Switch);
 		this.LeftPanel._x = aiPlatform == 0 ? -90 : -78.2;

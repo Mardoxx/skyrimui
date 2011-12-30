@@ -229,7 +229,7 @@ dynamic class Map.MapMenu
 		gfx.io.GameDelegate.call("CurrentLocationCallback", []);
 	}
 
-	function SetPlatform(aPlatformNum, abPS3Switch)
+	function SetPlatform(aPlatformNum: Number, abPS3Switch: Boolean)
 	{
 		if (this.BottomBar != undefined) 
 		{

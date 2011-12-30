@@ -47,7 +47,7 @@ dynamic class MagicMenu extends ItemMenu
 		this.ItemsListInputCatcher._width = this.RestoreCategoryRect._x - Stage.visibleRect.x + 10;
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		if (this.bFadedIn && !pathToFocus[0].handleInput(details, pathToFocus.slice(1))) 
 		{

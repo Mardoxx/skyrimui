@@ -14,7 +14,7 @@ dynamic class Shared.VerticalCenteredList extends Shared.CenteredList
 		this.bRepositionEntries = false;
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg2 = false;
 		if (Shared.GlobalFunc.IsKeyPressed(details)) 

@@ -179,7 +179,7 @@ dynamic class MessageBox extends MovieClip
 		}
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		if (aiPlatform != 0 && this.MessageButtons.length > 0) 
 		{

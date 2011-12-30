@@ -1,7 +1,7 @@
 dynamic class JournalBottomBar extends MovieClip
 {
-	var Button1_mc;
-	var Button2_mc;
+	var Button1_mc: Components.CrossPlatformButtons;
+	var Button2_mc: Components.CrossPlatformButtons;
 	var ButtonRect;
 	var DateText;
 	var LevelMeterRect;
@@ -57,7 +57,7 @@ dynamic class JournalBottomBar extends MovieClip
 		this.Button2_mc._x = this.Button1_mc._x + this.Button1_mc.textField.getLineMetrics(0).width + __reg2 + this.Button2_mc.ButtonArt._width;
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.Button1_mc.SetPlatform(aiPlatform, abPS3Switch);
 		this.Button2_mc.SetPlatform(aiPlatform, abPS3Switch);

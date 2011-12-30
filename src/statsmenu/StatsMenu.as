@@ -196,7 +196,7 @@ dynamic class StatsMenu extends MovieClip
 		this.AddPerkTextInstance._alpha = 0;
 	}
 
-	static function SetPlatform(aiPlatformIndex, abPS3Switch)
+	static function SetPlatform(aiPlatformIndex: Number, abPS3Switch: Boolean)
 	{
 		StatsMenu.StatsMenuInstance.AddPerkButtonInstance.SetPlatform(aiPlatformIndex, abPS3Switch);
 		StatsMenu.StatsMenuInstance.Platform = aiPlatformIndex;

@@ -1,7 +1,7 @@
-dynamic class TutorialMenu extends MovieClip
+class TutorialMenu extends MovieClip
 {
-	var ButtonArtHolder;
-	var ButtonHolder;
+	var ButtonArtHolder: Shared.ButtonTextArtHolder;
+	var ButtonHolder: Shared.ButtonTextArtHolder;
 	var ButtonRect;
 	var HelpScrollingText;
 	var HelpText;
@@ -22,7 +22,7 @@ dynamic class TutorialMenu extends MovieClip
 		gfx.managers.FocusHandler.instance.setFocus(this.HelpScrollingText, 0);
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.ButtonRect.ExitGamepadButton._visible = aiPlatform != 0;
 		this.ButtonRect.ExitMouseButton._visible = aiPlatform == 0;
@@ -32,7 +32,7 @@ dynamic class TutorialMenu extends MovieClip
 		}
 	}
 
-	function ApplyButtonArt()
+	function ApplyButtonArt(): Void
 	{
 		var __reg2 = this.ButtonHolder.CreateButtonArt(this.HelpScrollingText.textField);
 		if (__reg2 != undefined) 

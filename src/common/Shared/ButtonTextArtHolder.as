@@ -1,62 +1,62 @@
-dynamic class Shared.ButtonTextArtHolder extends MovieClip
+class Shared.ButtonTextArtHolder extends MovieClip
 {
-	var strButtonName;
+	var strButtonName: String;
 
 	function ButtonTextArtHolder()
 	{
 		super();
 	}
 
-	function SetButtonName(aText)
+	function SetButtonName(aText: String): Void
 	{
 		this.strButtonName = aText;
 	}
 
-	function CreateButtonArt(aInputText)
+	function CreateButtonArt(aInputText): String
 	{
-		var __reg5 = aInputText.text.indexOf("[");
-		var __reg2 = __reg5 == -1 ? -1 : aInputText.text.indexOf("]", __reg5);
-		var __reg7 = undefined;
-		if (__reg5 != -1 && __reg2 != -1) 
+		var iReplacerStart = aInputText.text.indexOf("[");
+		var iReplacerEnd = iReplacerStart == -1 ? -1 : aInputText.text.indexOf("]", iReplacerStart);
+		var strTextWithButtons = undefined;
+		if (iReplacerStart != -1 && iReplacerEnd != -1) 
 		{
-			__reg7 = aInputText.text.substr(0, __reg5);
-			while (__reg5 != -1 && __reg2 != -1) 
+			strTextWithButtons = aInputText.text.substr(0, iReplacerStart);
+			while (iReplacerStart != -1 && iReplacerEnd != -1) 
 			{
-				var __reg10 = aInputText.text.substring(__reg5 + 1, __reg2);
-				gfx.io.GameDelegate.call("GetButtonFromUserEvent", [__reg10], this, "SetButtonName");
+				var strButtonReplacer = aInputText.text.substring(iReplacerStart + 1, iReplacerEnd);
+				gfx.io.GameDelegate.call("GetButtonFromUserEvent", [strButtonReplacer], this, "SetButtonName");
 				if (this.strButtonName == undefined) 
 				{
-					__reg7 = __reg7 + aInputText.text.substring(__reg5, __reg2 + 1);
+					strTextWithButtons = strTextWithButtons + aInputText.text.substring(iReplacerStart, iReplacerEnd + 1);
 				}
 				else 
 				{
-					var __reg6 = flash.display.BitmapData.loadBitmap(this.strButtonName + ".png");
-					if (__reg6 != undefined && __reg6.height > 0) 
+					var ButtonImage: flash.display.BitmapData = flash.display.BitmapData.loadBitmap(this.strButtonName + ".png");
+					if (ButtonImage != undefined && ButtonImage.height > 0) 
 					{
-						var __reg8 = 26;
-						var __reg11 = Math.floor(__reg8 / __reg6.height * __reg6.width);
-						__reg7 = __reg7 + ("<img src=\'" + this.strButtonName + ".png\' vspace=\'-5\' height=\'" + __reg8 + "\' width=\'" + __reg11 + "\'>");
+						var iMaxHeight: Number = 26;
+						var iScaledWidth: Number = Math.floor(iMaxHeight / ButtonImage.height * ButtonImage.width);
+						strTextWithButtons = strTextWithButtons + ("<img src=\'" + this.strButtonName + ".png\' vspace=\'-5\' height=\'" + iMaxHeight + "\' width=\'" + iScaledWidth + "\'>");
 					}
 					else 
 					{
-						__reg7 = __reg7 + aInputText.text.substring(__reg5, __reg2 + 1);
+						strTextWithButtons = strTextWithButtons + aInputText.text.substring(iReplacerStart, iReplacerEnd + 1);
 					}
 				}
-				var __reg4 = aInputText.text.indexOf("[", __reg2);
-				var __reg9 = __reg4 == -1 ? -1 : aInputText.text.indexOf("]", __reg4);
-				if (__reg4 != -1 && __reg9 != -1) 
+				var iReplacerStartNext = aInputText.text.indexOf("[", iReplacerEnd);
+				var iReplacerEndNext = iReplacerStartNext == -1 ? -1 : aInputText.text.indexOf("]", iReplacerStartNext);
+				if (iReplacerStartNext != -1 && iReplacerEndNext != -1) 
 				{
-					__reg7 = __reg7 + aInputText.text.substring(__reg2 + 1, __reg4);
+					strTextWithButtons = strTextWithButtons + aInputText.text.substring(iReplacerEnd + 1, iReplacerStartNext);
 				}
 				else 
 				{
-					__reg7 = __reg7 + aInputText.text.substr(__reg2 + 1);
+					strTextWithButtons = strTextWithButtons + aInputText.text.substr(iReplacerEnd + 1);
 				}
-				__reg5 = __reg4;
-				__reg2 = __reg9;
+				iReplacerStart = iReplacerStartNext;
+				iReplacerEnd = iReplacerEndNext;
 			}
 		}
-		return __reg7;
+		return strTextWithButtons;
 	}
 
 }

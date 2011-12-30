@@ -102,7 +102,7 @@ dynamic class RaceSexPanels extends MovieClip
 		_root.RaceSexMenuBaseInstance.LoadingIconInstance._visible = false;
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.iPlatform = aiPlatform;
 		this._TextEntryField.SetPlatform(aiPlatform, abPS3Switch);
@@ -212,7 +212,7 @@ dynamic class RaceSexPanels extends MovieClip
 		this._SubList2.UpdateList();
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		var __reg3 = false;
 		if (Shared.GlobalFunc.IsKeyPressed(details)) 

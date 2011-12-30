@@ -41,7 +41,7 @@ dynamic class ContainerMenu extends ItemMenu
 		this.InventoryLists_mc.ShowItemsList(false);
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		super.handleInput(details, pathToFocus);
 		if (this.ShouldProcessItemsListInput(false)) 
@@ -250,7 +250,7 @@ dynamic class ContainerMenu extends ItemMenu
 		}
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		super.SetPlatform(aiPlatform, abPS3Switch);
 		this.iPlatform = aiPlatform;

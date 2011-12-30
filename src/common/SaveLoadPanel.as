@@ -1,17 +1,17 @@
-dynamic class SaveLoadPanel extends MovieClip
+class SaveLoadPanel extends MovieClip
 {
 	static var SCREENSHOT_DELAY: Number = 750;
-	var List_mc;
-	var PlayerInfoText;
-	var SaveLoadList_mc;
-	var ScreenshotHolder;
-	var ScreenshotLoader;
-	var ScreenshotRect;
-	var bSaving;
-	var dispatchEvent;
-	var iBatchSize;
-	var iPlatform;
-	var iScreenshotTimerID;
+	var List_mc: MovieClip;
+	var PlayerInfoText: TextField;
+	var SaveLoadList_mc: MovieClip;
+	var ScreenshotHolder: MovieClip;
+	var ScreenshotLoader: MovieClipLoader;
+	var ScreenshotRect: MovieClip;
+	var bSaving: Boolean;
+	var dispatchEvent: Function;
+	var iBatchSize: Number;
+	var iPlatform: Number;
+	var iScreenshotTimerID: Number;
 
 	function SaveLoadPanel()
 	{
@@ -21,7 +21,7 @@ dynamic class SaveLoadPanel extends MovieClip
 		this.bSaving = true;
 	}
 
-	function onLoad()
+	function onLoad(): Void
 	{
 		this.ScreenshotLoader = new MovieClipLoader();
 		this.ScreenshotLoader.addListener(this);
@@ -36,42 +36,42 @@ dynamic class SaveLoadPanel extends MovieClip
 		this.PlayerInfoText.LevelText._visible = false;
 	}
 
-	function get isSaving()
+	function get isSaving(): Boolean
 	{
 		return this.bSaving;
 	}
 
-	function set isSaving(abFlag)
+	function set isSaving(abFlag: Boolean)
 	{
 		this.bSaving = abFlag;
 	}
 
-	function get selectedIndex()
+	function get selectedIndex(): Number
 	{
 		return this.SaveLoadList_mc.selectedIndex;
 	}
 
-	function get platform()
+	function get platform(): Number
 	{
 		return this.iPlatform;
 	}
 
-	function set platform(aiPlatform)
+	function set platform(aiPlatform: Number)
 	{
 		this.iPlatform = aiPlatform;
 	}
 
-	function get batchSize()
+	function get batchSize(): Number
 	{
 		return this.iBatchSize;
 	}
 
-	function get numSaves()
+	function get numSaves(): Number
 	{
 		return this.SaveLoadList_mc.entryList.length;
 	}
 
-	function onSaveLoadItemPress(event)
+	function onSaveLoadItemPress(event: Object): Void
 	{
 		if (!this.bSaving) 
 		{
@@ -81,12 +81,12 @@ dynamic class SaveLoadPanel extends MovieClip
 		this.dispatchEvent({type: "saveGameSelected", index: this.SaveLoadList_mc.selectedIndex});
 	}
 
-	function onOKToLoadConfirm()
+	function onOKToLoadConfirm(): Void
 	{
 		this.dispatchEvent({type: "loadGameSelected", index: this.SaveLoadList_mc.selectedIndex});
 	}
 
-	function onSaveLoadItemHighlight(event)
+	function onSaveLoadItemHighlight(event: Object): Void
 	{
 		if (this.iScreenshotTimerID != undefined) 
 		{
@@ -108,7 +108,7 @@ dynamic class SaveLoadPanel extends MovieClip
 		this.dispatchEvent({type: "saveHighlighted", index: this.SaveLoadList_mc.selectedIndex});
 	}
 
-	function PrepScreenshot()
+	function PrepScreenshot(): Void
 	{
 		clearInterval(this.iScreenshotTimerID);
 		this.iScreenshotTimerID = undefined;
@@ -120,7 +120,7 @@ dynamic class SaveLoadPanel extends MovieClip
 		gfx.io.GameDelegate.call("PrepSaveGameScreenshot", [this.SaveLoadList_mc.selectedIndex, this.SaveLoadList_mc.selectedEntry]);
 	}
 
-	function ShowScreenshot()
+	function ShowScreenshot(): Void
 	{
 		this.ScreenshotRect = this.ScreenshotHolder.createEmptyMovieClip("ScreenshotRect", 0);
 		this.ScreenshotLoader.loadClip("img://BGSSaveLoadHeader_Screenshot", this.ScreenshotRect);
@@ -138,22 +138,22 @@ dynamic class SaveLoadPanel extends MovieClip
 		}
 		else 
 		{
-			var __reg2 = this.SaveLoadList_mc.selectedEntry.name;
-			var __reg3 = 20;
-			if (__reg2.length > __reg3) 
+			var strSaveName: String = this.SaveLoadList_mc.selectedEntry.name;
+			var iSaveNameMaxLength: Number = 20;
+			if (strSaveName.length > iSaveNameMaxLength) 
 			{
-				__reg2 = __reg2.substr(0, __reg3 - 3) + "...";
+				strSaveName = strSaveName.substr(0, iSaveNameMaxLength - 3) + "...";
 			}
 			if (this.SaveLoadList_mc.selectedEntry.raceName != undefined && this.SaveLoadList_mc.selectedEntry.raceName.length > 0) 
 			{
-				__reg2 = __reg2 + (", " + this.SaveLoadList_mc.selectedEntry.raceName);
+				strSaveName = strSaveName + (", " + this.SaveLoadList_mc.selectedEntry.raceName);
 			}
 			if (this.SaveLoadList_mc.selectedEntry.level != undefined && this.SaveLoadList_mc.selectedEntry.level > 0) 
 			{
-				__reg2 = __reg2 + (", " + this.PlayerInfoText.LevelText.text + " " + this.SaveLoadList_mc.selectedEntry.level);
+				strSaveName = strSaveName + (", " + this.PlayerInfoText.LevelText.text + " " + this.SaveLoadList_mc.selectedEntry.level);
 			}
 			this.PlayerInfoText.textField.textAutoSize = "shrink";
-			this.PlayerInfoText.textField.SetText(__reg2);
+			this.PlayerInfoText.textField.SetText(strSaveName);
 		}
 		if (this.SaveLoadList_mc.selectedEntry.playTime == undefined) 
 		{
@@ -171,31 +171,31 @@ dynamic class SaveLoadPanel extends MovieClip
 		this.PlayerInfoText.DateText.SetText(" ");
 	}
 
-	function onLoadInit(aTargetClip)
+	function onLoadInit(aTargetClip: MovieClip): Void
 	{
 		aTargetClip._width = this.ScreenshotHolder.sizer._width;
 		aTargetClip._height = this.ScreenshotHolder.sizer._height;
 	}
 
-	function onSaveLoadBatchComplete(abDoInitialUpdate)
+	function onSaveLoadBatchComplete(abDoInitialUpdate: Boolean): Void
 	{
-		var __reg2 = 20;
-		for (var __reg3 in this.SaveLoadList_mc.entryList) 
+		var iSaveNameMaxLength: Number = 20;
+		for (var i: String in this.SaveLoadList_mc.entryList) 
 		{
-			if (this.SaveLoadList_mc.entryList[__reg3].text.length > __reg2) 
+			if (this.SaveLoadList_mc.entryList[i].text.length > iSaveNameMaxLength) 
 			{
-				this.SaveLoadList_mc.entryList[__reg3].text = this.SaveLoadList_mc.entryList[__reg3].text.substr(0, __reg2 - 3) + "...";
+				this.SaveLoadList_mc.entryList[i].text = this.SaveLoadList_mc.entryList[i].text.substr(0, iSaveNameMaxLength - 3) + "...";
 			}
 		}
 		if (abDoInitialUpdate) 
 		{
-			var __reg4 = "$[NEW SAVE]";
-			if (this.bSaving && this.SaveLoadList_mc.entryList[0].text != __reg4) 
+			var strNewSave: String = "$[NEW SAVE]";
+			if (this.bSaving && this.SaveLoadList_mc.entryList[0].text != strNewSave) 
 			{
-				var __reg5 = {name: " ", playTime: " ", text: __reg4};
-				this.SaveLoadList_mc.entryList.unshift(__reg5);
+				var newSaveObj: Object = {name: " ", playTime: " ", text: strNewSave};
+				this.SaveLoadList_mc.entryList.unshift(newSaveObj);
 			}
-			else if (!this.bSaving && this.SaveLoadList_mc.entryList[0].text == __reg4) 
+			else if (!this.bSaving && this.SaveLoadList_mc.entryList[0].text == strNewSave) 
 			{
 				this.SaveLoadList_mc.entryList.shift();
 			}
@@ -218,7 +218,7 @@ dynamic class SaveLoadPanel extends MovieClip
 		}
 	}
 
-	function DeleteSelectedSave()
+	function DeleteSelectedSave(): Void
 	{
 		if (!this.bSaving || this.SaveLoadList_mc.selectedIndex != 0) 
 		{

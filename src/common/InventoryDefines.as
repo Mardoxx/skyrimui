@@ -1,4 +1,4 @@
-dynamic class InventoryDefines
+class InventoryDefines
 {
 	static var ICT_NONE: Number = 0;
 	static var ICT_ARMOR: Number = 1;
@@ -27,25 +27,26 @@ dynamic class InventoryDefines
 	{
 	}
 
-	static function GetEquipText(aiItemType)
+	static function GetEquipText(aiItemType: Number): String
 	{
-		if ((__reg0 = aiItemType) === InventoryDefines.ICT_ARMOR) 
+		var iItemType: Number = aiItemType;
+		if (iItemType === InventoryDefines.ICT_ARMOR) 
 		{
 			return "$Equip";
 		}
-		else if (__reg0 === InventoryDefines.ICT_BOOK) 
+		else if (iItemType === InventoryDefines.ICT_BOOK) 
 		{
 			return "$Read";
 		}
-		else if (__reg0 === InventoryDefines.ICT_POTION) 
+		else if (iItemType === InventoryDefines.ICT_POTION) 
 		{
 			return "$Use";
 		}
-		else if (__reg0 === InventoryDefines.ICT_FOOD) 
+		else if (iItemType === InventoryDefines.ICT_FOOD) 
 		{
 			return "$Eat";
 		}
-		else if (__reg0 === InventoryDefines.ICT_INGREDIENT) 
+		else if (iItemType === InventoryDefines.ICT_INGREDIENT) 
 		{
 			return "$Eat";
 		}

@@ -1,61 +1,60 @@
-dynamic class BottomBar extends MovieClip
+class BottomBar extends MovieClip
 {
-	var Buttons;
-	var HealthMeter;
-	var LevelMeter;
-	var MagickaMeter;
-	var PlayerInfoCard_mc;
-	var PlayerInfoObj;
-	var StaminaMeter;
-	var iLastItemType;
-	var iLeftOffset;
+	var Buttons: Array;
+	var HealthMeter: Components.Meter;
+	var LevelMeter: Components.Meter;
+	var MagickaMeter: Components.Meter;
+	var PlayerInfoCard_mc: MovieClip;
+	var PlayerInfoObj: Object;
+	var StaminaMeter: Components.Meter;
+	var iLastItemType: Number;
+	var iLeftOffset: Number;
 
 	function BottomBar()
 	{
 		super();
-		this.PlayerInfoCard_mc = this.PlayerInfoCard_mc;
 		this.iLastItemType = InventoryDefines.ICT_NONE;
 		this.HealthMeter = new Components.Meter(this.PlayerInfoCard_mc.HealthRect.MeterInstance.Meter_mc);
 		this.MagickaMeter = new Components.Meter(this.PlayerInfoCard_mc.MagickaRect.MeterInstance.Meter_mc);
 		this.StaminaMeter = new Components.Meter(this.PlayerInfoCard_mc.StaminaRect.MeterInstance.Meter_mc);
 		this.LevelMeter = new Components.Meter(this.PlayerInfoCard_mc.LevelMeterInstance.Meter_mc);
-		var __reg3 = 0;
 		this.Buttons = new Array();
+		var i: Number = 0;
 		for (;;) 
 		{
-			if (this["Button" + __reg3] == undefined) 
+			if (this["Button" + i] == undefined) 
 			{
 				return;
 			}
-			this.Buttons.push(this["Button" + __reg3]);
-			++__reg3;
+			this.Buttons.push(this["Button" + i]);
+			++i;
 		}
 	}
 
-	function PositionElements(aiLeftOffset, aiRightOffset)
+	function PositionElements(aiLeftOffset: Number, aiRightOffset: Number): Void
 	{
 		this.iLeftOffset = aiLeftOffset;
 		this.PositionButtons();
 		this.PlayerInfoCard_mc._x = aiRightOffset - this.PlayerInfoCard_mc._width;
 	}
 
-	function ShowPlayerInfo()
+	function ShowPlayerInfo(): Void
 	{
 		this.PlayerInfoCard_mc._alpha = 100;
 	}
 
-	function HidePlayerInfo()
+	function HidePlayerInfo(): Void
 	{
 		this.PlayerInfoCard_mc._alpha = 0;
 	}
 
-	function UpdatePerItemInfo(aItemUpdateObj)
+	function UpdatePerItemInfo(aItemUpdateObj: Object): Void
 	{
-		var __reg3 = aItemUpdateObj.type;
-		var __reg5 = true;
-		if (__reg3 == undefined) 
+		var iItemType: Number = aItemUpdateObj.type;
+		var bHasWeightandValue = true;
+		if (iItemType == undefined) 
 		{
-			__reg3 = this.iLastItemType;
+			iItemType = this.iLastItemType;
 			if (aItemUpdateObj == undefined) 
 			{
 				aItemUpdateObj = {type: this.iLastItemType};
@@ -63,132 +62,132 @@ dynamic class BottomBar extends MovieClip
 		}
 		else 
 		{
-			this.iLastItemType = __reg3;
+			this.iLastItemType = iItemType;
 		}
 		if (this.PlayerInfoObj != undefined && aItemUpdateObj != undefined) 
 		{
-			if ((__reg0 = __reg3) === InventoryDefines.ICT_ARMOR) 
+			if (iItemType === InventoryDefines.ICT_ARMOR) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Armor");
-				var __reg4 = Math.floor(this.PlayerInfoObj.armor).toString();
+				var strArmor: String = Math.floor(this.PlayerInfoObj.armor).toString();
 				if (aItemUpdateObj.armorChange != undefined) 
 				{
-					var __reg7 = Math.round(aItemUpdateObj.armorChange);
-					if (__reg7 > 0) 
+					var iArmorDelta = Math.round(aItemUpdateObj.armorChange);
+					if (iArmorDelta > 0) 
 					{
-						__reg4 = __reg4 + " <font color=\'#189515\'>(+" + __reg7.toString() + ")</font>";
+						strArmor = strArmor + " <font color=\'#189515\'>(+" + iArmorDelta.toString() + ")</font>";
 					}
-					else if (__reg7 < 0) 
+					else if (iArmorDelta < 0) 
 					{
-						__reg4 = __reg4 + " <font color=\'#FF0000\'>(" + __reg7.toString() + ")</font>";
+						strArmor = strArmor + " <font color=\'#FF0000\'>(" + iArmorDelta.toString() + ")</font>";
 					}
 				}
 				this.PlayerInfoCard_mc.ArmorRatingValue.textAutoSize = "shrink";
 				this.PlayerInfoCard_mc.ArmorRatingValue.html = true;
-				this.PlayerInfoCard_mc.ArmorRatingValue.SetText(__reg4, true);
+				this.PlayerInfoCard_mc.ArmorRatingValue.SetText(strArmor, true);
 			}
-			else if (__reg0 === InventoryDefines.ICT_WEAPON) 
+			else if (iItemType === InventoryDefines.ICT_WEAPON) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Weapon");
-				__reg4 = Math.floor(this.PlayerInfoObj.damage).toString();
+				var strDamage: String = Math.floor(this.PlayerInfoObj.damage).toString();
 				if (aItemUpdateObj.damageChange != undefined) 
 				{
-					var __reg6 = Math.round(aItemUpdateObj.damageChange);
-					if (__reg6 > 0) 
+					var iDamageDelta = Math.round(aItemUpdateObj.damageChange);
+					if (iDamageDelta > 0) 
 					{
-						__reg4 = __reg4 + " <font color=\'#189515\'>(+" + __reg6.toString() + ")</font>";
+						strDamage = strDamage + " <font color=\'#189515\'>(+" + iDamageDelta.toString() + ")</font>";
 					}
-					else if (__reg6 < 0) 
+					else if (iDamageDelta < 0) 
 					{
-						__reg4 = __reg4 + " <font color=\'#FF0000\'>(" + __reg6.toString() + ")</font>";
+						strDamage = strDamage + " <font color=\'#FF0000\'>(" + iDamageDelta.toString() + ")</font>";
 					}
 				}
 				this.PlayerInfoCard_mc.DamageValue.textAutoSize = "shrink";
 				this.PlayerInfoCard_mc.DamageValue.html = true;
-				this.PlayerInfoCard_mc.DamageValue.SetText(__reg4, true);
+				this.PlayerInfoCard_mc.DamageValue.SetText(strDamage, true);
 			}
-			else if (__reg0 === InventoryDefines.ICT_POTION) 
+			else if (iItemType === InventoryDefines.ICT_POTION) 
 			{
-				var __reg9 = 0;
-				var __reg8 = 1;
-				var __reg10 = 2;
-				if (aItemUpdateObj.potionType == __reg8) 
+				var EF_HEALTH: Number = 0;
+				var EF_MAGICKA: Number = 1;
+				var EF_STAMINA: Number = 2;
+				if (aItemUpdateObj.potionType == EF_MAGICKA) 
 				{
 					this.PlayerInfoCard_mc.gotoAndStop("MagickaPotion");
 				}
-				else if (aItemUpdateObj.potionType == __reg10) 
+				else if (aItemUpdateObj.potionType == EF_STAMINA) 
 				{
 					this.PlayerInfoCard_mc.gotoAndStop("StaminaPotion");
 				}
-				else if (aItemUpdateObj.potionType == __reg9) 
+				else if (aItemUpdateObj.potionType == EF_HEALTH) 
 				{
 					this.PlayerInfoCard_mc.gotoAndStop("HealthPotion");
 				}
 			}
-			else if (__reg0 === InventoryDefines.ICT_FOOD) 
+			else if (iItemType === InventoryDefines.ICT_FOOD) 
 			{
-				__reg9 = 0;
-				__reg8 = 1;
-				__reg10 = 2;
-				if (aItemUpdateObj.potionType == __reg8) 
+				var EF_HEALTH: Number = 0;
+				var EF_MAGICKA: Number = 1;
+				var EF_STAMINA: Number = 2;
+				if (aItemUpdateObj.potionType == EF_MAGICKA) 
 				{
 					this.PlayerInfoCard_mc.gotoAndStop("MagickaPotion");
 				}
-				else if (aItemUpdateObj.potionType == __reg10) 
+				else if (aItemUpdateObj.potionType == EF_STAMINA) 
 				{
 					this.PlayerInfoCard_mc.gotoAndStop("StaminaPotion");
 				}
-				else if (aItemUpdateObj.potionType == __reg9) 
+				else if (aItemUpdateObj.potionType == EF_HEALTH) 
 				{
 					this.PlayerInfoCard_mc.gotoAndStop("HealthPotion");
 				}
 			}
-			else if (__reg0 === InventoryDefines.ICT_BOOK) 
+			else if (iItemType === InventoryDefines.ICT_BOOK) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Default");
 			}
-			else if (__reg0 === InventoryDefines.ICT_INGREDIENT) 
+			else if (iItemType === InventoryDefines.ICT_INGREDIENT) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Default");
 			}
-			else if (__reg0 === InventoryDefines.ICT_MISC) 
+			else if (iItemType === InventoryDefines.ICT_MISC) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Default");
 			}
-			else if (__reg0 === InventoryDefines.ICT_KEY) 
+			else if (iItemType === InventoryDefines.ICT_KEY) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Default");
 			}
-			else if (__reg0 === InventoryDefines.ICT_SPELL_DEFAULT) 
+			else if (iItemType === InventoryDefines.ICT_SPELL_DEFAULT) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Magic");
-				__reg5 = false;
+				bHasWeightandValue = false;
 			}
-			else if (__reg0 === InventoryDefines.ICT_ACTIVE_EFFECT) 
+			else if (iItemType === InventoryDefines.ICT_ACTIVE_EFFECT) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Magic");
-				__reg5 = false;
+				bHasWeightandValue = false;
 			}
-			else if (__reg0 === InventoryDefines.ICT_SPELL) 
+			else if (iItemType === InventoryDefines.ICT_SPELL) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("MagicSkill");
 				if (aItemUpdateObj.magicSchoolName != undefined) 
 				{
 					this.UpdateSkillBar(aItemUpdateObj.magicSchoolName, aItemUpdateObj.magicSchoolLevel, aItemUpdateObj.magicSchoolPct);
 				}
-				__reg5 = false;
+				bHasWeightandValue = false;
 			}
-			else if (__reg0 === InventoryDefines.ICT_SHOUT) 
+			else if (iItemType === InventoryDefines.ICT_SHOUT) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Shout");
 				this.PlayerInfoCard_mc.DragonSoulTextInstance.SetText(this.PlayerInfoObj.dragonSoulText);
-				__reg5 = false;
+				bHasWeightandValue = false;
 			}
 			else 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Default");
 			}
-			if (__reg5) 
+			if (bHasWeightandValue) 
 			{
 				this.PlayerInfoCard_mc.CarryWeightValue.textAutoSize = "shrink";
 				this.PlayerInfoCard_mc.CarryWeightValue.SetText(Math.ceil(this.PlayerInfoObj.encumbrance) + "/" + Math.floor(this.PlayerInfoObj.maxEncumbrance));
@@ -196,12 +195,12 @@ dynamic class BottomBar extends MovieClip
 				this.PlayerInfoCard_mc.PlayerGoldLabel._x = this.PlayerInfoCard_mc.PlayerGoldValue._x + this.PlayerInfoCard_mc.PlayerGoldValue.getLineMetrics(0).x - this.PlayerInfoCard_mc.PlayerGoldLabel._width;
 				this.PlayerInfoCard_mc.CarryWeightValue._x = this.PlayerInfoCard_mc.PlayerGoldLabel._x + this.PlayerInfoCard_mc.PlayerGoldLabel.getLineMetrics(0).x - this.PlayerInfoCard_mc.CarryWeightValue._width - 5;
 				this.PlayerInfoCard_mc.CarryWeightLabel._x = this.PlayerInfoCard_mc.CarryWeightValue._x + this.PlayerInfoCard_mc.CarryWeightValue.getLineMetrics(0).x - this.PlayerInfoCard_mc.CarryWeightLabel._width;
-				if ((__reg0 = __reg3) === InventoryDefines.ICT_ARMOR) 
+				if (iItemType === InventoryDefines.ICT_ARMOR) 
 				{
 					this.PlayerInfoCard_mc.ArmorRatingValue._x = this.PlayerInfoCard_mc.CarryWeightLabel._x + this.PlayerInfoCard_mc.CarryWeightLabel.getLineMetrics(0).x - this.PlayerInfoCard_mc.ArmorRatingValue._width - 5;
 					this.PlayerInfoCard_mc.ArmorRatingLabel._x = this.PlayerInfoCard_mc.ArmorRatingValue._x + this.PlayerInfoCard_mc.ArmorRatingValue.getLineMetrics(0).x - this.PlayerInfoCard_mc.ArmorRatingLabel._width;
 				}
-				else if (__reg0 === InventoryDefines.ICT_WEAPON) 
+				else if (iItemType === InventoryDefines.ICT_WEAPON) 
 				{
 					this.PlayerInfoCard_mc.DamageValue._x = this.PlayerInfoCard_mc.CarryWeightLabel._x + this.PlayerInfoCard_mc.CarryWeightLabel.getLineMetrics(0).x - this.PlayerInfoCard_mc.DamageValue._width - 5;
 					this.PlayerInfoCard_mc.DamageLabel._x = this.PlayerInfoCard_mc.DamageValue._x + this.PlayerInfoCard_mc.DamageValue.getLineMetrics(0).x - this.PlayerInfoCard_mc.DamageLabel._width;
@@ -213,13 +212,13 @@ dynamic class BottomBar extends MovieClip
 		}
 	}
 
-	function UpdatePlayerInfo(aPlayerUpdateObj, aItemUpdateObj)
+	function UpdatePlayerInfo(aPlayerUpdateObj: Object, aItemUpdateObj: Object): Void
 	{
 		this.PlayerInfoObj = aPlayerUpdateObj;
 		this.UpdatePerItemInfo(aItemUpdateObj);
 	}
 
-	function UpdateSkillBar(aSkillName, aiLevelStart, afLevelPercent)
+	function UpdateSkillBar(aSkillName: String, aiLevelStart: Number, afLevelPercent: Number): Void
 	{
 		this.PlayerInfoCard_mc.SkillLevelLabel.SetText(aSkillName);
 		this.PlayerInfoCard_mc.SkillLevelCurrent.SetText(aiLevelStart);
@@ -228,13 +227,13 @@ dynamic class BottomBar extends MovieClip
 		this.LevelMeter.SetPercent(afLevelPercent);
 	}
 
-	function UpdateCraftingInfo(aSkillName, aiLevelStart, afLevelPercent)
+	function UpdateCraftingInfo(aSkillName: String, aiLevelStart: Number, afLevelPercent: Number): Void
 	{
 		this.PlayerInfoCard_mc.gotoAndStop("Crafting");
 		this.UpdateSkillBar(aSkillName, aiLevelStart, afLevelPercent);
 	}
 
-	function UpdateStatMeter(aMeterRect, aMeterObj, aiCurrValue, aiMaxValue, aColor)
+	function UpdateStatMeter(aMeterRect: MovieClip, aMeterObj: Components.Meter, aiCurrValue: Number, aiMaxValue: Number, aColor: String): Void
 	{
 		if (aColor == undefined) 
 		{
@@ -253,7 +252,7 @@ dynamic class BottomBar extends MovieClip
 		}
 	}
 
-	function SetBarterInfo(aiPlayerGold, aiVendorGold, aiGoldDelta, astrVendorName)
+	function SetBarterInfo(aiPlayerGold: Number, aiVendorGold: Number, aiGoldDelta: Number, astrVendorName: String): Void
 	{
 		if (this.PlayerInfoCard_mc._currentframe == 1) 
 		{
@@ -284,50 +283,51 @@ dynamic class BottomBar extends MovieClip
 		this.PlayerInfoCard_mc.PlayerGoldLabel._x = this.PlayerInfoCard_mc.PlayerGoldValue._x + this.PlayerInfoCard_mc.PlayerGoldValue.getLineMetrics(0).x - this.PlayerInfoCard_mc.PlayerGoldLabel._width - 5;
 	}
 
-	function SetBarterPerItemInfo(aItemUpdateObj, aPlayerInfoObj)
+	function SetBarterPerItemInfo(aItemUpdateObj: Object, aPlayerInfoObj: Object): Void
 	{
 		if (aItemUpdateObj != undefined) 
 		{
-			if ((__reg0 = aItemUpdateObj.type) === InventoryDefines.ICT_ARMOR) 
+			var iItemType: Number = aItemUpdateObj.type;
+			if (iItemType === InventoryDefines.ICT_ARMOR) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Barter_Armor");
-				var __reg2 = Math.floor(aPlayerInfoObj.armor).toString();
+				var strArmor: String = Math.floor(aPlayerInfoObj.armor).toString();
 				if (aItemUpdateObj.armorChange != undefined) 
 				{
-					var __reg4 = Math.round(aItemUpdateObj.armorChange);
-					if (__reg4 > 0) 
+					var iArmorDelta: Number = Math.round(aItemUpdateObj.armorChange);
+					if (iArmorDelta > 0) 
 					{
-						__reg2 = __reg2 + " <font color=\'#189515\'>(+" + __reg4.toString() + ")</font>";
+						strArmor = strArmor + " <font color=\'#189515\'>(+" + iArmorDelta.toString() + ")</font>";
 					}
-					else if (__reg4 < 0) 
+					else if (iArmorDelta < 0) 
 					{
-						__reg2 = __reg2 + " <font color=\'#FF0000\'>(" + __reg4.toString() + ")</font>";
+						strArmor = strArmor + " <font color=\'#FF0000\'>(" + iArmorDelta.toString() + ")</font>";
 					}
 				}
 				this.PlayerInfoCard_mc.ArmorRatingValue.textAutoSize = "shrink";
 				this.PlayerInfoCard_mc.ArmorRatingValue.html = true;
-				this.PlayerInfoCard_mc.ArmorRatingValue.SetText(__reg2, true);
+				this.PlayerInfoCard_mc.ArmorRatingValue.SetText(strArmor, true);
 				return;
 			}
-			else if (__reg0 === InventoryDefines.ICT_WEAPON) 
+			else if (iItemType === InventoryDefines.ICT_WEAPON) 
 			{
 				this.PlayerInfoCard_mc.gotoAndStop("Barter_Weapon");
-				__reg2 = Math.floor(aPlayerInfoObj.damage).toString();
+				var strDamage: String = Math.floor(aPlayerInfoObj.damage).toString();
 				if (aItemUpdateObj.damageChange != undefined) 
 				{
-					var __reg3 = Math.round(aItemUpdateObj.damageChange);
-					if (__reg3 > 0) 
+					var iDamageDelta: Number = Math.round(aItemUpdateObj.damageChange);
+					if (iDamageDelta > 0) 
 					{
-						__reg2 = __reg2 + " <font color=\'#189515\'>(+" + __reg3.toString() + ")</font>";
+						strDamage = strDamage + " <font color=\'#189515\'>(+" + iDamageDelta.toString() + ")</font>";
 					}
-					else if (__reg3 < 0) 
+					else if (iDamageDelta < 0) 
 					{
-						__reg2 = __reg2 + " <font color=\'#FF0000\'>(" + __reg3.toString() + ")</font>";
+						strDamage = strDamage + " <font color=\'#FF0000\'>(" + iDamageDelta.toString() + ")</font>";
 					}
 				}
 				this.PlayerInfoCard_mc.DamageValue.textAutoSize = "shrink";
 				this.PlayerInfoCard_mc.DamageValue.html = true;
-				this.PlayerInfoCard_mc.DamageValue.SetText(__reg2, true);
+				this.PlayerInfoCard_mc.DamageValue.SetText(strDamage, true);
 				return;
 			}
 			this.PlayerInfoCard_mc.gotoAndStop("Barter");
@@ -335,66 +335,66 @@ dynamic class BottomBar extends MovieClip
 		}
 	}
 
-	function SetGiftInfo(aiFavorPoints)
+	function SetGiftInfo(aiFavorPoints: Number): Void
 	{
 		this.PlayerInfoCard_mc.gotoAndStop("Gift");
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
-		var __reg2 = 0;
+		var i: Number = 0;
 		for (;;) 
 		{
-			if (__reg2 >= this.Buttons.length) 
+			if (i >= this.Buttons.length) 
 			{
 				return;
 			}
-			this.Buttons[__reg2].SetPlatform(aiPlatform, abPS3Switch);
-			++__reg2;
+			this.Buttons[i].SetPlatform(aiPlatform, abPS3Switch);
+			++i;
 		}
 	}
 
-	function ShowButtons()
+	function ShowButtons(): Void
 	{
-		var __reg2 = 0;
+		var i: Number = 0;
 		for (;;) 
 		{
-			if (__reg2 >= this.Buttons.length) 
+			if (i >= this.Buttons.length) 
 			{
 				return;
 			}
-			this.Buttons[__reg2]._visible = this.Buttons[__reg2].label.length > 0;
-			++__reg2;
+			this.Buttons[i]._visible = this.Buttons[i].label.length > 0;
+			++i;
 		}
 	}
 
-	function HideButtons()
+	function HideButtons(): Void
 	{
-		var __reg2 = 0;
+		var i: Number = 0;
 		for (;;) 
 		{
-			if (__reg2 >= this.Buttons.length) 
+			if (i >= this.Buttons.length) 
 			{
 				return;
 			}
-			this.Buttons[__reg2]._visible = false;
-			++__reg2;
+			this.Buttons[i]._visible = false;
+			++i;
 		}
 	}
 
-	function SetButtonsText()
+	function SetButtonsText(): Void
 	{
-		var __reg3 = 0;
-		while (__reg3 < this.Buttons.length) 
+		var i: Number = 0;
+		while (i < this.Buttons.length) 
 		{
-			this.Buttons[__reg3].label = __reg3 >= arguments.length ? "" : arguments[__reg3];
-			this.Buttons[__reg3]._visible = this.Buttons[__reg3].label.length > 0;
-			++__reg3;
+			this.Buttons[i].label = i >= arguments.length ? "" : arguments[i];
+			this.Buttons[i]._visible = this.Buttons[i].label.length > 0;
+			++i;
 		}
 		this.PositionButtons();
 	}
 
-	function SetButtonText(aText, aIndex)
+	function SetButtonText(aText: String, aIndex: Number): Void
 	{
 		if (aIndex < this.Buttons.length) 
 		{
@@ -404,21 +404,21 @@ dynamic class BottomBar extends MovieClip
 		}
 	}
 
-	function SetButtonsArt(aButtonArt)
+	function SetButtonsArt(aButtonArt: Object): Void
 	{
-		var __reg2 = 0;
+		var i: Number = 0;
 		for (;;) 
 		{
-			if (__reg2 >= aButtonArt.length) 
+			if (i >= aButtonArt.length) 
 			{
 				return;
 			}
-			this.SetButtonArt(aButtonArt[__reg2], __reg2);
-			++__reg2;
+			this.SetButtonArt(aButtonArt[i], i);
+			++i;
 		}
 	}
 
-	function AttachDualButton(aButtonArtObj, aiIndex)
+	function AttachDualButton(aButtonArtObj: Object, aiIndex: Number): Void
 	{
 		if (aiIndex < this.Buttons.length) 
 		{
@@ -426,19 +426,19 @@ dynamic class BottomBar extends MovieClip
 		}
 	}
 
-	function GetButtonsArt()
+	function GetButtonsArt(): Array
 	{
-		var __reg3 = new Array(this.Buttons.length);
-		var __reg2 = 0;
-		while (__reg2 < this.Buttons.length) 
+		var ButtonsArt = new Array(this.Buttons.length);
+		var i: Number = 0;
+		while (i < this.Buttons.length) 
 		{
-			__reg3[__reg2] = this.Buttons[__reg2].GetArt();
-			++__reg2;
+			ButtonsArt[i] = this.Buttons[i].GetArt();
+			++i;
 		}
-		return __reg3;
+		return ButtonsArt;
 	}
 
-	function GetButtonArt(aiIndex)
+	function GetButtonArt(aiIndex: Number): Object
 	{
 		if (aiIndex < this.Buttons.length) 
 		{
@@ -447,39 +447,39 @@ dynamic class BottomBar extends MovieClip
 		return undefined;
 	}
 
-	function SetButtonArt(aPlatformArt, aIndex)
+	function SetButtonArt(aPlatformArt: Object, aIndex: Number): Void
 	{
 		if (aIndex < this.Buttons.length) 
 		{
-			var __reg2 = this.Buttons[aIndex];
-			__reg2.PCArt = aPlatformArt.PCArt;
-			__reg2.XBoxArt = aPlatformArt.XBoxArt;
-			__reg2.PS3Art = aPlatformArt.PS3Art;
-			__reg2.RefreshArt();
+			var aButton = this.Buttons[aIndex];
+			aButton.PCArt = aPlatformArt.PCArt;
+			aButton.XBoxArt = aPlatformArt.XBoxArt;
+			aButton.PS3Art = aPlatformArt.PS3Art;
+			aButton.RefreshArt();
 		}
 	}
 
-	function PositionButtons()
+	function PositionButtons(): Void
 	{
-		var __reg4 = 10;
-		var __reg3 = this.iLeftOffset;
-		var __reg2 = 0;
+		var RightOffset: Number = 10;
+		var LeftOffset: Number = this.iLeftOffset;
+		var i: Number = 0;
 		for (;;) 
 		{
-			if (__reg2 >= this.Buttons.length) 
+			if (i >= this.Buttons.length) 
 			{
 				return;
 			}
-			if (this.Buttons[__reg2].label.length > 0) 
+			if (this.Buttons[i].label.length > 0) 
 			{
-				this.Buttons[__reg2]._x = __reg3 + this.Buttons[__reg2].ButtonArt._width;
-				if (this.Buttons[__reg2].ButtonArt2 != undefined) 
+				this.Buttons[i]._x = LeftOffset + this.Buttons[i].ButtonArt._width;
+				if (this.Buttons[i].ButtonArt2 != undefined) 
 				{
-					this.Buttons[__reg2]._x = this.Buttons[__reg2]._x + this.Buttons[__reg2].ButtonArt2._width;
+					this.Buttons[i]._x = this.Buttons[i]._x + this.Buttons[i].ButtonArt2._width;
 				}
-				__reg3 = this.Buttons[__reg2]._x + this.Buttons[__reg2].textField.getLineMetrics(0).width + __reg4;
+				LeftOffset = this.Buttons[i]._x + this.Buttons[i].textField.getLineMetrics(0).width + RightOffset;
 			}
-			++__reg2;
+			++i;
 		}
 	}
 

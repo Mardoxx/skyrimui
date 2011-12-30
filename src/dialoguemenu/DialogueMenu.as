@@ -6,7 +6,7 @@ dynamic class DialogueMenu extends MovieClip
 	static var TOPIC_CLICKED: Number = 2;
 	static var TRANSITIONING: Number = 3;
 	static var iMouseDownExecutionCount: Number = 0;
-	var ExitButton;
+	var ExitButton: Components.CrossPlatformButtons;
 	var SpeakerName;
 	var SubtitleText;
 	var TopicList;
@@ -66,7 +66,7 @@ dynamic class DialogueMenu extends MovieClip
 		_root.DialogueMenu_mc._x = _root.DialogueMenu_mc._x - 35;
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.ExitButton.SetPlatform(aiPlatform, abPS3Switch);
 		this.TopicList.SetPlatform(aiPlatform, abPS3Switch);
@@ -77,7 +77,7 @@ dynamic class DialogueMenu extends MovieClip
 		this.SpeakerName.SetText(strName);
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
 		if (this.bFadedIn && Shared.GlobalFunc.IsKeyPressed(details)) 
 		{

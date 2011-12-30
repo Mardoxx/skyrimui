@@ -64,17 +64,17 @@ class BookMenu extends MovieClip
 	function CreateDisplayPage(PageTop: Number, PageBottom: Number, aPageNum: Number): Void
 	{
 		var Page_mc: MovieClip = this.ReferenceText_mc.duplicateMovieClip("Page", this.getNextHighestDepth());
-		var PageTextField: TextField = Page_mc.PageTextField;
-		PageTextField.noTranslate = true;
-		PageTextField.SetText(this.ReferenceTextField.htmlText, true);
+		var PageTextField_tf: TextField = Page_mc.PageTextField;
+		PageTextField_tf.noTranslate = true;
+		PageTextField_tf.SetText(this.ReferenceTextField.htmlText, true);
 		var iLineOffsetTop: Number = this.ReferenceTextField.getLineOffset(this.ReferenceTextField.getLineIndexAtPoint(0, PageTop));
 		var iLineOffsetBottom: Number = this.ReferenceTextField.getLineOffset(this.ReferenceTextField.getLineIndexAtPoint(0, PageBottom));
-		PageTextField.replaceText(0, iLineOffsetTop, "");
-		PageTextField.replaceText(iLineOffsetBottom - iLineOffsetTop, this.ReferenceTextField.length, "");
-		PageTextField.autoSize = "left";
+		PageTextField_tf.replaceText(0, iLineOffsetTop, "");
+		PageTextField_tf.replaceText(iLineOffsetBottom - iLineOffsetTop, this.ReferenceTextField.length, "");
+		PageTextField_tf.autoSize = "left";
 		if (this.bNote) 
 		{
-			PageTextField._width = BookMenu.NOTE_WIDTH;
+			PageTextField_tf._width = BookMenu.NOTE_WIDTH;
 			Page_mc._x = Stage.visibleRect.x + BookMenu.NOTE_X_OFFSET;
 			Page_mc._y = Stage.visibleRect.y + BookMenu.NOTE_Y_OFFSET;
 		}
@@ -88,15 +88,15 @@ class BookMenu extends MovieClip
 		this.BookPages.push(Page_mc);
 	}
 
-	function CalculatePagination(): Void
+	function CalculatePagination()
 	{
 		var bLastPage: Boolean = false;
 		while (!bLastPage && this.iCurrentLine <= this.ReferenceTextField.numLines) 
 		{
 			var iLineOffsetCurrent: Number = this.ReferenceTextField.getLineOffset(this.iCurrentLine);
-			var iLineOffsetNext: Number  = this.ReferenceTextField.getLineOffset(this.iCurrentLine + 1);
-			var acharBoundaries: Object = this.ReferenceTextField.getacharBoundaries(iLineOffsetCurrent);
-			var astrPageText: String = iLineOffsetNext == -1 ? this.ReferenceTextField.text.substring(iLineOffsetCurrent ) : this.ReferenceTextField.text.substring(iLineOffsetCurrent, iLineOffsetNext);
+			var iLineOffsetNext: Number = this.ReferenceTextField.getLineOffset(this.iCurrentLine + 1);
+			var acharBoundaries: Object = this.ReferenceTextField.getCharBoundaries(iLineOffsetCurrent);
+			var astrPageText: String = iLineOffsetNext == -1 ? this.ReferenceTextField.text.substring(iLineOffsetCurrent) : this.ReferenceTextField.text.substring(iLineOffsetCurrent, iLineOffsetNext);
 			astrPageText = Shared.GlobalFunc.StringTrim(astrPageText);
 			if (acharBoundaries.bottom > this.iNextPageBreak || astrPageText == BookMenu.PAGE_BREAK_TAG || this.iCurrentLine >= this.ReferenceTextField.numLines) 
 			{

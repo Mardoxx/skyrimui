@@ -47,7 +47,7 @@ dynamic class LockpickingMenu extends MovieClip
 		this.InfoRect_mc.NumLockpicksText.textAutoSize = "shrink";
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		var __reg2 = 20;
 		this.ButtonRect_mc.RotatePickButton.SetPlatform(aiPlatform, abPS3Switch);

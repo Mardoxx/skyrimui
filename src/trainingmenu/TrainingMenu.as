@@ -1,8 +1,8 @@
 dynamic class TrainingMenu extends MovieClip
 {
-	var AcceptButton;
+	var AcceptButton: Components.CrossPlatformButtons;
 	var CurrentGold;
-	var ExitButton;
+	var ExitButton: Components.CrossPlatformButtons;
 	var SkillMeter;
 	var SkillName;
 	var TimesTrained;
@@ -46,7 +46,7 @@ dynamic class TrainingMenu extends MovieClip
 		this.SkillMeter.Update();
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
 		this.AcceptButton.SetPlatform(aiPlatform, abPS3Switch);
 		this.ExitButton.SetPlatform(aiPlatform, abPS3Switch);

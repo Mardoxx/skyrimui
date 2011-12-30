@@ -1,6 +1,6 @@
-dynamic class InventoryScrollingList extends Shared.CenteredScrollingList
+class InventoryScrollingList extends Shared.CenteredScrollingList
 {
-	var iMaxTextLength;
+	var iMaxTextLength: Number;
 
 	function InventoryScrollingList()
 	{
@@ -9,40 +9,40 @@ dynamic class InventoryScrollingList extends Shared.CenteredScrollingList
 
 	function SetEntryText(aEntryClip, aEntryObject)
 	{
-		var __reg5 = ["None", "Equipped", "LeftEquip", "RightEquip", "LeftAndRightEquip"];
+		var equippedStates: Array = ["None", "Equipped", "LeftEquip", "RightEquip", "LeftAndRightEquip"];
 		if (aEntryObject.text != undefined) 
 		{
-			var __reg3 = aEntryObject.text;
+			var strEntryObjectText = aEntryObject.text;
 			if (aEntryObject.soulLVL != undefined) 
 			{
-				__reg3 = __reg3 + " (" + aEntryObject.soulLVL + ")";
+				strEntryObjectText = strEntryObjectText + " (" + aEntryObject.soulLVL + ")";
 			}
 			if (aEntryObject.count > 1) 
 			{
-				__reg3 = __reg3 + " (" + aEntryObject.count.toString() + ")";
+				strEntryObjectText = strEntryObjectText + " (" + aEntryObject.count.toString() + ")";
 			}
-			if (__reg3.length > this.iMaxTextLength) 
+			if (strEntryObjectText.length > this.iMaxTextLength) 
 			{
-				__reg3 = __reg3.substr(0, this.iMaxTextLength - 3) + "...";
+				strEntryObjectText = strEntryObjectText.substr(0, this.iMaxTextLength - 3) + "...";
 			}
 			if (aEntryObject.bestInClass == true) 
 			{
-				__reg3 = __reg3 + "<img src=\'BestIcon.png\' vspace=\'2\'>";
+				strEntryObjectText = strEntryObjectText + "<img src=\'BestIcon.png\' vspace=\'2\'>";
 			}
 			aEntryClip.textField.textAutoSize = "shrink";
-			aEntryClip.textField.SetText(__reg3, true);
+			aEntryClip.textField.SetText(strEntryObjectText, true);
 			if (aEntryObject.negativeEffect == true || aEntryObject.isStealing == true) 
 			{
-				aEntryClip.textField.textColor = aEntryObject.enabled == false ? 8388608 : 16711680;
+				aEntryClip.textField.textColor = aEntryObject.enabled == false ? 0x800000 : 0xFF0000;
 			}
 			else 
 			{
-				aEntryClip.textField.textColor = aEntryObject.enabled == false ? 5000268 : 16777215;
+				aEntryClip.textField.textColor = aEntryObject.enabled == false ? 0x4C4C4C : 0xFFFFFF;
 			}
 		}
 		if (aEntryObject != undefined && aEntryObject.equipState != undefined) 
 		{
-			aEntryClip.EquipIcon.gotoAndStop(__reg5[aEntryObject.equipState]);
+			aEntryClip.EquipIcon.gotoAndStop(equippedStates[aEntryObject.equipState]);
 		}
 		else 
 		{
@@ -55,5 +55,4 @@ dynamic class InventoryScrollingList extends Shared.CenteredScrollingList
 		}
 		aEntryClip.EquipIcon.FavoriteIconInstance.gotoAndStop("Off");
 	}
-
 }

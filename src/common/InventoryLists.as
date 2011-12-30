@@ -1,4 +1,4 @@
-dynamic class InventoryLists extends MovieClip
+class InventoryLists extends MovieClip
 {
 	static var NO_PANELS: Number = 0;
 	static var ONE_PANEL: Number = 1;
@@ -6,18 +6,16 @@ dynamic class InventoryLists extends MovieClip
 	static var TRANSITIONING_TO_NO_PANELS: Number = 3;
 	static var TRANSITIONING_TO_ONE_PANEL: Number = 4;
 	static var TRANSITIONING_TO_TWO_PANELS: Number = 5;
-	var CategoriesListHolder;
-	var ItemsListHolder;
-	var _CategoriesList;
-	var _ItemsList;
-	var dispatchEvent;
-	var gotoAndPlay;
-	var gotoAndStop;
-	var iCurrCategoryIndex;
-	var iCurrentState;
-	var iPlatform;
-	var strHideItemsCode;
-	var strShowItemsCode;
+	var CategoriesListHolder: MovieClip;
+	var ItemsListHolder: MovieClip;
+	var _CategoriesList: MovieClip;
+	var _ItemsList: MovieClip;
+	var dispatchEvent: Function;
+	var iCurrCategoryIndex: Number;
+	var iCurrentState: Number;
+	var iPlatform: Number;
+	var strHideItemsCode: String;
+	var strShowItemsCode: String;
 
 	function InventoryLists()
 	{
@@ -32,7 +30,7 @@ dynamic class InventoryLists extends MovieClip
 		this.strShowItemsCode = gfx.ui.NavigationCode.RIGHT;
 	}
 
-	function onLoad()
+	function onLoad(): Void
 	{
 		this._CategoriesList.addEventListener("itemPress", this, "onCategoriesItemPress");
 		this._CategoriesList.addEventListener("listPress", this, "onCategoriesListPress");
@@ -48,7 +46,7 @@ dynamic class InventoryLists extends MovieClip
 		this._ItemsList.addEventListener("selectionChange", this, "onItemsListMouseSelectionChange");
 	}
 
-	function SetPlatform(aiPlatform, abPS3Switch)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
 		this.iPlatform = aiPlatform;
 		this._CategoriesList.SetPlatform(aiPlatform, abPS3Switch);
@@ -63,9 +61,9 @@ dynamic class InventoryLists extends MovieClip
 		this.ItemsListHolder.ListBackground.gotoAndStop("Gamepad");
 	}
 
-	function handleInput(details, pathToFocus)
+	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
-		var __reg2 = false;
+		var bHandledInput: Boolean = false;
 		if (this.iCurrentState == InventoryLists.ONE_PANEL || this.iCurrentState == InventoryLists.TWO_PANELS) 
 		{
 			if (Shared.GlobalFunc.IsKeyPressed(details)) 
@@ -73,61 +71,61 @@ dynamic class InventoryLists extends MovieClip
 				if (details.navEquivalent == this.strHideItemsCode && this.iCurrentState == InventoryLists.TWO_PANELS) 
 				{
 					this.HideItemsList();
-					__reg2 = true;
+					bHandledInput = true;
 				}
 				else if (details.navEquivalent == this.strShowItemsCode && this.iCurrentState == InventoryLists.ONE_PANEL) 
 				{
 					this.ShowItemsList();
-					__reg2 = true;
+					bHandledInput = true;
 				}
 			}
-			if (!__reg2) 
+			if (!bHandledInput) 
 			{
-				__reg2 = pathToFocus[0].handleInput(details, pathToFocus.slice(1));
+				bHandledInput = pathToFocus[0].handleInput(details, pathToFocus.slice(1));
 			}
 		}
-		return __reg2;
+		return bHandledInput;
 	}
 
-	function get CategoriesList()
+	function get CategoriesList(): MovieClip
 	{
 		return this._CategoriesList;
 	}
 
-	function get ItemsList()
+	function get ItemsList(): MovieClip
 	{
 		return this._ItemsList;
 	}
 
-	function get currentState()
+	function get currentState(): Number
 	{
 		return this.iCurrentState;
 	}
 
-	function set currentState(aiNewState)
+	function set currentState(aiNewState: Number): Void
 	{
-		if ((__reg0 = aiNewState) === InventoryLists.NO_PANELS) 
+		if (aiNewState === InventoryLists.NO_PANELS) 
 		{
 			this.iCurrentState = aiNewState;
 		}
-		else if (__reg0 === InventoryLists.ONE_PANEL) 
+		else if (aiNewState === InventoryLists.ONE_PANEL) 
 		{
 			this.iCurrentState = aiNewState;
 			gfx.managers.FocusHandler.instance.setFocus(this._CategoriesList, 0);
 		}
-		else if (__reg0 === InventoryLists.TWO_PANELS) 
+		else if (aiNewState === InventoryLists.TWO_PANELS) 
 		{
 			this.iCurrentState = aiNewState;
 			gfx.managers.FocusHandler.instance.setFocus(this._ItemsList, 0);
 		}
 	}
 
-	function RestoreCategoryIndex()
+	function RestoreCategoryIndex(): Void
 	{
 		this._CategoriesList.selectedIndex = this.iCurrCategoryIndex;
 	}
 
-	function ShowCategoriesList(abPlayBladeSound)
+	function ShowCategoriesList(abPlayBladeSound: Boolean): Void
 	{
 		this.iCurrentState = InventoryLists.TRANSITIONING_TO_ONE_PANEL;
 		this.dispatchEvent({type: "categoryChange", index: this._CategoriesList.selectedIndex});
@@ -138,14 +136,14 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function HideCategoriesList()
+	function HideCategoriesList(): Void
 	{
 		this.iCurrentState = InventoryLists.TRANSITIONING_TO_NO_PANELS;
 		this.gotoAndPlay("Panel1Hide");
 		gfx.io.GameDelegate.call("PlaySound", ["UIMenuBladeCloseSD"]);
 	}
 
-	function ShowItemsList(abPlayBladeSound, abPlayAnim)
+	function ShowItemsList(abPlayBladeSound: Boolean, abPlayAnim: Boolean): Void
 	{
 		if (abPlayAnim != false) 
 		{
@@ -170,7 +168,7 @@ dynamic class InventoryLists extends MovieClip
 		this._ItemsList.disableInput = false;
 	}
 
-	function HideItemsList()
+	function HideItemsList(): Void
 	{
 		this.iCurrentState = InventoryLists.TRANSITIONING_TO_ONE_PANEL;
 		this.dispatchEvent({type: "hideItemsList", index: this._ItemsList.selectedIndex});
@@ -180,7 +178,7 @@ dynamic class InventoryLists extends MovieClip
 		this._ItemsList.disableInput = true;
 	}
 
-	function onCategoriesItemPress()
+	function onCategoriesItemPress(): Void
 	{
 		if (this.iCurrentState == InventoryLists.ONE_PANEL) 
 		{
@@ -193,7 +191,7 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function onCategoriesListPress()
+	function onCategoriesListPress(): Void
 	{
 		if (this.iCurrentState == InventoryLists.TWO_PANELS && !this._ItemsList.disableSelection && !this._ItemsList.disableInput) 
 		{
@@ -202,7 +200,7 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function onCategoriesListMoveUp(event)
+	function onCategoriesListMoveUp(event: Object): Void
 	{
 		this.doCategorySelectionChange(event);
 		if (event.scrollChanged == true) 
@@ -211,7 +209,7 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function onCategoriesListMoveDown(event)
+	function onCategoriesListMoveDown(event: Object): Void
 	{
 		this.doCategorySelectionChange(event);
 		if (event.scrollChanged == true) 
@@ -220,7 +218,7 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function onCategoriesListMouseSelectionChange(event)
+	function onCategoriesListMouseSelectionChange(event: Object): Void
 	{
 		if (event.keyboardOrMouse == 0) 
 		{
@@ -228,7 +226,7 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function onItemsListMoveUp(event)
+	function onItemsListMoveUp(event: Object): Void
 	{
 		this.doItemsSelectionChange(event);
 		if (event.scrollChanged == true) 
@@ -237,7 +235,7 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function onItemsListMoveDown(event)
+	function onItemsListMoveDown(event: Object): Void
 	{
 		this.doItemsSelectionChange(event);
 		if (event.scrollChanged == true) 
@@ -246,7 +244,7 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function onItemsListMouseSelectionChange(event)
+	function onItemsListMouseSelectionChange(event: Object): Void
 	{
 		if (event.keyboardOrMouse == 0) 
 		{
@@ -254,7 +252,7 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function doCategorySelectionChange(event)
+	function doCategorySelectionChange(event: Object): Void
 	{
 		this.dispatchEvent({type: "categoryChange", index: event.index});
 		if (event.index != -1) 
@@ -263,7 +261,7 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function doItemsSelectionChange(event)
+	function doItemsSelectionChange(event: Object): Void
 	{
 		this._CategoriesList.selectedEntry.savedItemIndex = this._ItemsList.scrollPosition;
 		this.dispatchEvent({type: "itemHighlightChange", index: event.index});
@@ -273,78 +271,78 @@ dynamic class InventoryLists extends MovieClip
 		}
 	}
 
-	function SetCategoriesList()
+	function SetCategoriesList(): Void
 	{
-		var __reg12 = 0;
-		var __reg13 = 1;
-		var __reg5 = 2;
-		var __reg11 = 3;
+		var iTextOffset: Number = 0;
+		var iFlagOffset: Number = 1;
+		var iDontHideOffset: Number = 2;
+		var iNumObjKeys: Number = 3;
 		this._CategoriesList.entryList.splice(0, this._CategoriesList.entryList.length);
-		var __reg3 = 0;
-		while (__reg3 < arguments.length) 
+		var i: Number = 0;
+		while (i < arguments.length) 
 		{
-			var __reg4 = {text: arguments[__reg3 + __reg12], flag: arguments[__reg3 + __reg13], bDontHide: arguments[__reg3 + __reg5], savedItemIndex: 0, filterFlag: arguments[__reg3 + __reg5] == true ? 1 : 0};
-			if (__reg4.flag == 0) 
+			var ItemObj: Object = {text: arguments[i + iTextOffset], flag: arguments[i + iFlagOffset], bDontHide: arguments[i + iDontHideOffset], savedItemIndex: 0, filterFlag: arguments[i + iDontHideOffset] == true ? 1 : 0};
+			if (ItemObj.flag == 0) 
 			{
-				__reg4.divider = true;
+				ItemObj.divider = true;
 			}
-			this._CategoriesList.entryList.push(__reg4);
-			__reg3 = __reg3 + __reg11;
+			this._CategoriesList.entryList.push(ItemObj);
+			i = i + iNumObjKeys;
 		}
 		this._CategoriesList.InvalidateData();
 		this._ItemsList.filterer.itemFilter = this._CategoriesList.selectedEntry.flag;
 	}
 
-	function InvalidateListData()
+	function InvalidateListData(): Void
 	{
-		var __reg6 = this._CategoriesList.centeredEntry;
-		var __reg7 = this._CategoriesList.selectedEntry.flag;
-		var __reg3 = 0;
-		while (__reg3 < this._CategoriesList.entryList.length) 
+		var centredEntry: Object = this._CategoriesList.centeredEntry;
+		var iselectedEntryFlag: Number = this._CategoriesList.selectedEntry.flag;
+		var i: Number = 0;
+		while (i < this._CategoriesList.entryList.length) 
 		{
-			this._CategoriesList.entryList[__reg3].filterFlag = this._CategoriesList.entryList[__reg3].bDontHide ? 1 : 0;
-			++__reg3;
+			this._CategoriesList.entryList[i].filterFlag = this._CategoriesList.entryList[i].bDontHide ? 1 : 0;
+			++i;
 		}
 		this._ItemsList.InvalidateData();
-		__reg3 = 0;
-		while (__reg3 < this._ItemsList.entryList.length) 
+		i = 0;
+		while (i < this._ItemsList.entryList.length) 
 		{
-			var __reg5 = this._ItemsList.entryList[__reg3].filterFlag;
-			var __reg2 = 0;
-			while (__reg2 < this._CategoriesList.entryList.length) 
+			var iCurrentEntryFilterFlag: Number = this._ItemsList.entryList[i].filterFlag;
+			var j: Number = 0;
+			while (j < this._CategoriesList.entryList.length) 
 			{
-				if (this._CategoriesList.entryList[__reg2].filterFlag == 0) 
+				if (this._CategoriesList.entryList[j].filterFlag == 0) 
 				{
-					if (this._ItemsList.entryList[__reg3].filterFlag & this._CategoriesList.entryList[__reg2].flag) 
+					if (this._ItemsList.entryList[i].filterFlag & this._CategoriesList.entryList[j].flag) 
 					{
-						this._CategoriesList.entryList[__reg2].filterFlag = 1;
+						this._CategoriesList.entryList[j].filterFlag = 1;
 					}
 				}
-				++__reg2;
+				++j;
 			}
-			++__reg3;
+			++i;
 		}
 		this._CategoriesList.onFilterChange();
-		var __reg4 = 0;
-		__reg3 = 0;
-		while (__reg3 < this._CategoriesList.entryList.length) 
+		var j: Number = 0;
+		i = 0;
+		while (i < this._CategoriesList.entryList.length) 
 		{
-			if (this._CategoriesList.entryList[__reg3].filterFlag == 1) 
+			if (this._CategoriesList.entryList[i].filterFlag == 1) 
 			{
-				if (__reg6.flag == this._CategoriesList.entryList[__reg3].flag) 
+				if (centredEntry.flag == this._CategoriesList.entryList[i].flag) 
 				{
-					this._CategoriesList.RestoreScrollPosition(__reg4, false);
+					this._CategoriesList.RestoreScrollPosition(j, false);
 				}
-				++__reg4;
+				++j;
 			}
-			++__reg3;
+			++i;
 		}
 		this._CategoriesList.UpdateList();
 		if (this._CategoriesList.centeredEntry == undefined) 
 		{
 			this._CategoriesList.scrollPosition = this._CategoriesList.scrollPosition - 1;
 		}
-		if (__reg7 != this._CategoriesList.selectedEntry.flag) 
+		if (iselectedEntryFlag != this._CategoriesList.selectedEntry.flag) 
 		{
 			this._ItemsList.filterer.itemFilter = this._CategoriesList.selectedEntry.flag;
 			this._ItemsList.UpdateList();
@@ -362,5 +360,4 @@ dynamic class InventoryLists extends MovieClip
 		}
 		this.dispatchEvent({type: "showItemsList", index: this._ItemsList.selectedIndex});
 	}
-
 }
