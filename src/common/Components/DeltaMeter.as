@@ -1,4 +1,6 @@
-﻿class Components.DeltaMeter extends Components.Meter
+﻿import Shared.GlobalFunc;
+
+class Components.DeltaMeter extends Components.Meter
 {
 	var DeltaEmpty: Number;
 	var DeltaFull: Number;
@@ -7,18 +9,18 @@
 	function DeltaMeter(aMovieClip: MovieClip)
 	{
 		super(aMovieClip);
-		this.DeltaMeterMovieClip = aMovieClip.DeltaIndicatorInstance;
-		this.DeltaMeterMovieClip.gotoAndStop("Empty");
-		this.DeltaEmpty = this.DeltaMeterMovieClip._currentframe;
-		this.DeltaMeterMovieClip.gotoAndStop("Full");
-		this.DeltaFull = this.DeltaMeterMovieClip._currentframe;
+		DeltaMeterMovieClip = aMovieClip.DeltaIndicatorInstance;
+		DeltaMeterMovieClip.gotoAndStop("Empty");
+		DeltaEmpty = DeltaMeterMovieClip._currentframe;
+		DeltaMeterMovieClip.gotoAndStop("Full");
+		DeltaFull = DeltaMeterMovieClip._currentframe;
 	}
 
 	function SetDeltaPercent(aiPercent: Number): Void
 	{
 		var iPercent: Number = Math.min(100, Math.max(aiPercent, 0));
-		var iMeterFrame: Number = Math.floor(Shared.GlobalFunc.Lerp(this.DeltaEmpty, this.DeltaFull, 0, 100, iPercent));
-		this.DeltaMeterMovieClip.gotoAndStop(iMeterFrame);
+		var iMeterFrame: Number = Math.floor(GlobalFunc.Lerp(DeltaEmpty, DeltaFull, 0, 100, iPercent));
+		DeltaMeterMovieClip.gotoAndStop(iMeterFrame);
 	}
 
 }

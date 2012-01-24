@@ -1,3 +1,5 @@
+import Shared.ButtonChange;
+
 class Components.CrossPlatformButtons extends gfx.controls.Button
 {
 	var ButtonArt: MovieClip;
@@ -16,9 +18,9 @@ class Components.CrossPlatformButtons extends gfx.controls.Button
 	function onLoad(): Void
 	{
 		super.onLoad();
-		if (this._parent.onButtonLoad != undefined) 
+		if (_parent.onButtonLoad != undefined) 
 		{
-			this._parent.onButtonLoad(this);
+			_parent.onButtonLoad(this);
 		}
 	}
 
@@ -26,41 +28,41 @@ class Components.CrossPlatformButtons extends gfx.controls.Button
 	{
 		if (aiPlatform != undefined) 
 		{
-			this.CurrentPlatform = aiPlatform;
+			CurrentPlatform = aiPlatform;
 		}
 		if (aSwapPS3 != undefined) 
 		{
-			this.PS3Swapped = aSwapPS3;
+			PS3Swapped = aSwapPS3;
 		}
-		this.RefreshArt();
+		RefreshArt();
 	}
 
 	function RefreshArt(): Void
 	{
-		if (undefined != this.ButtonArt) 
+		if (undefined != ButtonArt) 
 		{
-			this.ButtonArt.removeMovieClip();
+			ButtonArt.removeMovieClip();
 		}
-		var iCurrentPlatform: Number = this.CurrentPlatform;
-		if (iCurrentPlatform === Shared.ButtonChange.PLATFORM_PC) 
+		var iCurrentPlatform: Number = CurrentPlatform;
+		if (iCurrentPlatform === ButtonChange.PLATFORM_PC) 
 		{
-			if (this.PCButton != "None") 
+			if (PCButton != "None") 
 			{
-				this.ButtonArt_mc = this.attachMovie(this.PCButton, "ButtonArt", this.getNextHighestDepth());
+				ButtonArt_mc = attachMovie(PCButton, "ButtonArt", getNextHighestDepth());
 			}
 		}
-		else if (iCurrentPlatform === Shared.ButtonChange.PLATFORM_PC_GAMEPAD) 
+		else if (iCurrentPlatform === ButtonChange.PLATFORM_PC_GAMEPAD) 
 		{
-			this.ButtonArt_mc = this.attachMovie(this.XBoxButton, "ButtonArt", this.getNextHighestDepth());
+			ButtonArt_mc = attachMovie(XBoxButton, "ButtonArt", getNextHighestDepth());
 		}
-		else if (iCurrentPlatform === Shared.ButtonChange.PLATFORM_360) 
+		else if (iCurrentPlatform === ButtonChange.PLATFORM_360) 
 		{
-			this.ButtonArt_mc = this.attachMovie(this.XBoxButton, "ButtonArt", this.getNextHighestDepth());
+			ButtonArt_mc = attachMovie(XBoxButton, "ButtonArt", getNextHighestDepth());
 		}
-		else if (iCurrentPlatform === Shared.ButtonChange.PLATFORM_PS3) 
+		else if (iCurrentPlatform === ButtonChange.PLATFORM_PS3) 
 		{
-			var strPS3Button: String = this.PS3Button;
-			if (this.PS3Swapped) 
+			var strPS3Button: String = PS3Button;
+			if (PS3Swapped) 
 			{
 				if (strPS3Button == "PS3_A") 
 				{
@@ -71,24 +73,24 @@ class Components.CrossPlatformButtons extends gfx.controls.Button
 					strPS3Button = "PS3_A";
 				}
 			}
-			this.ButtonArt_mc = this.attachMovie(strPS3Button, "ButtonArt", this.getNextHighestDepth());
+			ButtonArt_mc = attachMovie(strPS3Button, "ButtonArt", getNextHighestDepth());
 		}
-		this.ButtonArt_mc._x = this.ButtonArt_mc._x - this.ButtonArt_mc._width;
-		this.ButtonArt_mc._y = (this._height - this.ButtonArt_mc._height) / 2;
-		this.border._visible = false;
+		ButtonArt_mc._x = ButtonArt_mc._x - ButtonArt_mc._width;
+		ButtonArt_mc._y = (_height - ButtonArt_mc._height) / 2;
+		border._visible = false;
 	}
 
 	function GetArt(): Object
 	{
-		return {PCArt: this.PCButton, XBoxArt: this.XBoxButton, PS3Art: this.PS3Button};
+		return {PCArt: PCButton, XBoxArt: XBoxButton, PS3Art: PS3Button};
 	}
 
 	function SetArt(aPlatformArt: Object): Void
 	{
-		this.PCArt = aPlatformArt.PCArt;
-		this.XBoxArt = aPlatformArt.XBoxArt;
-		this.PS3Art = aPlatformArt.PS3Art;
-		this.RefreshArt();
+		PCArt = aPlatformArt.PCArt;
+		XBoxArt = aPlatformArt.XBoxArt;
+		PS3Art = aPlatformArt.PS3Art;
+		RefreshArt();
 	}
 
 	function get XBoxArt(): String
@@ -100,7 +102,7 @@ class Components.CrossPlatformButtons extends gfx.controls.Button
 	{
 		if (aValue != "") 
 		{
-			this.XBoxButton = aValue;
+			XBoxButton = aValue;
 		}
 	}
 
@@ -113,7 +115,7 @@ class Components.CrossPlatformButtons extends gfx.controls.Button
 	{
 		if (aValue != "") 
 		{
-			this.PS3Button = aValue;
+			PS3Button = aValue;
 		}
 	}
 
@@ -126,7 +128,7 @@ class Components.CrossPlatformButtons extends gfx.controls.Button
 	{
 		if (aValue != "") 
 		{
-			this.PCButton = aValue;
+			PCButton = aValue;
 		}
 	}
 

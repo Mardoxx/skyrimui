@@ -1,32 +1,36 @@
+import Components.CrossPlatformButtons;
+import gfx.io.GameDelegate;
+import Shared.GlobalFunc;
+
 class BookBottomBar extends MovieClip
 {
 	var ButtonRect: Object;
-	var PageTurnButton: Components.CrossPlatformButtons;
-	var TakeButton: Components.CrossPlatformButtons;
+	var PageTurnButton: CrossPlatformButtons;
+	var TakeButton: CrossPlatformButtons;
 
 	function BookBottomBar()
 	{
 		super();
-		this.PageTurnButton = this.ButtonRect.TurnPageButtonInstance;
-		this.TakeButton = this.ButtonRect.TakeButtonInstance;
+		PageTurnButton = ButtonRect.TurnPageButtonInstance;
+		TakeButton = ButtonRect.TakeButtonInstance;
 	}
 
 	function InitExtensions(): Void
 	{
-		gfx.io.GameDelegate.addCallBack("ShowTakeButton", this, "ShowTakeButton");
-		Shared.GlobalFunc.SetLockFunction();
+		GameDelegate.addCallBack("ShowTakeButton", this, "ShowTakeButton");
+		GlobalFunc.SetLockFunction();
 		MovieClip(this).Lock("BL");
 	}
 
 	function ShowTakeButton(abShow: Boolean, abSteal: Boolean): Void
 	{
-		this.TakeButton.visible = abShow;
-		this.TakeButton.label = abSteal ? "$Steal" : "$Take";
+		TakeButton.visible = abShow;
+		TakeButton.label = abSteal ? "$Steal" : "$Take";
 	}
 
 	function SetPlatform(aiPlatformIndex: Number, abPS3Switch: Boolean): Void
 	{
-		this.PageTurnButton.SetPlatform(aiPlatformIndex, abPS3Switch);
-		this.TakeButton.SetPlatform(aiPlatformIndex, abPS3Switch);
+		PageTurnButton.SetPlatform(aiPlatformIndex, abPS3Switch);
+		TakeButton.SetPlatform(aiPlatformIndex, abPS3Switch);
 	}
 }

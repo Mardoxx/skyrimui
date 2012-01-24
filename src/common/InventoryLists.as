@@ -1,3 +1,10 @@
+import gfx.events.EventDispatcher;
+import gfx.io.GameDelegate;
+import gfx.ui.InputDetails;
+import gfx.ui.NavigationCode;
+import gfx.managers.FocusHandler;
+import Shared.GlobalFunc;
+
 class InventoryLists extends MovieClip
 {
 	static var NO_PANELS: Number = 0;
@@ -6,76 +13,81 @@ class InventoryLists extends MovieClip
 	static var TRANSITIONING_TO_NO_PANELS: Number = 3;
 	static var TRANSITIONING_TO_ONE_PANEL: Number = 4;
 	static var TRANSITIONING_TO_TWO_PANELS: Number = 5;
+	
+	
 	var CategoriesListHolder: MovieClip;
 	var ItemsListHolder: MovieClip;
 	var _CategoriesList: MovieClip;
 	var _ItemsList: MovieClip;
+	
 	var dispatchEvent: Function;
+	
 	var iCurrCategoryIndex: Number;
 	var iCurrentState: Number;
 	var iPlatform: Number;
+	
 	var strHideItemsCode: String;
 	var strShowItemsCode: String;
 
 	function InventoryLists()
 	{
 		super();
-		this._CategoriesList = this.CategoriesListHolder.List_mc;
-		this._ItemsList = this.ItemsListHolder.List_mc;
-		gfx.events.EventDispatcher.initialize(this);
-		this.gotoAndStop("NoPanels");
-		gfx.io.GameDelegate.addCallBack("SetCategoriesList", this, "SetCategoriesList");
-		gfx.io.GameDelegate.addCallBack("InvalidateListData", this, "InvalidateListData");
-		this.strHideItemsCode = gfx.ui.NavigationCode.LEFT;
-		this.strShowItemsCode = gfx.ui.NavigationCode.RIGHT;
+		_CategoriesList = CategoriesListHolder.List_mc;
+		_ItemsList = ItemsListHolder.List_mc;
+		EventDispatcher.initialize(this);
+		gotoAndStop("NoPanels");
+		GameDelegate.addCallBack("SetCategoriesList", this, "SetCategoriesList");
+		GameDelegate.addCallBack("InvalidateListData", this, "InvalidateListData");
+		strHideItemsCode = NavigationCode.LEFT;
+		strShowItemsCode = NavigationCode.RIGHT;
 	}
 
 	function onLoad(): Void
 	{
-		this._CategoriesList.addEventListener("itemPress", this, "onCategoriesItemPress");
-		this._CategoriesList.addEventListener("listPress", this, "onCategoriesListPress");
-		this._CategoriesList.addEventListener("listMovedUp", this, "onCategoriesListMoveUp");
-		this._CategoriesList.addEventListener("listMovedDown", this, "onCategoriesListMoveDown");
-		this._CategoriesList.addEventListener("selectionChange", this, "onCategoriesListMouseSelectionChange");
-		this._CategoriesList.numTopHalfEntries = 7;
-		this._CategoriesList.filterer.itemFilter = 1;
-		this._ItemsList.maxTextLength = 35;
-		this._ItemsList.disableInput = true;
-		this._ItemsList.addEventListener("listMovedUp", this, "onItemsListMoveUp");
-		this._ItemsList.addEventListener("listMovedDown", this, "onItemsListMoveDown");
-		this._ItemsList.addEventListener("selectionChange", this, "onItemsListMouseSelectionChange");
+		_CategoriesList.addEventListener("itemPress", this, "onCategoriesItemPress");
+		_CategoriesList.addEventListener("listPress", this, "onCategoriesListPress");
+		_CategoriesList.addEventListener("listMovedUp", this, "onCategoriesListMoveUp");
+		_CategoriesList.addEventListener("listMovedDown", this, "onCategoriesListMoveDown");
+		_CategoriesList.addEventListener("selectionChange", this, "onCategoriesListMouseSelectionChange");
+		_CategoriesList.numTopHalfEntries = 7;
+		_CategoriesList.filterer.itemFilter = 1;
+		_ItemsList.maxTextLength = 35;
+		_ItemsList.disableInput = true;
+		_ItemsList.addEventListener("listMovedUp", this, "onItemsListMoveUp");
+		_ItemsList.addEventListener("listMovedDown", this, "onItemsListMoveDown");
+		_ItemsList.addEventListener("selectionChange", this, "onItemsListMouseSelectionChange");
 	}
 
 	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
-		this.iPlatform = aiPlatform;
-		this._CategoriesList.SetPlatform(aiPlatform, abPS3Switch);
-		this._ItemsList.SetPlatform(aiPlatform, abPS3Switch);
-		if (this.iPlatform == 0) 
+		iPlatform = aiPlatform;
+		_CategoriesList.SetPlatform(aiPlatform, abPS3Switch);
+		_ItemsList.SetPlatform(aiPlatform, abPS3Switch);
+		if (iPlatform == 0) 
 		{
-			this.CategoriesListHolder.ListBackground.gotoAndStop("Mouse");
-			this.ItemsListHolder.ListBackground.gotoAndStop("Mouse");
+			CategoriesListHolder.ListBackground.gotoAndStop("Mouse");
+			ItemsListHolder.ListBackground.gotoAndStop("Mouse");
 			return;
 		}
-		this.CategoriesListHolder.ListBackground.gotoAndStop("Gamepad");
-		this.ItemsListHolder.ListBackground.gotoAndStop("Gamepad");
+		CategoriesListHolder.ListBackground.gotoAndStop("Gamepad");
+		ItemsListHolder.ListBackground.gotoAndStop("Gamepad");
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
 		var bHandledInput: Boolean = false;
-		if (this.iCurrentState == InventoryLists.ONE_PANEL || this.iCurrentState == InventoryLists.TWO_PANELS) 
+		if (iCurrentState == InventoryLists.ONE_PANEL || iCurrentState == InventoryLists.TWO_PANELS) 
 		{
-			if (Shared.GlobalFunc.IsKeyPressed(details)) 
+			if (GlobalFunc.IsKeyPressed(details)) 
 			{
-				if (details.navEquivalent == this.strHideItemsCode && this.iCurrentState == InventoryLists.TWO_PANELS) 
+				if (details.navEquivalent == strHideItemsCode && iCurrentState == InventoryLists.TWO_PANELS) 
 				{
-					this.HideItemsList();
+					HideItemsList();
 					bHandledInput = true;
 				}
-				else if (details.navEquivalent == this.strShowItemsCode && this.iCurrentState == InventoryLists.ONE_PANEL) 
+				else if (details.navEquivalent == strShowItemsCode && iCurrentState == InventoryLists.ONE_PANEL) 
 				{
-					this.ShowItemsList();
+					ShowItemsList();
 					bHandledInput = true;
 				}
 			}
@@ -89,132 +101,132 @@ class InventoryLists extends MovieClip
 
 	function get CategoriesList(): MovieClip
 	{
-		return this._CategoriesList;
+		return _CategoriesList;
 	}
 
 	function get ItemsList(): MovieClip
 	{
-		return this._ItemsList;
+		return _ItemsList;
 	}
 
 	function get currentState(): Number
 	{
-		return this.iCurrentState;
+		return iCurrentState;
 	}
 
 	function set currentState(aiNewState: Number): Void
 	{
 		if (aiNewState === InventoryLists.NO_PANELS) 
 		{
-			this.iCurrentState = aiNewState;
+			iCurrentState = aiNewState;
 		}
 		else if (aiNewState === InventoryLists.ONE_PANEL) 
 		{
-			this.iCurrentState = aiNewState;
-			gfx.managers.FocusHandler.instance.setFocus(this._CategoriesList, 0);
+			iCurrentState = aiNewState;
+			FocusHandler.instance.setFocus(_CategoriesList, 0);
 		}
 		else if (aiNewState === InventoryLists.TWO_PANELS) 
 		{
-			this.iCurrentState = aiNewState;
-			gfx.managers.FocusHandler.instance.setFocus(this._ItemsList, 0);
+			iCurrentState = aiNewState;
+			FocusHandler.instance.setFocus(_ItemsList, 0);
 		}
 	}
 
 	function RestoreCategoryIndex(): Void
 	{
-		this._CategoriesList.selectedIndex = this.iCurrCategoryIndex;
+		_CategoriesList.selectedIndex = iCurrCategoryIndex;
 	}
 
 	function ShowCategoriesList(abPlayBladeSound: Boolean): Void
 	{
-		this.iCurrentState = InventoryLists.TRANSITIONING_TO_ONE_PANEL;
-		this.dispatchEvent({type: "categoryChange", index: this._CategoriesList.selectedIndex});
-		this.gotoAndPlay("Panel1Show");
+		iCurrentState = InventoryLists.TRANSITIONING_TO_ONE_PANEL;
+		dispatchEvent({type: "categoryChange", index: _CategoriesList.selectedIndex});
+		gotoAndPlay("Panel1Show");
 		if (abPlayBladeSound != false) 
 		{
-			gfx.io.GameDelegate.call("PlaySound", ["UIMenuBladeOpenSD"]);
+			GameDelegate.call("PlaySound", ["UIMenuBladeOpenSD"]);
 		}
 	}
 
 	function HideCategoriesList(): Void
 	{
-		this.iCurrentState = InventoryLists.TRANSITIONING_TO_NO_PANELS;
-		this.gotoAndPlay("Panel1Hide");
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuBladeCloseSD"]);
+		iCurrentState = InventoryLists.TRANSITIONING_TO_NO_PANELS;
+		gotoAndPlay("Panel1Hide");
+		GameDelegate.call("PlaySound", ["UIMenuBladeCloseSD"]);
 	}
 
 	function ShowItemsList(abPlayBladeSound: Boolean, abPlayAnim: Boolean): Void
 	{
 		if (abPlayAnim != false) 
 		{
-			this.iCurrentState = InventoryLists.TRANSITIONING_TO_TWO_PANELS;
+			iCurrentState = InventoryLists.TRANSITIONING_TO_TWO_PANELS;
 		}
-		if (this._CategoriesList.selectedEntry != undefined) 
+		if (_CategoriesList.selectedEntry != undefined) 
 		{
-			this.iCurrCategoryIndex = this._CategoriesList.selectedIndex;
-			this._ItemsList.filterer.itemFilter = this._CategoriesList.selectedEntry.flag;
-			this._ItemsList.RestoreScrollPosition(this._CategoriesList.selectedEntry.savedItemIndex, true);
+			iCurrCategoryIndex = _CategoriesList.selectedIndex;
+			_ItemsList.filterer.itemFilter = _CategoriesList.selectedEntry.flag;
+			_ItemsList.RestoreScrollPosition(_CategoriesList.selectedEntry.savedItemIndex, true);
 		}
-		this._ItemsList.UpdateList();
-		this.dispatchEvent({type: "showItemsList", index: this._ItemsList.selectedIndex});
+		_ItemsList.UpdateList();
+		dispatchEvent({type: "showItemsList", index: _ItemsList.selectedIndex});
 		if (abPlayAnim != false) 
 		{
-			this.gotoAndPlay("Panel2Show");
+			gotoAndPlay("Panel2Show");
 		}
 		if (abPlayBladeSound != false) 
 		{
-			gfx.io.GameDelegate.call("PlaySound", ["UIMenuBladeOpenSD"]);
+			GameDelegate.call("PlaySound", ["UIMenuBladeOpenSD"]);
 		}
-		this._ItemsList.disableInput = false;
+		_ItemsList.disableInput = false;
 	}
 
 	function HideItemsList(): Void
 	{
-		this.iCurrentState = InventoryLists.TRANSITIONING_TO_ONE_PANEL;
-		this.dispatchEvent({type: "hideItemsList", index: this._ItemsList.selectedIndex});
-		this._ItemsList.selectedIndex = -1;
-		this.gotoAndPlay("Panel2Hide");
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuBladeCloseSD"]);
-		this._ItemsList.disableInput = true;
+		iCurrentState = InventoryLists.TRANSITIONING_TO_ONE_PANEL;
+		dispatchEvent({type: "hideItemsList", index: _ItemsList.selectedIndex});
+		_ItemsList.selectedIndex = -1;
+		gotoAndPlay("Panel2Hide");
+		GameDelegate.call("PlaySound", ["UIMenuBladeCloseSD"]);
+		_ItemsList.disableInput = true;
 	}
 
 	function onCategoriesItemPress(): Void
 	{
-		if (this.iCurrentState == InventoryLists.ONE_PANEL) 
+		if (iCurrentState == InventoryLists.ONE_PANEL) 
 		{
-			this.ShowItemsList();
+			ShowItemsList();
 			return;
 		}
-		if (this.iCurrentState == InventoryLists.TWO_PANELS) 
+		if (iCurrentState == InventoryLists.TWO_PANELS) 
 		{
-			this.ShowItemsList(true, false);
+			ShowItemsList(true, false);
 		}
 	}
 
 	function onCategoriesListPress(): Void
 	{
-		if (this.iCurrentState == InventoryLists.TWO_PANELS && !this._ItemsList.disableSelection && !this._ItemsList.disableInput) 
+		if (iCurrentState == InventoryLists.TWO_PANELS && !_ItemsList.disableSelection && !_ItemsList.disableInput) 
 		{
-			this.HideItemsList();
-			this._CategoriesList.UpdateList();
+			HideItemsList();
+			_CategoriesList.UpdateList();
 		}
 	}
 
 	function onCategoriesListMoveUp(event: Object): Void
 	{
-		this.doCategorySelectionChange(event);
+		doCategorySelectionChange(event);
 		if (event.scrollChanged == true) 
 		{
-			this._CategoriesList._parent.gotoAndPlay("moveUp");
+			_CategoriesList._parent.gotoAndPlay("moveUp");
 		}
 	}
 
 	function onCategoriesListMoveDown(event: Object): Void
 	{
-		this.doCategorySelectionChange(event);
+		doCategorySelectionChange(event);
 		if (event.scrollChanged == true) 
 		{
-			this._CategoriesList._parent.gotoAndPlay("moveDown");
+			_CategoriesList._parent.gotoAndPlay("moveDown");
 		}
 	}
 
@@ -222,25 +234,25 @@ class InventoryLists extends MovieClip
 	{
 		if (event.keyboardOrMouse == 0) 
 		{
-			this.doCategorySelectionChange(event);
+			doCategorySelectionChange(event);
 		}
 	}
 
 	function onItemsListMoveUp(event: Object): Void
 	{
-		this.doItemsSelectionChange(event);
+		doItemsSelectionChange(event);
 		if (event.scrollChanged == true) 
 		{
-			this._ItemsList._parent.gotoAndPlay("moveUp");
+			_ItemsList._parent.gotoAndPlay("moveUp");
 		}
 	}
 
 	function onItemsListMoveDown(event: Object): Void
 	{
-		this.doItemsSelectionChange(event);
+		doItemsSelectionChange(event);
 		if (event.scrollChanged == true) 
 		{
-			this._ItemsList._parent.gotoAndPlay("moveDown");
+			_ItemsList._parent.gotoAndPlay("moveDown");
 		}
 	}
 
@@ -248,26 +260,26 @@ class InventoryLists extends MovieClip
 	{
 		if (event.keyboardOrMouse == 0) 
 		{
-			this.doItemsSelectionChange(event);
+			doItemsSelectionChange(event);
 		}
 	}
 
 	function doCategorySelectionChange(event: Object): Void
 	{
-		this.dispatchEvent({type: "categoryChange", index: event.index});
+		dispatchEvent({type: "categoryChange", index: event.index});
 		if (event.index != -1) 
 		{
-			gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+			GameDelegate.call("PlaySound", ["UIMenuFocus"]);
 		}
 	}
 
 	function doItemsSelectionChange(event: Object): Void
 	{
-		this._CategoriesList.selectedEntry.savedItemIndex = this._ItemsList.scrollPosition;
-		this.dispatchEvent({type: "itemHighlightChange", index: event.index});
+		_CategoriesList.selectedEntry.savedItemIndex = _ItemsList.scrollPosition;
+		dispatchEvent({type: "itemHighlightChange", index: event.index});
 		if (event.index != -1) 
 		{
-			gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+			GameDelegate.call("PlaySound", ["UIMenuFocus"]);
 		}
 	}
 
@@ -277,7 +289,7 @@ class InventoryLists extends MovieClip
 		var iFlagOffset: Number = 1;
 		var iDontHideOffset: Number = 2;
 		var iNumObjKeys: Number = 3;
-		this._CategoriesList.entryList.splice(0, this._CategoriesList.entryList.length);
+		_CategoriesList.entryList.splice(0, _CategoriesList.entryList.length);
 		var i: Number = 0;
 		while (i < arguments.length) 
 		{
@@ -286,78 +298,67 @@ class InventoryLists extends MovieClip
 			{
 				ItemObj.divider = true;
 			}
-			this._CategoriesList.entryList.push(ItemObj);
+			_CategoriesList.entryList.push(ItemObj);
 			i = i + iNumObjKeys;
 		}
-		this._CategoriesList.InvalidateData();
-		this._ItemsList.filterer.itemFilter = this._CategoriesList.selectedEntry.flag;
+		_CategoriesList.InvalidateData();
+		_ItemsList.filterer.itemFilter = _CategoriesList.selectedEntry.flag;
 	}
 
 	function InvalidateListData(): Void
 	{
-		var centredEntry: Object = this._CategoriesList.centeredEntry;
-		var iselectedEntryFlag: Number = this._CategoriesList.selectedEntry.flag;
-		var i: Number = 0;
-		while (i < this._CategoriesList.entryList.length) 
-		{
-			this._CategoriesList.entryList[i].filterFlag = this._CategoriesList.entryList[i].bDontHide ? 1 : 0;
-			++i;
+		var centredEntry: Object = _CategoriesList.centeredEntry;
+		var iselectedEntryFlag: Number = _CategoriesList.selectedEntry.flag;
+		for (var i = 0; i < _CategoriesList.entryList.length; i++) {
+			_CategoriesList.entryList[i].filterFlag = _CategoriesList.entryList[i].bDontHide ? 1 : 0;
 		}
-		this._ItemsList.InvalidateData();
-		i = 0;
-		while (i < this._ItemsList.entryList.length) 
-		{
-			var iCurrentEntryFilterFlag: Number = this._ItemsList.entryList[i].filterFlag;
-			var j: Number = 0;
-			while (j < this._CategoriesList.entryList.length) 
-			{
-				if (this._CategoriesList.entryList[j].filterFlag == 0) 
+		_ItemsList.InvalidateData();
+		
+		for (var i = 0; i < _ItemsList.entryList.length; i++) {
+			var iCurrentEntryFilterFlag: Number = _ItemsList.entryList[i].filterFlag;
+			for (var j = 0; j < _CategoriesList.entryList.length; j++) {
+				if (_CategoriesList.entryList[j].filterFlag == 0) 
 				{
-					if (this._ItemsList.entryList[i].filterFlag & this._CategoriesList.entryList[j].flag) 
+					if (_ItemsList.entryList[i].filterFlag & _CategoriesList.entryList[j].flag) 
 					{
-						this._CategoriesList.entryList[j].filterFlag = 1;
+						_CategoriesList.entryList[j].filterFlag = 1;
 					}
 				}
-				++j;
 			}
-			++i;
 		}
-		this._CategoriesList.onFilterChange();
+		_CategoriesList.onFilterChange();
 		var j: Number = 0;
-		i = 0;
-		while (i < this._CategoriesList.entryList.length) 
-		{
-			if (this._CategoriesList.entryList[i].filterFlag == 1) 
+		for (var i = 0; i < _CategoriesList.entryList.length; i++) {
+			if (_CategoriesList.entryList[i].filterFlag == 1) 
 			{
-				if (centredEntry.flag == this._CategoriesList.entryList[i].flag) 
+				if (centredEntry.flag == _CategoriesList.entryList[i].flag) 
 				{
-					this._CategoriesList.RestoreScrollPosition(j, false);
+					_CategoriesList.RestoreScrollPosition(j, false);
 				}
 				++j;
 			}
-			++i;
 		}
-		this._CategoriesList.UpdateList();
-		if (this._CategoriesList.centeredEntry == undefined) 
+		_CategoriesList.UpdateList();
+		if (_CategoriesList.centeredEntry == undefined) 
 		{
-			this._CategoriesList.scrollPosition = this._CategoriesList.scrollPosition - 1;
+			_CategoriesList.scrollPosition = _CategoriesList.scrollPosition - 1;
 		}
-		if (iselectedEntryFlag != this._CategoriesList.selectedEntry.flag) 
+		if (iselectedEntryFlag != _CategoriesList.selectedEntry.flag) 
 		{
-			this._ItemsList.filterer.itemFilter = this._CategoriesList.selectedEntry.flag;
-			this._ItemsList.UpdateList();
-			this.dispatchEvent({type: "categoryChange", index: this._CategoriesList.selectedIndex});
+			_ItemsList.filterer.itemFilter = _CategoriesList.selectedEntry.flag;
+			_ItemsList.UpdateList();
+			dispatchEvent({type: "categoryChange", index: _CategoriesList.selectedIndex});
 		}
-		if (this.iCurrentState != InventoryLists.TWO_PANELS && this.iCurrentState != InventoryLists.TRANSITIONING_TO_TWO_PANELS) 
+		if (iCurrentState != InventoryLists.TWO_PANELS && iCurrentState != InventoryLists.TRANSITIONING_TO_TWO_PANELS) 
 		{
-			this._ItemsList.selectedIndex = -1;
+			_ItemsList.selectedIndex = -1;
 			return;
 		}
-		if (this.iCurrentState == InventoryLists.TWO_PANELS) 
+		if (iCurrentState == InventoryLists.TWO_PANELS) 
 		{
-			this.dispatchEvent({type: "itemHighlightChange", index: this._ItemsList.selectedIndex});
+			dispatchEvent({type: "itemHighlightChange", index: _ItemsList.selectedIndex});
 			return;
 		}
-		this.dispatchEvent({type: "showItemsList", index: this._ItemsList.selectedIndex});
+		dispatchEvent({type: "showItemsList", index: _ItemsList.selectedIndex});
 	}
 }

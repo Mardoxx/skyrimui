@@ -1,3 +1,5 @@
+import Shared.GlobalFunc;
+
 class Components.Meter
 {
 	var CurrentPercent: Number;
@@ -10,78 +12,78 @@ class Components.Meter
 
 	function Meter(aMovieClip: MovieClip)
 	{
-		this.Empty = 0;
-		this.Full = 0;
-		this.CurrentPercent = 100;
-		this.TargetPercent = 100;
-		this.FillSpeed = 2;
-		this.EmptySpeed = 3;
-		this.meterMovieClip = aMovieClip;
-		this.meterMovieClip.gotoAndStop("Empty");
-		this.Empty = this.meterMovieClip._currentframe;
-		this.meterMovieClip.gotoAndStop("Full");
-		this.Full = this.meterMovieClip._currentframe;
+		Empty = 0;
+		Full = 0;
+		CurrentPercent = 100;
+		TargetPercent = 100;
+		FillSpeed = 2;
+		EmptySpeed = 3;
+		meterMovieClip = aMovieClip;
+		meterMovieClip.gotoAndStop("Empty");
+		Empty = meterMovieClip._currentframe;
+		meterMovieClip.gotoAndStop("Full");
+		Full = meterMovieClip._currentframe;
 	}
 
 	function SetPercent(aPercent: Number): Void
 	{
-		this.CurrentPercent = Math.min(100, Math.max(aPercent, 0));
-		this.TargetPercent = this.CurrentPercent;
-		var iMeterFrame: Number = Math.floor(Shared.GlobalFunc.Lerp(this.Empty, this.Full, 0, 100, this.CurrentPercent));
-		this.meterMovieClip.gotoAndStop(iMeterFrame);
+		CurrentPercent = Math.min(100, Math.max(aPercent, 0));
+		TargetPercent = CurrentPercent;
+		var iMeterFrame: Number = Math.floor(GlobalFunc.Lerp(Empty, Full, 0, 100, CurrentPercent));
+		meterMovieClip.gotoAndStop(iMeterFrame);
 	}
 
 	function SetTargetPercent(aPercent: Number): Void
 	{
-		this.TargetPercent = Math.min(100, Math.max(aPercent, 0));
+		TargetPercent = Math.min(100, Math.max(aPercent, 0));
 	}
 
 	function SetFillSpeed(aSpeed: Number): Void
 	{
-		this.FillSpeed = aSpeed;
+		FillSpeed = aSpeed;
 	}
 
 	function SetEmptySpeed(aSpeed: Number): Void
 	{
-		this.EmptySpeed = aSpeed;
+		EmptySpeed = aSpeed;
 	}
 
 	function Update(): Void
 	{
-		if (this.TargetPercent > 0 && this.TargetPercent > this.CurrentPercent) 
+		if (TargetPercent > 0 && TargetPercent > CurrentPercent) 
 		{
-			if (this.TargetPercent - this.CurrentPercent > this.FillSpeed) 
+			if (TargetPercent - CurrentPercent > FillSpeed) 
 			{
-				this.CurrentPercent = this.CurrentPercent + this.FillSpeed;
-				var iMeterFrame: Number = Shared.GlobalFunc.Lerp(this.Empty, this.Full, 0, 100, this.CurrentPercent);
-				this.meterMovieClip.gotoAndStop(iMeterFrame);
+				CurrentPercent = CurrentPercent + FillSpeed;
+				var iMeterFrame: Number = GlobalFunc.Lerp(Empty, Full, 0, 100, CurrentPercent);
+				meterMovieClip.gotoAndStop(iMeterFrame);
 			}
 			else 
 			{
-				this.SetPercent(this.TargetPercent);
+				SetPercent(TargetPercent);
 			}
 			return;
 		}
-		if (this.TargetPercent <= this.CurrentPercent) 
+		if (TargetPercent <= CurrentPercent) 
 		{
-			var bUnknown: Boolean = this.CurrentPercent - this.TargetPercent > this.EmptySpeed; // Unknown Boolean
-			if ((this.TargetPercent > 0 && bUnknown) || this.CurrentPercent > this.EmptySpeed) 
+			var bUnknown: Boolean = CurrentPercent - TargetPercent > EmptySpeed; // Unknown Boolean
+			if ((TargetPercent > 0 && bUnknown) || CurrentPercent > EmptySpeed) 
 			{
 				if (bUnknown) 
 				{
-					this.CurrentPercent = this.CurrentPercent - this.EmptySpeed;
+					CurrentPercent = CurrentPercent - EmptySpeed;
 				}
 				else 
 				{
-					this.CurrentPercent = this.TargetPercent;
+					CurrentPercent = TargetPercent;
 				}
-				var iMeterFrame: Number = Shared.GlobalFunc.Lerp(this.Empty, this.Full, 0, 100, this.CurrentPercent);
-				this.meterMovieClip.gotoAndStop(iMeterFrame);
+				var iMeterFrame: Number = GlobalFunc.Lerp(Empty, Full, 0, 100, CurrentPercent);
+				meterMovieClip.gotoAndStop(iMeterFrame);
 				return;
 			}
-			if (this.CurrentPercent >= 0) 
+			if (CurrentPercent >= 0) 
 			{
-				this.SetPercent(this.TargetPercent);
+				SetPercent(TargetPercent);
 			}
 		}
 	}

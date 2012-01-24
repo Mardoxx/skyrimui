@@ -1,4 +1,9 @@
-﻿class ItemMenu extends MovieClip
+﻿import gfx.io.GameDelegate;
+import Shared.GlobalFunc;
+import gfx.ui.InputDetails;
+import gfx.ui.NavigationCode;
+
+class ItemMenu extends MovieClip
 {
 	var BottomBar_mc: MovieClip;
 	var ExitMenuRect: MovieClip;
@@ -8,105 +13,107 @@
 	var ItemsListInputCatcher: MovieClip;
 	var MouseRotationRect: MovieClip;
 	var RestoreCategoryRect: MovieClip;
+	
 	var bFadedIn: Boolean;
+	
 	var iPlatform: Number;
 
 	function ItemMenu()
 	{
 		super();
-		this.InventoryLists_mc = this.InventoryLists_mc;
-		this.ItemCard_mc = this.ItemCardFadeHolder_mc.ItemCard_mc;
-		this.BottomBar_mc = this.BottomBar_mc;
-		this.bFadedIn = true;
+		InventoryLists_mc = InventoryLists_mc;
+		ItemCard_mc = ItemCardFadeHolder_mc.ItemCard_mc;
+		BottomBar_mc = BottomBar_mc;
+		bFadedIn = true;
 		Mouse.addListener(this);
 	}
 
 	function InitExtensions(abPlayBladeSound: Boolean): Void
 	{
-		gfx.io.GameDelegate.addCallBack("UpdatePlayerInfo", this, "UpdatePlayerInfo");
-		gfx.io.GameDelegate.addCallBack("UpdateItemCardInfo", this, "UpdateItemCardInfo");
-		gfx.io.GameDelegate.addCallBack("ToggleMenuFade", this, "ToggleMenuFade");
-		gfx.io.GameDelegate.addCallBack("RestoreIndices", this, "RestoreIndices");
-		this.InventoryLists_mc.addEventListener("categoryChange", this, "onCategoryChange");
-		this.InventoryLists_mc.addEventListener("itemHighlightChange", this, "onItemHighlightChange");
-		this.InventoryLists_mc.addEventListener("showItemsList", this, "onShowItemsList");
-		this.InventoryLists_mc.addEventListener("hideItemsList", this, "onHideItemsList");
-		this.InventoryLists_mc.ItemsList.addEventListener("itemPress", this, "onItemSelect");
-		this.ItemCard_mc.addEventListener("quantitySelect", this, "onQuantityMenuSelect");
-		this.ItemCard_mc.addEventListener("subMenuAction", this, "onItemCardSubMenuAction");
-		this.PositionElements();
-		this.InventoryLists_mc.ShowCategoriesList(abPlayBladeSound);
-		this.ItemCard_mc._visible = false;
-		this.BottomBar_mc.HideButtons();
-		this.ItemsListInputCatcher.onMouseDown = function ()
+		GameDelegate.addCallBack("UpdatePlayerInfo", this, "UpdatePlayerInfo");
+		GameDelegate.addCallBack("UpdateItemCardInfo", this, "UpdateItemCardInfo");
+		GameDelegate.addCallBack("ToggleMenuFade", this, "ToggleMenuFade");
+		GameDelegate.addCallBack("RestoreIndices", this, "RestoreIndices");
+		InventoryLists_mc.addEventListener("categoryChange", this, "onCategoryChange");
+		InventoryLists_mc.addEventListener("itemHighlightChange", this, "onItemHighlightChange");
+		InventoryLists_mc.addEventListener("showItemsList", this, "onShowItemsList");
+		InventoryLists_mc.addEventListener("hideItemsList", this, "onHideItemsList");
+		InventoryLists_mc.ItemsList.addEventListener("itemPress", this, "onItemSelect");
+		ItemCard_mc.addEventListener("quantitySelect", this, "onQuantityMenuSelect");
+		ItemCard_mc.addEventListener("subMenuAction", this, "onItemCardSubMenuAction");
+		PositionElements();
+		InventoryLists_mc.ShowCategoriesList(abPlayBladeSound);
+		ItemCard_mc._visible = false;
+		BottomBar_mc.HideButtons();
+		ItemsListInputCatcher.onMouseDown = function ()
 		{
-			if (this._parent.bFadedIn == true && Mouse.getTopMostEntity() == this) 
+			if (_parent.bFadedIn == true && Mouse.getTopMostEntity() == this) 
 			{
-				this._parent.onItemsListInputCatcherClick();
+				_parent.onItemsListInputCatcherClick();
 			}
 		}
-		this.RestoreCategoryRect.onRollOver = function ()
+		RestoreCategoryRect.onRollOver = function ()
 		{
-			if (this._parent.bFadedIn == true && this._parent.InventoryLists_mc.currentState == InventoryLists.TWO_PANELS) 
+			if (_parent.bFadedIn == true && _parent.InventoryLists_mc.currentState == InventoryLists.TWO_PANELS) 
 			{
-				this._parent.InventoryLists_mc.RestoreCategoryIndex();
+				_parent.InventoryLists_mc.RestoreCategoryIndex();
 			}
 		}
-		this.ExitMenuRect.onMouseDown = function ()
+		ExitMenuRect.onMouseDown = function ()
 		{
-			if (this._parent.bFadedIn == true && Mouse.getTopMostEntity() == this) 
+			if (_parent.bFadedIn == true && Mouse.getTopMostEntity() == this) 
 			{
-				this._parent.onExitMenuRectClick();
+				_parent.onExitMenuRectClick();
 			}
 		}
 	}
 
 	function PositionElements(): Void
 	{
-		Shared.GlobalFunc.SetLockFunction();
-		MovieClip(this.InventoryLists_mc).Lock("L");
-		this.InventoryLists_mc._x = this.InventoryLists_mc._x - 20;
+		GlobalFunc.SetLockFunction();
+		MovieClip(InventoryLists_mc).Lock("L");
+		InventoryLists_mc._x = InventoryLists_mc._x - 20;
 		var iLeftOffset: Number = Stage.visibleRect.x + Stage.safeRect.x;
 		var iRightOffset: Number = Stage.visibleRect.x + Stage.visibleRect.width - Stage.safeRect.x;
-		this.BottomBar_mc.PositionElements(iLeftOffset, iRightOffset);
-		this.ItemCard_mc._parent._x = (iRightOffset + this.InventoryLists_mc._x + this.InventoryLists_mc._width) / 2 - this.ItemCard_mc._parent._width / 2 - 85;
-		MovieClip(this.ExitMenuRect).Lock("TL");
-		this.ExitMenuRect._x = this.ExitMenuRect._x - Stage.safeRect.x;
-		this.ExitMenuRect._y = this.ExitMenuRect._y - Stage.safeRect.y;
-		this.RestoreCategoryRect._x = this.ExitMenuRect._x + this.InventoryLists_mc.CategoriesList._parent._width;
-		this.ItemsListInputCatcher._x = this.RestoreCategoryRect._x + this.RestoreCategoryRect._width;
-		this.ItemsListInputCatcher._width = _root._width - this.ItemsListInputCatcher._x;
-		if (this.MouseRotationRect != undefined) 
+		BottomBar_mc.PositionElements(iLeftOffset, iRightOffset);
+		ItemCard_mc._parent._x = (iRightOffset + InventoryLists_mc._x + InventoryLists_mc._width) / 2 - ItemCard_mc._parent._width / 2 - 85;
+		MovieClip(ExitMenuRect).Lock("TL");
+		ExitMenuRect._x = ExitMenuRect._x - Stage.safeRect.x;
+		ExitMenuRect._y = ExitMenuRect._y - Stage.safeRect.y;
+		RestoreCategoryRect._x = ExitMenuRect._x + InventoryLists_mc.CategoriesList._parent._width;
+		ItemsListInputCatcher._x = RestoreCategoryRect._x + RestoreCategoryRect._width;
+		ItemsListInputCatcher._width = _root._width - ItemsListInputCatcher._x;
+		if (MouseRotationRect != undefined) 
 		{
-			MovieClip(this.MouseRotationRect).Lock("T");
-			this.MouseRotationRect._x = this.ItemCard_mc._parent._x;
-			this.MouseRotationRect._width = this.ItemCard_mc._parent._width;
-			this.MouseRotationRect._height = 0.55 * Stage.visibleRect.height;
+			MovieClip(MouseRotationRect).Lock("T");
+			MouseRotationRect._x = ItemCard_mc._parent._x;
+			MouseRotationRect._width = ItemCard_mc._parent._width;
+			MouseRotationRect._height = 0.55 * Stage.visibleRect.height;
 		}
 	}
 
 	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
-		this.iPlatform = aiPlatform;
-		this.InventoryLists_mc.SetPlatform(aiPlatform, abPS3Switch);
-		this.ItemCard_mc.SetPlatform(aiPlatform, abPS3Switch);
-		this.BottomBar_mc.SetPlatform(aiPlatform, abPS3Switch);
+		iPlatform = aiPlatform;
+		InventoryLists_mc.SetPlatform(aiPlatform, abPS3Switch);
+		ItemCard_mc.SetPlatform(aiPlatform, abPS3Switch);
+		BottomBar_mc.SetPlatform(aiPlatform, abPS3Switch);
 	}
 
 	function GetInventoryItemList()
 	{
-		return this.InventoryLists_mc.ItemsList;
+		return InventoryLists_mc.ItemsList;
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
-		if (this.bFadedIn) 
+		if (bFadedIn) 
 		{
 			if (!pathToFocus[0].handleInput(details, pathToFocus.slice(1))) 
 			{
-				if (Shared.GlobalFunc.IsKeyPressed(details) && details.navEquivalent == gfx.ui.NavigationCode.TAB) 
+				if (GlobalFunc.IsKeyPressed(details) && details.navEquivalent == NavigationCode.TAB) 
 				{
-					gfx.io.GameDelegate.call("CloseMenu", []);
+					GameDelegate.call("CloseMenu", []);
 				}
 			}
 		}
@@ -115,35 +122,22 @@
 
 	function onMouseWheel(delta: Object): Void
 	{
-		var topMostEntity: Object = Mouse.getTopMostEntity();
-		for (;;) 
-		{
-			if (!(topMostEntity && topMostEntity != undefined)) 
-			{
-				return;
-			}
-			if ((topMostEntity == this.MouseRotationRect && this.ShouldProcessItemsListInput(false)) || (!this.bFadedIn && delta == -1)) 
-			{
-				gfx.io.GameDelegate.call("ZoomItemModel", [delta]);
-			}
-			else if (topMostEntity == this.ItemsListInputCatcher && this.ShouldProcessItemsListInput(false)) 
-			{
-				if (delta == 1) 
-				{
-					this.InventoryLists_mc.ItemsList.moveSelectionUp();
-				}
-				else if (delta == -1) 
-				{
-					this.InventoryLists_mc.ItemsList.moveSelectionDown();
+		for (var topMostEntity: Object = Mouse.getTopMostEntity(); !(topMostEntity && topMostEntity != undefined); topMostEntity = topMostEntity._parent) {
+			if ((topMostEntity == MouseRotationRect && ShouldProcessItemsListInput(false)) || (!bFadedIn && delta == -1)) {
+				GameDelegate.call("ZoomItemModel", [delta]);
+			} else if (topMostEntity == ItemsListInputCatcher && ShouldProcessItemsListInput(false)) {
+				if (delta == 1) {
+					InventoryLists_mc.ItemsList.moveSelectionUp();
+				} else if (delta == -1) {
+					InventoryLists_mc.ItemsList.moveSelectionDown();
 				}
 			}
-			topMostEntity = topMostEntity._parent;
 		}
 	}
 
 	function onExitMenuRectClick(): Void
 	{
-		gfx.io.GameDelegate.call("CloseMenu", []);
+		GameDelegate.call("CloseMenu", []);
 	}
 
 	function onCategoryChange(event: Object): Void
@@ -154,29 +148,29 @@
 	{
 		if (event.index != -1) 
 		{
-			gfx.io.GameDelegate.call("UpdateItem3D", [true]);
-			gfx.io.GameDelegate.call("RequestItemCardInfo", [], this, "UpdateItemCardInfo");
+			GameDelegate.call("UpdateItem3D", [true]);
+			GameDelegate.call("RequestItemCardInfo", [], this, "UpdateItemCardInfo");
 			return;
 		}
-		this.onHideItemsList();
+		onHideItemsList();
 	}
 
 	function onShowItemsList(event: Object): Void
 	{
 		if (event.index != -1) 
 		{
-			gfx.io.GameDelegate.call("UpdateItem3D", [true]);
-			gfx.io.GameDelegate.call("RequestItemCardInfo", [], this, "UpdateItemCardInfo");
-			this.ItemCard_mc.FadeInCard();
-			this.BottomBar_mc.ShowButtons();
+			GameDelegate.call("UpdateItem3D", [true]);
+			GameDelegate.call("RequestItemCardInfo", [], this, "UpdateItemCardInfo");
+			ItemCard_mc.FadeInCard();
+			BottomBar_mc.ShowButtons();
 		}
 	}
 
 	function onHideItemsList(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("UpdateItem3D", [false]);
-		this.ItemCard_mc.FadeOutCard();
-		this.BottomBar_mc.HideButtons();
+		GameDelegate.call("UpdateItem3D", [false]);
+		ItemCard_mc.FadeOutCard();
+		BottomBar_mc.HideButtons();
 	}
 
 	function onItemSelect(event: Object): Void
@@ -185,62 +179,62 @@
 		{
 			if (event.entry.count > InventoryDefines.QUANTITY_MENU_COUNT_LIMIT) 
 			{
-				this.ItemCard_mc.ShowQuantityMenu(event.entry.count);
+				ItemCard_mc.ShowQuantityMenu(event.entry.count);
 			}
 			else 
 			{
-				this.onQuantityMenuSelect({amount: 1});
+				onQuantityMenuSelect({amount: 1});
 			}
 			return;
 		}
-		gfx.io.GameDelegate.call("DisabledItemSelect", []);
+		GameDelegate.call("DisabledItemSelect", []);
 	}
 
 	function onQuantityMenuSelect(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("ItemSelect", [event.amount]);
+		GameDelegate.call("ItemSelect", [event.amount]);
 	}
 
 	function UpdatePlayerInfo(aUpdateObj: Object): Void
 	{
-		this.BottomBar_mc.UpdatePlayerInfo(aUpdateObj, this.ItemCard_mc.itemInfo);
+		BottomBar_mc.UpdatePlayerInfo(aUpdateObj, ItemCard_mc.itemInfo);
 	}
 
 	function UpdateItemCardInfo(aUpdateObj: Object): Void
 	{
-		this.ItemCard_mc.itemInfo = aUpdateObj;
-		this.BottomBar_mc.UpdatePerItemInfo(aUpdateObj);
+		ItemCard_mc.itemInfo = aUpdateObj;
+		BottomBar_mc.UpdatePerItemInfo(aUpdateObj);
 	}
 
 	function onItemCardSubMenuAction(event: Object): Void
 	{
 		if (event.opening == true) 
 		{
-			this.InventoryLists_mc.ItemsList.disableSelection = true;
-			this.InventoryLists_mc.ItemsList.disableInput = true;
-			this.InventoryLists_mc.CategoriesList.disableSelection = true;
-			this.InventoryLists_mc.CategoriesList.disableInput = true;
+			InventoryLists_mc.ItemsList.disableSelection = true;
+			InventoryLists_mc.ItemsList.disableInput = true;
+			InventoryLists_mc.CategoriesList.disableSelection = true;
+			InventoryLists_mc.CategoriesList.disableInput = true;
 			return;
 		}
 		if (event.opening == false) 
 		{
-			this.InventoryLists_mc.ItemsList.disableSelection = false;
-			this.InventoryLists_mc.ItemsList.disableInput = false;
-			this.InventoryLists_mc.CategoriesList.disableSelection = false;
-			this.InventoryLists_mc.CategoriesList.disableInput = false;
+			InventoryLists_mc.ItemsList.disableSelection = false;
+			InventoryLists_mc.ItemsList.disableInput = false;
+			InventoryLists_mc.CategoriesList.disableSelection = false;
+			InventoryLists_mc.CategoriesList.disableInput = false;
 		}
 	}
 
 	function ShouldProcessItemsListInput(abCheckIfOverRect: Boolean): Boolean
 	{
-		var bInTwoPanelsWithItems: Boolean = this.bFadedIn == true && this.InventoryLists_mc.currentState == InventoryLists.TWO_PANELS && this.InventoryLists_mc.ItemsList.numUnfilteredItems > 0 && !this.InventoryLists_mc.ItemsList.disableSelection && !this.InventoryLists_mc.ItemsList.disableInput;
-		if (bInTwoPanelsWithItems && this.iPlatform == 0 && abCheckIfOverRect) 
+		var bInTwoPanelsWithItems: Boolean = bFadedIn == true && InventoryLists_mc.currentState == InventoryLists.TWO_PANELS && InventoryLists_mc.ItemsList.numUnfilteredItems > 0 && !InventoryLists_mc.ItemsList.disableSelection && !InventoryLists_mc.ItemsList.disableInput;
+		if (bInTwoPanelsWithItems && iPlatform == 0 && abCheckIfOverRect) 
 		{
 			var topMostEntity: Object = Mouse.getTopMostEntity();
 			var bFoundInputRect: Boolean = false;
 			while (!bFoundInputRect && topMostEntity && topMostEntity != undefined) 
 			{
-				if (topMostEntity == this.ItemsListInputCatcher || topMostEntity == this.InventoryLists_mc.ItemsList) 
+				if (topMostEntity == ItemsListInputCatcher || topMostEntity == InventoryLists_mc.ItemsList) 
 				{
 					bFoundInputRect = true;
 				}
@@ -253,78 +247,72 @@
 
 	function onMouseRotationStart(): Void
 	{
-		gfx.io.GameDelegate.call("StartMouseRotation", []);
-		this.InventoryLists_mc.CategoriesList.disableSelection = true;
-		this.InventoryLists_mc.ItemsList.disableSelection = true;
+		GameDelegate.call("StartMouseRotation", []);
+		InventoryLists_mc.CategoriesList.disableSelection = true;
+		InventoryLists_mc.ItemsList.disableSelection = true;
 	}
 
 	function onMouseRotationStop(): Void
 	{
-		gfx.io.GameDelegate.call("StopMouseRotation", []);
-		this.InventoryLists_mc.CategoriesList.disableSelection = false;
-		this.InventoryLists_mc.ItemsList.disableSelection = false;
+		GameDelegate.call("StopMouseRotation", []);
+		InventoryLists_mc.CategoriesList.disableSelection = false;
+		InventoryLists_mc.ItemsList.disableSelection = false;
 	}
 
 	function onItemsListInputCatcherClick(): Void
 	{
-		if (this.ShouldProcessItemsListInput(false)) 
+		if (ShouldProcessItemsListInput(false)) 
 		{
-			this.onItemSelect({entry: this.InventoryLists_mc.ItemsList.selectedEntry, keyboardOrMouse: 0});
+			onItemSelect({entry: InventoryLists_mc.ItemsList.selectedEntry, keyboardOrMouse: 0});
 		}
 	}
 
 	function onMouseRotationFastClick(): Void
 	{
-		this.onItemsListInputCatcherClick();
+		onItemsListInputCatcherClick();
 	}
 
 	function ToggleMenuFade(): Void
 	{
-		if (this.bFadedIn) 
+		if (bFadedIn) 
 		{
-			this._parent.gotoAndPlay("fadeOut");
-			this.bFadedIn = false;
-			this.InventoryLists_mc.ItemsList.disableSelection = true;
-			this.InventoryLists_mc.ItemsList.disableInput = true;
-			this.InventoryLists_mc.CategoriesList.disableSelection = true;
-			this.InventoryLists_mc.CategoriesList.disableInput = true;
+			_parent.gotoAndPlay("fadeOut");
+			bFadedIn = false;
+			InventoryLists_mc.ItemsList.disableSelection = true;
+			InventoryLists_mc.ItemsList.disableInput = true;
+			InventoryLists_mc.CategoriesList.disableSelection = true;
+			InventoryLists_mc.CategoriesList.disableInput = true;
 			return;
 		}
-		this._parent.gotoAndPlay("fadeIn");
+		_parent.gotoAndPlay("fadeIn");
 	}
 
 	function SetFadedIn(): Void
 	{
-		this.bFadedIn = true;
-		this.InventoryLists_mc.ItemsList.disableSelection = false;
-		this.InventoryLists_mc.ItemsList.disableInput = false;
-		this.InventoryLists_mc.CategoriesList.disableSelection = false;
-		this.InventoryLists_mc.CategoriesList.disableInput = false;
+		bFadedIn = true;
+		InventoryLists_mc.ItemsList.disableSelection = false;
+		InventoryLists_mc.ItemsList.disableInput = false;
+		InventoryLists_mc.CategoriesList.disableSelection = false;
+		InventoryLists_mc.CategoriesList.disableInput = false;
 	}
 
 	function RestoreIndices(): Void
 	{
-		this.InventoryLists_mc.CategoriesList.RestoreScrollPosition(arguments[0], true);
-		var i: Number = 1;
-		while (i < arguments.length) 
-		{
-			this.InventoryLists_mc.CategoriesList.entryList[i - 1].savedItemIndex = arguments[i];
-			++i;
+		InventoryLists_mc.CategoriesList.RestoreScrollPosition(arguments[0], true);
+		for (var i = 0; i < arguments.length; i++) {
+			InventoryLists_mc.CategoriesList.entryList[i - 1].savedItemIndex = arguments[i];
 		}
-		this.InventoryLists_mc.CategoriesList.UpdateList();
+		InventoryLists_mc.CategoriesList.UpdateList();
 	}
 
 	function SaveIndices(): Void
 	{
 		var Indices: Array = new Array();
-		Indices.push(this.InventoryLists_mc.CategoriesList.scrollPosition);
-		var i: Number = 0;
-		while (i < this.InventoryLists_mc.CategoriesList.entryList.length) 
-		{
-			Indices.push(this.InventoryLists_mc.CategoriesList.entryList[i].savedItemIndex);
-			++i;
+		Indices.push(InventoryLists_mc.CategoriesList.scrollPosition);
+		for (var i = 0; i < InventoryLists_mc.CategoriesList.entryList.length; i++) {
+			Indices.push(InventoryLists_mc.CategoriesList.entryList[i].savedItemIndex);
 		}
-		gfx.io.GameDelegate.call("SaveIndices", [Indices]);
+		GameDelegate.call("SaveIndices", [Indices]);
 	}
 
 }

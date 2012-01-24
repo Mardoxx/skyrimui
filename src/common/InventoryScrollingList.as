@@ -21,9 +21,9 @@ class InventoryScrollingList extends Shared.CenteredScrollingList
 			{
 				strEntryObjectText = strEntryObjectText + " (" + aEntryObject.count.toString() + ")";
 			}
-			if (strEntryObjectText.length > this.iMaxTextLength) 
+			if (strEntryObjectText.length > iMaxTextLength) 
 			{
-				strEntryObjectText = strEntryObjectText.substr(0, this.iMaxTextLength - 3) + "...";
+				strEntryObjectText = strEntryObjectText.substr(0, iMaxTextLength - 3) + "...";
 			}
 			if (aEntryObject.bestInClass == true) 
 			{
@@ -34,25 +34,21 @@ class InventoryScrollingList extends Shared.CenteredScrollingList
 			if (aEntryObject.negativeEffect == true || aEntryObject.isStealing == true) 
 			{
 				aEntryClip.textField.textColor = aEntryObject.enabled == false ? 0x800000 : 0xFF0000;
-			}
-			else 
-			{
+			} else {
 				aEntryClip.textField.textColor = aEntryObject.enabled == false ? 0x4C4C4C : 0xFFFFFF;
 			}
 		}
 		if (aEntryObject != undefined && aEntryObject.equipState != undefined) 
 		{
 			aEntryClip.EquipIcon.gotoAndStop(equippedStates[aEntryObject.equipState]);
-		}
-		else 
-		{
+		} else {
 			aEntryClip.EquipIcon.gotoAndStop("None");
 		}
 		if (aEntryObject.favorite == true && (aEntryObject.equipState == 0 || aEntryObject.equipState == 1)) 
 		{
 			aEntryClip.EquipIcon.FavoriteIconInstance.gotoAndStop("On");
-			return;
+		} else {
+			aEntryClip.EquipIcon.FavoriteIconInstance.gotoAndStop("Off");
 		}
-		aEntryClip.EquipIcon.FavoriteIconInstance.gotoAndStop("Off");
 	}
 }

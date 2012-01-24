@@ -12,13 +12,13 @@
 	function Update(): Void
 	{
 		super.Update();
-		var iCurrentFrame = this.meterMovieClip._currentframe;
-		if (this.iCurrentPercent <= 0) 
+		var iCurrentFrame = meterMovieClip._currentframe;
+		if (iCurrentPercent <= 0) 
 		{
-			if (iCurrentFrame == this.iEmpty) 
+			if (iCurrentFrame == iEmpty) 
 			{
-				this.meterMovieClip.gotoAndPlay(this.iEmpty + 1);
-				var iCurrentFrame1: Number = this.meterMovieClip._currentframe;
+				meterMovieClip.gotoAndPlay(iEmpty + 1);
+				var iCurrentFrame1: Number = meterMovieClip._currentframe;
 			}
 		}
 	}

@@ -29,28 +29,30 @@ class InventoryDefines
 
 	static function GetEquipText(aiItemType: Number): String
 	{
-		var iItemType: Number = aiItemType;
-		if (iItemType === InventoryDefines.ICT_ARMOR) 
-		{
-			return "$Equip";
+		switch (aiItemType) {
+			case InventoryDefines.ICT_ARMOR:
+				return "$Equip";
+				break;
+				
+			case InventoryDefines.ICT_BOOK: 
+				return "$Read";
+				break;
+				
+			case InventoryDefines.ICT_POTION: 
+				return "$Use";
+				break;
+				
+			case InventoryDefines.ICT_FOOD: 
+				return "$Eat";
+				break;
+				
+			case InventoryDefines.ICT_INGREDIENT:
+				return "$Eat";
+				break;
+				
+			default:
+				return "$Equip";
 		}
-		else if (iItemType === InventoryDefines.ICT_BOOK) 
-		{
-			return "$Read";
-		}
-		else if (iItemType === InventoryDefines.ICT_POTION) 
-		{
-			return "$Use";
-		}
-		else if (iItemType === InventoryDefines.ICT_FOOD) 
-		{
-			return "$Eat";
-		}
-		else if (iItemType === InventoryDefines.ICT_INGREDIENT) 
-		{
-			return "$Eat";
-		}
-		return "$Equip";
 	}
 
 }

@@ -1,18 +1,28 @@
+import gfx.io.GameDelegate;
+import Shared.GlobalFunc;
+
 class BookMenu extends MovieClip
 {
 	static var PAGE_BREAK_TAG: String = "[pagebreak]";
+	
 	static var NOTE_WIDTH: Number = 400;
 	static var NOTE_X_OFFSET: Number = 20;
 	static var NOTE_Y_OFFSET: Number = 10;
 	static var CACHED_PAGES: Number = 4;
+	
 	static var BookMenuInstance: Object;
+	
+	
 	var BookPages: Array;
 	var PageInfoA: Array;
+	
 	var RefTextFieldTextFormat: TextField;
 	var ReferenceTextField: TextField;
 	var ReferenceTextInstance: TextField;
 	var ReferenceText_mc: TextField
+	
 	var bNote: Boolean;
+	
 	var iCurrentLine: Number;
 	var iLeftPageNumber: Number;
 	var iMaxPageHeight: Number;
@@ -24,55 +34,55 @@ class BookMenu extends MovieClip
 	{
 		super();
 		BookMenu.BookMenuInstance = this;
-		this.BookPages = new Array();
-		this.PageInfoA = new Array();
-		this.iLeftPageNumber = 0;
-		this.iPageSetIndex = 0;
-		this.bNote = false;
-		this.ReferenceText_mc = this.ReferenceTextInstance;
-		this.RefTextFieldTextFormat = this.ReferenceText_mc.PageTextField.getTextFormat();
+		BookPages = new Array();
+		PageInfoA = new Array();
+		iLeftPageNumber = 0;
+		iPageSetIndex = 0;
+		bNote = false;
+		ReferenceText_mc = ReferenceTextInstance;
+		RefTextFieldTextFormat = ReferenceText_mc.PageTextField.getTextFormat();
 	}
 
 	function onLoad(): Void
 	{
-		this.ReferenceText_mc._visible = false;
-		this.ReferenceTextField = this.ReferenceText_mc.PageTextField;
-		this.ReferenceTextField.noTranslate = true;
-		this.ReferenceTextField.setTextFormat(this.RefTextFieldTextFormat);
-		this.iMaxPageHeight = this.ReferenceTextField._height;
-		gfx.io.GameDelegate.addCallBack("SetBookText", this, "SetBookText");
-		gfx.io.GameDelegate.addCallBack("TurnPage", this, "TurnPage");
-		gfx.io.GameDelegate.addCallBack("PrepForClose", this, "PrepForClose");
+		ReferenceText_mc._visible = false;
+		ReferenceTextField = ReferenceText_mc.PageTextField;
+		ReferenceTextField.noTranslate = true;
+		ReferenceTextField.setTextFormat(RefTextFieldTextFormat);
+		iMaxPageHeight = ReferenceTextField._height;
+		GameDelegate.addCallBack("SetBookText", this, "SetBookText");
+		GameDelegate.addCallBack("TurnPage", this, "TurnPage");
+		GameDelegate.addCallBack("PrepForClose", this, "PrepForClose");
 	}
 
 	function SetBookText(astrText: String, abNote: Boolean): Void
 	{
-		this.bNote = abNote;
-		this.ReferenceTextField.verticalAutoSize = "top";
-		this.ReferenceTextField.SetText(astrText, true);
+		bNote = abNote;
+		ReferenceTextField.verticalAutoSize = "top";
+		ReferenceTextField.SetText(astrText, true);
 		if (abNote) 
 		{
-			this.ReferenceTextField._width = BookMenu.NOTE_WIDTH;
+			ReferenceTextField._width = BookMenu.NOTE_WIDTH;
 		}
-		this.PageInfoA.push({pageTop: 0, pageHeight: this.iMaxPageHeight});
-		this.iCurrentLine = 0;
-		this.iPaginationIndex = setInterval(this, "CalculatePagination", 30);
-		this.iNextPageBreak = this.iMaxPageHeight;
-		this.SetLeftPageNumber(0);
+		PageInfoA.push({pageTop: 0, pageHeight: iMaxPageHeight});
+		iCurrentLine = 0;
+		iPaginationIndex = setInterval(this, "CalculatePagination", 30);
+		iNextPageBreak = iMaxPageHeight;
+		SetLeftPageNumber(0);
 	}
 
 	function CreateDisplayPage(PageTop: Number, PageBottom: Number, aPageNum: Number): Void
 	{
-		var Page_mc: MovieClip = this.ReferenceText_mc.duplicateMovieClip("Page", this.getNextHighestDepth());
+		var Page_mc: MovieClip = ReferenceText_mc.duplicateMovieClip("Page", getNextHighestDepth());
 		var PageTextField_tf: TextField = Page_mc.PageTextField;
 		PageTextField_tf.noTranslate = true;
-		PageTextField_tf.SetText(this.ReferenceTextField.htmlText, true);
-		var iLineOffsetTop: Number = this.ReferenceTextField.getLineOffset(this.ReferenceTextField.getLineIndexAtPoint(0, PageTop));
-		var iLineOffsetBottom: Number = this.ReferenceTextField.getLineOffset(this.ReferenceTextField.getLineIndexAtPoint(0, PageBottom));
+		PageTextField_tf.SetText(ReferenceTextField.htmlText, true);
+		var iLineOffsetTop: Number = ReferenceTextField.getLineOffset(ReferenceTextField.getLineIndexAtPoint(0, PageTop));
+		var iLineOffsetBottom: Number = ReferenceTextField.getLineOffset(ReferenceTextField.getLineIndexAtPoint(0, PageBottom));
 		PageTextField_tf.replaceText(0, iLineOffsetTop, "");
-		PageTextField_tf.replaceText(iLineOffsetBottom - iLineOffsetTop, this.ReferenceTextField.length, "");
+		PageTextField_tf.replaceText(iLineOffsetBottom - iLineOffsetTop, ReferenceTextField.length, "");
 		PageTextField_tf.autoSize = "left";
-		if (this.bNote) 
+		if (bNote) 
 		{
 			PageTextField_tf._width = BookMenu.NOTE_WIDTH;
 			Page_mc._x = Stage.visibleRect.x + BookMenu.NOTE_X_OFFSET;
@@ -80,147 +90,128 @@ class BookMenu extends MovieClip
 		}
 		else 
 		{
-			Page_mc._x = this.ReferenceText_mc._x;
-			Page_mc._y = this.ReferenceText_mc._y;
+			Page_mc._x = ReferenceText_mc._x;
+			Page_mc._y = ReferenceText_mc._y;
 		}
 		Page_mc._visible = false;
 		Page_mc.pageNum = aPageNum;
-		this.BookPages.push(Page_mc);
+		BookPages.push(Page_mc);
 	}
 
 	function CalculatePagination()
 	{
 		var bLastPage: Boolean = false;
-		while (!bLastPage && this.iCurrentLine <= this.ReferenceTextField.numLines) 
+		while (!bLastPage && iCurrentLine <= ReferenceTextField.numLines) 
 		{
-			var iLineOffsetCurrent: Number = this.ReferenceTextField.getLineOffset(this.iCurrentLine);
-			var iLineOffsetNext: Number = this.ReferenceTextField.getLineOffset(this.iCurrentLine + 1);
-			var acharBoundaries: Object = this.ReferenceTextField.getCharBoundaries(iLineOffsetCurrent);
-			var astrPageText: String = iLineOffsetNext == -1 ? this.ReferenceTextField.text.substring(iLineOffsetCurrent) : this.ReferenceTextField.text.substring(iLineOffsetCurrent, iLineOffsetNext);
-			astrPageText = Shared.GlobalFunc.StringTrim(astrPageText);
-			if (acharBoundaries.bottom > this.iNextPageBreak || astrPageText == BookMenu.PAGE_BREAK_TAG || this.iCurrentLine >= this.ReferenceTextField.numLines) 
+			var iLineOffsetCurrent: Number = ReferenceTextField.getLineOffset(iCurrentLine);
+			var iLineOffsetNext: Number = ReferenceTextField.getLineOffset(iCurrentLine + 1);
+			var acharBoundaries: Object = ReferenceTextField.getCharBoundaries(iLineOffsetCurrent);
+			var astrPageText: String = iLineOffsetNext == -1 ? ReferenceTextField.text.substring(iLineOffsetCurrent) : ReferenceTextField.text.substring(iLineOffsetCurrent, iLineOffsetNext);
+			astrPageText = GlobalFunc.StringTrim(astrPageText);
+			if (acharBoundaries.bottom > iNextPageBreak || astrPageText == BookMenu.PAGE_BREAK_TAG || iCurrentLine >= ReferenceTextField.numLines) 
 			{
-				var aPageDims: Object = {pageTop: 0, pageHeight: this.iMaxPageHeight};
+				var aPageDims: Object = {pageTop: 0, pageHeight: iMaxPageHeight};
 				if (astrPageText == BookMenu.PAGE_BREAK_TAG) 
 				{
-					aPageDims.pageTop = acharBoundaries.bottom + this.ReferenceTextField.getLineMetrics(this.iCurrentLine).leading;
-					this.PageInfoA[this.PageInfoA.length - 1].pageHeight = acharBoundaries.top - this.PageInfoA[this.PageInfoA.length - 1].pageTop;
+					aPageDims.pageTop = acharBoundaries.bottom + ReferenceTextField.getLineMetrics(iCurrentLine).leading;
+					PageInfoA[PageInfoA.length - 1].pageHeight = acharBoundaries.top - PageInfoA[PageInfoA.length - 1].pageTop;
 				}
 				else 
 				{
 					aPageDims.pageTop = acharBoundaries.top;
-					this.PageInfoA[this.PageInfoA.length - 1].pageHeight = aPageDims.pageTop - this.PageInfoA[this.PageInfoA.length - 1].pageTop;
+					PageInfoA[PageInfoA.length - 1].pageHeight = aPageDims.pageTop - PageInfoA[PageInfoA.length - 1].pageTop;
 				}
-				this.iNextPageBreak = aPageDims.pageTop + this.iMaxPageHeight;
-				if (aPageDims.pageTop != undefined || this.bNote) 
+				iNextPageBreak = aPageDims.pageTop + iMaxPageHeight;
+				if (aPageDims.pageTop != undefined || bNote) 
 				{
-					this.PageInfoA.push(aPageDims);
+					PageInfoA.push(aPageDims);
 				}
 				bLastPage = true;
 			}
-			++this.iCurrentLine;
+			++iCurrentLine;
 		}
-		if (this.iCurrentLine >= this.ReferenceTextField.numLines) 
+		if (iCurrentLine >= ReferenceTextField.numLines) 
 		{
-			clearInterval(this.iPaginationIndex);
-			this.iPaginationIndex = -1;
+			clearInterval(iPaginationIndex);
+			iPaginationIndex = -1;
 		}
-		this.UpdatePages();
+		UpdatePages();
 	}
 
 	function SetLeftPageNumber(aiPageNum: Number): Void
 	{
-		if (aiPageNum < this.PageInfoA.length) 
+		if (aiPageNum < PageInfoA.length) 
 		{
-			this.iLeftPageNumber = aiPageNum;
+			iLeftPageNumber = aiPageNum;
 		}
 	}
 
 	function ShowPageAtOffset(aiPageOffset: Number): Void
 	{
-		var iPageNumber: Number = 0;
-		for (;;) 
-		{
-			if (iPageNumber >= this.BookPages.length) 
+		for (var i = 0; i < BookPages.length; i++) {
+			if (BookPages[i].pageNum == iPageSetIndex + aiPageOffset) 
 			{
-				return;
+				BookPages[i]._visible = true;
+			} else {
+				BookPages[i]._visible = false;
 			}
-			if (this.BookPages[iPageNumber].pageNum == this.iPageSetIndex + aiPageOffset) 
-			{
-				this.BookPages[iPageNumber]._visible = true;
-			}
-			else 
-			{
-				this.BookPages[iPageNumber]._visible = false;
-			}
-			++iPageNumber;
 		}
 	}
 
 	function PrepForClose(): Void
 	{
-		this.iPageSetIndex = this.iLeftPageNumber;
+		iPageSetIndex = iLeftPageNumber;
 	}
 
 	function TurnPage(aiDelta: Number): Boolean
 	{
-		var iNewPageNumber: Number = this.iLeftPageNumber + aiDelta;
-		var bValidTurn: Boolean = iNewPageNumber >= 0 && iNewPageNumber < this.PageInfoA.length;
-		if (this.bNote) 
+		var iNewPageNumber: Number = iLeftPageNumber + aiDelta;
+		var bValidTurn: Boolean = iNewPageNumber >= 0 && iNewPageNumber < PageInfoA.length;
+		if (bNote) 
 		{
-			bValidTurn = iNewPageNumber >= 0 && iNewPageNumber < this.PageInfoA.length - 1;
+			bValidTurn = iNewPageNumber >= 0 && iNewPageNumber < PageInfoA.length - 1;
 		}
 		var iPagestoTurn: Number = Math.abs(aiDelta);
 		if (bValidTurn) 
 		{
-			var iUnknown: Number = iPagestoTurn == 1 ? 1 : 4; // Unknown variable
-			this.SetLeftPageNumber(iNewPageNumber);
-			if (this.iLeftPageNumber < this.iPageSetIndex) 
+			var iMaxTurnablePages: Number = iPagestoTurn == 1 ? 1 : 4;
+			SetLeftPageNumber(iNewPageNumber);
+			if (iLeftPageNumber < iPageSetIndex) 
 			{
-				this.iPageSetIndex = this.iPageSetIndex - iPagestoTurn;
+				iPageSetIndex = iPageSetIndex - iPagestoTurn;
 			}
-			else if (this.iLeftPageNumber >= this.iPageSetIndex + iUnknown) 
+			else if (iLeftPageNumber >= iPageSetIndex + iMaxTurnablePages) 
 			{
-				this.iPageSetIndex = this.iPageSetIndex + iPagestoTurn;
+				iPageSetIndex = iPageSetIndex + iPagestoTurn;
 			}
-			this.UpdatePages();
+			UpdatePages();
 		}
 		return bValidTurn;
 	}
 
 	function UpdatePages(): Void
 	{
-		var iCachedPage: Number = 0;
-		while (iCachedPage < BookMenu.CACHED_PAGES) 
-		{
-			var bUnknown: Boolean = false; // Unknown Boolean
-			var iCurrentPage: Number = 0;
-			while (!bUnknown && iCurrentPage < this.BookPages.length) 
-			{
-				if (this.BookPages[iCurrentPage].pageNum == this.iPageSetIndex + iCachedPage) 
+		for (var i = 0; i < BookMenu.CACHED_PAGES; i++) {
+			var bCachedPage: Boolean = false;			
+			
+			for (var j = 0; j < BookPages.length && !bCachedPage; j++) {
+				if (BookPages[j].pageNum == iPageSetIndex + i) 
 				{
-					bUnknown = true;
+					bCachedPage = true;
 				}
-				++iCurrentPage;
 			}
-			if (!bUnknown && (this.PageInfoA.length > this.iPageSetIndex + iCachedPage + 1 || (this.iPaginationIndex == -1 && this.PageInfoA.length > this.iPageSetIndex + iCachedPage))) 
+			
+			if (!bCachedPage && (PageInfoA.length > iPageSetIndex + i + 1 || (iPaginationIndex == -1 && PageInfoA.length > iPageSetIndex + i))) 
 			{
-				this.CreateDisplayPage(this.PageInfoA[this.iPageSetIndex + iCachedPage].pageTop, this.PageInfoA[this.iPageSetIndex + iCachedPage].pageTop + this.PageInfoA[this.iPageSetIndex + iCachedPage].pageHeight, this.iPageSetIndex + iCachedPage);
+				CreateDisplayPage(PageInfoA[iPageSetIndex + i].pageTop, PageInfoA[iPageSetIndex + i].pageTop + PageInfoA[iPageSetIndex + i].pageHeight, iPageSetIndex + i);
 			}
-			++iCachedPage;
 		}
-		var iCurrentPage: Number = 0;
-		for (;;) 
-		{
-			if (iCurrentPage >= this.BookPages.length) 
+		
+		for (var i = 0; i < BookPages.length; i++) {
+			if (BookPages[i].pageNum < iPageSetIndex || BookPages[i].pageNum >= iPageSetIndex + BookMenu.CACHED_PAGES) 
 			{
-				return;
+				BookPages.splice(i, 1)[0].removeMovieClip();
 			}
-			if (this.BookPages[iCurrentPage].pageNum < this.iPageSetIndex || this.BookPages[iCurrentPage].pageNum >= this.iPageSetIndex + BookMenu.CACHED_PAGES) 
-			{
-				this.BookPages.splice(iCurrentPage, 1)[0].removeMovieClip();
-			}
-			++iCurrentPage;
 		}
 	}
 

@@ -1,3 +1,7 @@
+import gfx.ui.InputDetails;
+import gfx.ui.NavigationCode;
+import Shared.GlobalFunc;
+
 class QuantitySlider extends gfx.controls.Slider
 {
 	var dispatchEvent: Function;
@@ -7,23 +11,23 @@ class QuantitySlider extends gfx.controls.Slider
 		super();
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
 		var bHandledInput: Boolean = super.handleInput(details, pathToFocus);
 		if (!bHandledInput) 
 		{
-			if (Shared.GlobalFunc.IsKeyPressed(details)) 
+			if (GlobalFunc.IsKeyPressed(details)) 
 			{
-				if (details.navEquivalent == gfx.ui.NavigationCode.PAGE_DOWN || details.navEquivalent == gfx.ui.NavigationCode.GAMEPAD_L1) 
+				if (details.navEquivalent == NavigationCode.PAGE_DOWN || details.navEquivalent == NavigationCode.GAMEPAD_L1) 
 				{
-					this.value = Math.floor(this.value - this.maximum / 4);
-					this.dispatchEvent({type: "change"});
+					value = Math.floor(value - maximum / 4);
+					dispatchEvent({type: "change"});
 					bHandledInput = true;
 				}
-				else if (details.navEquivalent == gfx.ui.NavigationCode.PAGE_UP || details.navEquivalent == gfx.ui.NavigationCode.GAMEPAD_R1) 
+				else if (details.navEquivalent == NavigationCode.PAGE_UP || details.navEquivalent == NavigationCode.GAMEPAD_R1) 
 				{
-					this.value = Math.ceil(this.value + this.maximum / 4);
-					this.dispatchEvent({type: "change"});
+					value = Math.ceil(value + maximum / 4);
+					dispatchEvent({type: "change"});
 					bHandledInput = true;
 				}
 			}

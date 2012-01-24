@@ -58,6 +58,6 @@ intrinsic class System.capabilities
 	static var MIMETypes:String;
 	static var hasXMLSocket:Boolean;
 	
-	// Scaleform numControllers
+	// Scaleform extensions
 	static var numControllers:Number;
 }
