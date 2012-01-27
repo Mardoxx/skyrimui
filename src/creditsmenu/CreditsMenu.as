@@ -36,8 +36,7 @@ dynamic class CreditsMenu extends MovieClip
 
 	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
-		/* if (Shared.GlobalFunc.IsKeyPressed(details)) 
-		{
+		if (Shared.GlobalFunc.IsKeyPressed(details)) {
 			if ((__reg0 = details.navEquivalent) === gfx.ui.NavigationCode.TAB) 
 			{
 				_root.CodeObj.closeMenu();
@@ -62,10 +61,6 @@ dynamic class CreditsMenu extends MovieClip
 			{
 				this.moveCredits(-80);
 			}
-		} */
-		_global.skse.Log("-----------------");
-		for (var s:String in details) {
-			_global.skse.Log(s + " : " + details[s]);
 		}
 		return true;
 	}
