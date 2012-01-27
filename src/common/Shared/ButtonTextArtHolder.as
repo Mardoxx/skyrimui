@@ -1,3 +1,5 @@
+import gfx.io.GameDelegate;
+
 class Shared.ButtonTextArtHolder extends MovieClip
 {
 	var strButtonName: String;
@@ -9,7 +11,7 @@ class Shared.ButtonTextArtHolder extends MovieClip
 
 	function SetButtonName(aText: String): Void
 	{
-		this.strButtonName = aText;
+		strButtonName = aText;
 	}
 
 	function CreateButtonArt(aInputText): String
@@ -23,19 +25,19 @@ class Shared.ButtonTextArtHolder extends MovieClip
 			while (iReplacerStart != -1 && iReplacerEnd != -1) 
 			{
 				var strButtonReplacer = aInputText.text.substring(iReplacerStart + 1, iReplacerEnd);
-				gfx.io.GameDelegate.call("GetButtonFromUserEvent", [strButtonReplacer], this, "SetButtonName");
-				if (this.strButtonName == undefined) 
+				GameDelegate.call("GetButtonFromUserEvent", [strButtonReplacer], this, "SetButtonName");
+				if (strButtonName == undefined) 
 				{
 					strTextWithButtons = strTextWithButtons + aInputText.text.substring(iReplacerStart, iReplacerEnd + 1);
 				}
 				else 
 				{
-					var ButtonImage: flash.display.BitmapData = flash.display.BitmapData.loadBitmap(this.strButtonName + ".png");
+					var ButtonImage: flash.display.BitmapData = flash.display.BitmapData.loadBitmap(strButtonName + ".png");
 					if (ButtonImage != undefined && ButtonImage.height > 0) 
 					{
 						var iMaxHeight: Number = 26;
 						var iScaledWidth: Number = Math.floor(iMaxHeight / ButtonImage.height * ButtonImage.width);
-						strTextWithButtons = strTextWithButtons + ("<img src=\'" + this.strButtonName + ".png\' vspace=\'-5\' height=\'" + iMaxHeight + "\' width=\'" + iScaledWidth + "\'>");
+						strTextWithButtons = strTextWithButtons + ("<img src=\'" + strButtonName + ".png\' vspace=\'-5\' height=\'" + iMaxHeight + "\' width=\'" + iScaledWidth + "\'>");
 					}
 					else 
 					{

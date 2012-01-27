@@ -1,74 +1,80 @@
-dynamic class Shared.CenteredScrollingList extends Shared.BSScrollingList
+import Shared.ListFilterer;
+
+class Shared.CenteredScrollingList extends Shared.BSScrollingList
 {
-	var EntriesA;
-	var GetClipByIndex;
-	var SetEntryText;
-	var _filterer;
-	var bDisableInput;
-	var bMouseDrivenNav;
-	var bRecenterSelection;
-	var border;
-	var dispatchEvent;
-	var doSetSelectedIndex;
-	var fListHeight;
-	var iDividerIndex;
-	var iListItemsShown;
-	var iMaxItemsShown;
-	var iMaxScrollPosition;
-	var iMaxTextLength;
-	var iNumTopHalfEntries;
-	var iNumUnfilteredItems;
-	var iPlatform;
-	var iScrollPosition;
-	var iSelectedIndex;
+	var EntriesA: Array;
+	
+	var _filterer: ListFilterer;
+	
+	var bDisableInput: Boolean;
+	var bMouseDrivenNav: Boolean;
+	var bRecenterSelection: Boolean;
+	var border: MovieClip;
+	
+	var dispatchEvent: Function;
+	var doSetSelectedIndex: Function;
+	var GetClipByIndex: Function;
+	var SetEntryText: Function;
+	
+	var fListHeight: Number;
+	var iDividerIndex: Number;
+	var iListItemsShown: Number;
+	var iMaxItemsShown: Number;
+	var iMaxScrollPosition: Number;
+	var iMaxTextLength: Number;
+	var iNumTopHalfEntries: Number;
+	var iNumUnfilteredItems: Number;
+	var iPlatform: Number;
+	var iScrollPosition: Number;
+	var iSelectedIndex: Number;
 
 	function CenteredScrollingList()
 	{
 		super();
-		this._filterer = new Shared.ListFilterer();
-		this._filterer.addEventListener("filterChange", this, "onFilterChange");
-		this.bRecenterSelection = false;
-		this.iMaxTextLength = 256;
-		this.iDividerIndex = -1;
-		this.iNumUnfilteredItems = 0;
+		_filterer = new ListFilterer();
+		_filterer.addEventListener("filterChange", this, "onFilterChange");
+		bRecenterSelection = false;
+		iMaxTextLength = 256;
+		iDividerIndex = -1;
+		iNumUnfilteredItems = 0;
 	}
 
 	function get filterer()
 	{
-		return this._filterer;
+		return _filterer;
 	}
 
 	function set maxTextLength(aLength)
 	{
 		if (aLength > 3) 
 		{
-			this.iMaxTextLength = aLength;
+			iMaxTextLength = aLength;
 		}
 	}
 
 	function get numUnfilteredItems()
 	{
-		return this.iNumUnfilteredItems;
+		return iNumUnfilteredItems;
 	}
 
 	function get maxTextLength()
 	{
-		return this.iMaxTextLength;
+		return iMaxTextLength;
 	}
 
 	function get numTopHalfEntries()
 	{
-		return this.iNumTopHalfEntries;
+		return iNumTopHalfEntries;
 	}
 
 	function set numTopHalfEntries(aiNum)
 	{
-		this.iNumTopHalfEntries = aiNum;
+		iNumTopHalfEntries = aiNum;
 	}
 
 	function get centeredEntry()
 	{
-		return this.EntriesA[this.GetClipByIndex(this.iNumTopHalfEntries).itemIndex];
+		return EntriesA[GetClipByIndex(iNumTopHalfEntries).itemIndex];
 	}
 
 	function IsDivider(aEntry)
@@ -78,248 +84,232 @@ dynamic class Shared.CenteredScrollingList extends Shared.BSScrollingList
     
 	function IsSelectionAboveDivider()
 	{
-		return this.iDividerIndex == -1 || this.selectedIndex < this.iDividerIndex;
+		return iDividerIndex == -1 || selectedIndex < iDividerIndex;
 	}
 
 	function get dividerIndex()
 	{
-		return this.iDividerIndex;
+		return iDividerIndex;
 	}
 
 	function RestoreScrollPosition(aiNewPosition, abRecenterSelection)
 	{
-		this.iScrollPosition = aiNewPosition;
-		if (this.iScrollPosition < 0) 
+		iScrollPosition = aiNewPosition;
+		if (iScrollPosition < 0) 
 		{
-			this.iScrollPosition = 0;
+			iScrollPosition = 0;
 		}
-		if (this.iScrollPosition > this.iMaxScrollPosition) 
+		if (iScrollPosition > iMaxScrollPosition) 
 		{
-			this.iScrollPosition = this.iMaxScrollPosition;
+			iScrollPosition = iMaxScrollPosition;
 		}
-		this.bRecenterSelection = abRecenterSelection;
+		bRecenterSelection = abRecenterSelection;
 	}
 
 	function UpdateList()
 	{
-		var __reg10 = this.GetClipByIndex(0)._y;
-		var __reg6 = 0;
-		var __reg2 = this.filterer.ClampIndex(0);
-		this.iDividerIndex = -1;
-		var __reg7 = 0;
-		while (__reg7 < this.EntriesA.length) 
-		{
-			if (this.IsDivider(this.EntriesA[__reg7])) 
-			{
-				this.iDividerIndex = __reg7;
+		var iItemHeight: Number = GetClipByIndex(0)._y;
+		var iHeightSum: Number = 0;
+		var iEntryIndex: Number = filterer.ClampIndex(0);
+		iDividerIndex = -1;
+		
+		for (var i: Number = 0; i < EntriesA.length; i++) {
+			if (IsDivider(EntriesA[i])) {
+				iDividerIndex = i
 			}
-			++__reg7;
 		}
-		if (this.bRecenterSelection || this.iPlatform != 0) 
-		{
-			this.iSelectedIndex = -1;
+		
+		if (bRecenterSelection || iPlatform != 0) {
+			iSelectedIndex = -1;
+		} else {
+			iSelectedIndex = filterer.ClampIndex(iSelectedIndex);
 		}
-		else 
-		{
-			this.iSelectedIndex = this.filterer.ClampIndex(this.iSelectedIndex);
+		
+		for (var i: Number = 0; i < iScrollPosition - iNumTopHalfEntries; i++) {
+			EntriesA[iEntryIndex].clipIndex = undefined;
+			iEntryIndex = filterer.GetNextFilterMatch(iEntryIndex);
 		}
-		var __reg9 = 0;
-		while (__reg9 < this.iScrollPosition - this.iNumTopHalfEntries) 
-		{
-			this.EntriesA[__reg2].clipIndex = undefined;
-			__reg2 = this.filterer.GetNextFilterMatch(__reg2);
-			++__reg9;
-		}
-		this.iListItemsShown = 0;
-		this.iNumUnfilteredItems = 0;
-		var __reg4 = 0;
-		while (__reg4 < this.iNumTopHalfEntries) 
-		{
-			var __reg5 = this.GetClipByIndex(__reg4);
-			if (this.iScrollPosition - this.iNumTopHalfEntries + __reg4 >= 0) 
+		
+		
+		iListItemsShown = 0;
+		iNumUnfilteredItems = 0;
+		
+		for (var i: Number = 0; i < iNumTopHalfEntries; i++) {
+			var item: MovieClip = GetClipByIndex(i);
+			if (iScrollPosition - iNumTopHalfEntries + i >= 0) 
 			{
-				this.SetEntry(__reg5, this.EntriesA[__reg2]);
-				__reg5._visible = true;
-				__reg5.itemIndex = this.IsDivider(this.EntriesA[__reg2]) == true ? undefined : __reg2;
-				this.EntriesA[__reg2].clipIndex = __reg4;
-				__reg2 = this.filterer.GetNextFilterMatch(__reg2);
-				++this.iNumUnfilteredItems;
+				SetEntry(item, EntriesA[iEntryIndex]);
+				item._visible = true;
+				item.itemIndex = IsDivider(EntriesA[iEntryIndex]) == true ? undefined : iEntryIndex;
+				EntriesA[iEntryIndex].clipIndex = i;
+				iEntryIndex = filterer.GetNextFilterMatch(iEntryIndex);
+				++iNumUnfilteredItems;
 			}
 			else 
 			{
-				__reg5._visible = false;
-				__reg5.itemIndex = undefined;
+				item._visible = false;
+				item.itemIndex = undefined;
 			}
-			__reg5._y = __reg10 + __reg6;
-			__reg6 = __reg6 + __reg5._height;
-			++this.iListItemsShown;
-			++__reg4;
+			item._y = iItemHeight + iHeightSum;
+			iHeightSum = iHeightSum + item._height;
+			++iListItemsShown;
 		}
-		if (__reg2 != undefined && (this.bRecenterSelection || this.iPlatform != 0)) 
+		if (iEntryIndex != undefined && (bRecenterSelection || iPlatform != 0)) 
 		{
-			this.iSelectedIndex = __reg2;
+			iSelectedIndex = iEntryIndex;
 		}
-		while (__reg2 != undefined && __reg2 != -1 && __reg2 < this.EntriesA.length && this.iListItemsShown < this.iMaxItemsShown && __reg6 <= this.fListHeight) 
+		while (iEntryIndex != undefined && iEntryIndex != -1 && iEntryIndex < EntriesA.length && iListItemsShown < iMaxItemsShown && iHeightSum <= fListHeight) 
 		{
-			__reg5 = this.GetClipByIndex(this.iListItemsShown);
-			this.SetEntry(__reg5, this.EntriesA[__reg2]);
-			this.EntriesA[__reg2].clipIndex = this.iListItemsShown;
-			__reg5.itemIndex = this.IsDivider(this.EntriesA[__reg2]) == true ? undefined : __reg2;
-			__reg5._y = __reg10 + __reg6;
-			__reg5._visible = true;
-			__reg6 = __reg6 + __reg5._height;
-			if (__reg6 <= this.fListHeight && this.iListItemsShown < this.iMaxItemsShown) 
+			item = GetClipByIndex(iListItemsShown);
+			SetEntry(item, EntriesA[iEntryIndex]);
+			EntriesA[iEntryIndex].clipIndex = iListItemsShown;
+			item.itemIndex = IsDivider(EntriesA[iEntryIndex]) == true ? undefined : iEntryIndex;
+			item._y = iItemHeight + iHeightSum;
+			item._visible = true;
+			iHeightSum = iHeightSum + item._height;
+			if (iHeightSum <= fListHeight && iListItemsShown < iMaxItemsShown) 
 			{
-				++this.iListItemsShown;
-				++this.iNumUnfilteredItems;
+				++iListItemsShown;
+				++iNumUnfilteredItems;
 			}
-			__reg2 = this.filterer.GetNextFilterMatch(__reg2);
+			iEntryIndex = filterer.GetNextFilterMatch(iEntryIndex);
 		}
-		var __reg8 = this.iListItemsShown;
-		while (__reg8 < this.iMaxItemsShown) 
-		{
-			this.GetClipByIndex(__reg8)._visible = false;
-			this.GetClipByIndex(__reg8).itemIndex = undefined;
-			++__reg8;
+
+		for (var i: Number = iListItemsShown; i < iMaxItemsShown; i++) {
+			GetClipByIndex(i)._visible = false;
+			GetClipByIndex(i).itemIndex = undefined;
 		}
-		if (this.bMouseDrivenNav && !this.bRecenterSelection) 
+		
+		
+		if (bMouseDrivenNav && !bRecenterSelection) 
 		{
-			var __reg3 = Mouse.getTopMostEntity();
-			while (__reg3 != undefined) 
-			{
-				if (__reg3._parent == this && __reg3._visible && __reg3.itemIndex != undefined) 
+			for (var item: MovieClip; item != undefined; item = item._parent) {
+				if (item._parent == this && item._visible && item.itemIndex != undefined) 
 				{
-					this.doSetSelectedIndex(__reg3.itemIndex, 0);
+					doSetSelectedIndex(item.itemIndex, 0);
 				}
-				__reg3 = __reg3._parent;
+				item = item._parent;
 			}
 		}
-		this.bRecenterSelection = false;
+		bRecenterSelection = false;
 	}
 
 	function InvalidateData()
 	{
-		this.filterer.filterArray = this.EntriesA;
-		this.fListHeight = this.border._height;
-		this.CalculateMaxScrollPosition();
-		if (this.iScrollPosition > this.iMaxScrollPosition) 
+		filterer.filterArray = EntriesA;
+		fListHeight = border._height;
+		CalculateMaxScrollPosition();
+		if (iScrollPosition > iMaxScrollPosition) 
 		{
-			this.iScrollPosition = this.iMaxScrollPosition;
+			iScrollPosition = iMaxScrollPosition;
 		}
-		this.UpdateList();
+		UpdateList();
 	}
 
 	function onFilterChange()
 	{
-		this.iSelectedIndex = this.filterer.ClampIndex(this.iSelectedIndex);
-		this.CalculateMaxScrollPosition();
+		iSelectedIndex = filterer.ClampIndex(iSelectedIndex);
+		CalculateMaxScrollPosition();
 	}
 
 	function moveSelectionUp()
 	{
-		var __reg4 = this.GetClipByIndex(this.iNumTopHalfEntries);
-		var __reg2 = this.filterer.GetPrevFilterMatch(this.iSelectedIndex);
-		var __reg3 = this.iScrollPosition;
-		if (__reg2 != undefined && this.IsDivider(this.EntriesA[__reg2]) == true) 
+		var itemIndex: Number = filterer.GetPrevFilterMatch(iSelectedIndex);
+		var iInitialScrollPos: Number = iScrollPosition;
+		if (itemIndex != undefined && IsDivider(EntriesA[itemIndex]) == true) 
 		{
-			--this.iScrollPosition;
-			__reg2 = this.filterer.GetPrevFilterMatch(__reg2);
+			--iScrollPosition;
+			itemIndex = filterer.GetPrevFilterMatch(itemIndex);
 		}
-		if (__reg2 != undefined) 
+		if (itemIndex != undefined) 
 		{
-			this.iSelectedIndex = __reg2;
-			if (this.iScrollPosition > 0) 
+			iSelectedIndex = itemIndex;
+			if (iScrollPosition > 0) 
 			{
-				--this.iScrollPosition;
+				--iScrollPosition;
 			}
-			this.bMouseDrivenNav = false;
-			this.UpdateList();
-			this.dispatchEvent({type: "listMovedUp", index: this.iSelectedIndex, scrollChanged: __reg3 != this.iScrollPosition});
+			bMouseDrivenNav = false;
+			UpdateList();
+			dispatchEvent({type: "listMovedUp", index: iSelectedIndex, scrollChanged: iInitialScrollPos != iScrollPosition});
 		}
 	}
 
 	function moveSelectionDown()
 	{
-		var __reg4 = this.GetClipByIndex(this.iNumTopHalfEntries);
-		var __reg2 = this.filterer.GetNextFilterMatch(this.iSelectedIndex);
-		var __reg3 = this.iScrollPosition;
-		if (__reg2 != undefined && this.IsDivider(this.EntriesA[__reg2]) == true) 
+		var itemIndex: Number = filterer.GetNextFilterMatch(iSelectedIndex);
+		var iInitialScrollPos: Number = iScrollPosition;
+		if (itemIndex != undefined && IsDivider(EntriesA[itemIndex]) == true) 
 		{
-			++this.iScrollPosition;
-			__reg2 = this.filterer.GetNextFilterMatch(__reg2);
+			++iScrollPosition;
+			itemIndex = filterer.GetNextFilterMatch(itemIndex);
 		}
-		if (__reg2 != undefined) 
+		if (itemIndex != undefined) 
 		{
-			this.iSelectedIndex = __reg2;
-			if (this.iScrollPosition < this.iMaxScrollPosition) 
+			iSelectedIndex = itemIndex;
+			if (iScrollPosition < iMaxScrollPosition) 
 			{
-				++this.iScrollPosition;
+				++iScrollPosition;
 			}
-			this.bMouseDrivenNav = false;
-			this.UpdateList();
-			this.dispatchEvent({type: "listMovedDown", index: this.iSelectedIndex, scrollChanged: __reg3 != this.iScrollPosition});
+			bMouseDrivenNav = false;
+			UpdateList();
+			dispatchEvent({type: "listMovedDown", index: iSelectedIndex, scrollChanged: iInitialScrollPos != iScrollPosition});
 		}
 	}
 
 	function onMouseWheel(delta)
 	{
-		if (this.bDisableInput) 
+		if (bDisableInput) 
 		{
 			return;
-		}
-		var __reg2 = Mouse.getTopMostEntity();
-		while (__reg2 && __reg2 != undefined) 
-		{
-			if (__reg2 == this) 
+		}		
+		for (var item: Object = Mouse.getTopMostEntity(); item && item != undefined; item = item._parent) {
+			if (item == this) 
 			{
 				if (delta < 0) 
 				{
-					var __reg4 = this.GetClipByIndex(this.iNumTopHalfEntries + 1);
-					if (__reg4._visible == true) 
+					var newItem: MovieClip = GetClipByIndex(iNumTopHalfEntries + 1);
+					if (newItem._visible == true) 
 					{
-						if (__reg4.itemIndex == undefined) 
+						if (newItem.itemIndex == undefined) 
 						{
-							this.scrollPosition = this.scrollPosition + 2;
+							scrollPosition = scrollPosition + 2;
 						}
 						else 
 						{
-							this.scrollPosition = this.scrollPosition + 1;
+							scrollPosition = scrollPosition + 1;
 						}
 					}
 				}
 				else if (delta > 0) 
 				{
-					var __reg3 = this.GetClipByIndex(this.iNumTopHalfEntries - 1);
-					if (__reg3._visible == true) 
+					var newItem = GetClipByIndex(iNumTopHalfEntries - 1);
+					if (newItem._visible == true) 
 					{
-						if (__reg3.itemIndex == undefined) 
+						if (newItem.itemIndex == undefined) 
 						{
-							this.scrollPosition = this.scrollPosition - 2;
+							scrollPosition = scrollPosition - 2;
 						}
 						else 
 						{
-							this.scrollPosition = this.scrollPosition - 1;
+							scrollPosition = scrollPosition - 1;
 						}
 					}
 				}
 			}
-			__reg2 = __reg2._parent;
 		}
-		this.bMouseDrivenNav = true;
+		bMouseDrivenNav = true;
 	}
 
 	function CalculateMaxScrollPosition()
 	{
-		this.iMaxScrollPosition = -1;
-		var __reg2 = this.filterer.ClampIndex(0);
-		while (__reg2 != undefined) 
-		{
-			++this.iMaxScrollPosition;
-			__reg2 = this.filterer.GetNextFilterMatch(__reg2);
+		iMaxScrollPosition = -1;
+		for (var item: MovieClip = filterer.ClampIndex(0); item != undefined; item = filterer.GetNextFilterMatch(item)) {
+			++iMaxScrollPosition;
 		}
-		if (this.iMaxScrollPosition == undefined || this.iMaxScrollPosition < 0) 
+		
+		if (iMaxScrollPosition == undefined || iMaxScrollPosition < 0) 
 		{
-			this.iMaxScrollPosition = 0;
+			iMaxScrollPosition = 0;
 		}
 	}
 
@@ -327,7 +317,7 @@ dynamic class Shared.CenteredScrollingList extends Shared.BSScrollingList
 	{
 		if (aEntryClip != undefined) 
 		{
-			if (this.IsDivider(aEntryObject) == true) 
+			if (IsDivider(aEntryObject) == true) 
 			{
 				aEntryClip.gotoAndStop("Divider");
 			}
@@ -335,27 +325,27 @@ dynamic class Shared.CenteredScrollingList extends Shared.BSScrollingList
 			{
 				aEntryClip.gotoAndStop("Normal");
 			}
-			if (this.iPlatform == 0) 
+			if (iPlatform == 0) 
 			{
-				aEntryClip._alpha = aEntryObject == this.selectedEntry ? 100 : 60;
+				aEntryClip._alpha = aEntryObject == selectedEntry ? 100 : 60;
 			}
 			else 
 			{
-				var __reg3 = 4;
-				if (aEntryClip.clipIndex < this.iNumTopHalfEntries) 
+				var iAlphaMulti: Number = 4;
+				if (aEntryClip.clipIndex < iNumTopHalfEntries) 
 				{
-					aEntryClip._alpha = 60 - __reg3 * (this.iNumTopHalfEntries - aEntryClip.clipIndex);
+					aEntryClip._alpha = 60 - iAlphaMulti * (iNumTopHalfEntries - aEntryClip.clipIndex);
 				}
-				else if (aEntryClip.clipIndex > this.iNumTopHalfEntries) 
+				else if (aEntryClip.clipIndex > iNumTopHalfEntries) 
 				{
-					aEntryClip._alpha = 60 - __reg3 * (aEntryClip.clipIndex - this.iNumTopHalfEntries);
+					aEntryClip._alpha = 60 - iAlphaMulti * (aEntryClip.clipIndex - iNumTopHalfEntries);
 				}
 				else 
 				{
 					aEntryClip._alpha = 100;
 				}
 			}
-			this.SetEntryText(aEntryClip, aEntryObject);
+			SetEntryText(aEntryClip, aEntryObject);
 		}
 	}
 

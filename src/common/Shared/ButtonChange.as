@@ -1,4 +1,6 @@
-dynamic class Shared.ButtonChange extends gfx.events.EventDispatcher
+import gfx.events.EventDispatcher;
+
+class Shared.ButtonChange extends gfx.events.EventDispatcher
 {
 	static var PLATFORM_PC: Number = 0;
 	static var PLATFORM_PC_GAMEPAD: Number = 1;
@@ -10,28 +12,28 @@ dynamic class Shared.ButtonChange extends gfx.events.EventDispatcher
 	function ButtonChange()
 	{
 		super();
-		gfx.events.EventDispatcher.initialize(this);
+		EventDispatcher.initialize(this);
 	}
 
 	function get Platform()
 	{
-		return this.iCurrPlatform;
+		return iCurrPlatform;
 	}
 
 	function IsGamepadConnected()
 	{
-		return this.iCurrPlatform == Shared.ButtonChange.PLATFORM_PC_GAMEPAD || this.iCurrPlatform == Shared.ButtonChange.PLATFORM_360 || this.iCurrPlatform == Shared.ButtonChange.PLATFORM_PS3;
+		return iCurrPlatform == Shared.ButtonChange.PLATFORM_PC_GAMEPAD || iCurrPlatform == Shared.ButtonChange.PLATFORM_360 || iCurrPlatform == Shared.ButtonChange.PLATFORM_PS3;
 	}
 
 	function SetPlatform(aSetPlatform: Number, aSetSwapPS3: Boolean)
 	{
-		this.iCurrPlatform = aSetPlatform;
-		this.dispatchEvent({target: this, type: "platformChange", aPlatform: aSetPlatform, aSwapPS3: aSetSwapPS3});
+		iCurrPlatform = aSetPlatform;
+		dispatchEvent({target: this, type: "platformChange", aPlatform: aSetPlatform, aSwapPS3: aSetSwapPS3});
 	}
 
 	function SetPS3Swap(aSwap)
 	{
-		this.dispatchEvent({target: this, type: "SwapPS3Button", Boolean: aSwap});
+		dispatchEvent({target: this, type: "SwapPS3Button", Boolean: aSwap});
 	}
 
 }

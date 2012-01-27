@@ -1,113 +1,94 @@
-dynamic class Shared.CenteredList extends MovieClip
+import gfx.events.EventDispatcher;
+import gfx.ui.InputDetails;
+import gfx.ui.NavigationCode;
+import gfx.managers.FocusHandler;
+import Shared.GlobalFunc;
+
+class Shared.CenteredList extends MovieClip
 {
-	var BottomHalf;
-	var EntriesA;
-	var SelectedEntry;
-	var TopHalf;
-	var bMultilineList;
-	var bRepositionEntries;
-	var bToFitList;
-	var dispatchEvent;
-	var fCenterY;
-	var iMaxEntriesBottomHalf;
-	var iMaxEntriesTopHalf;
-	var iSelectedIndex;
+	var BottomHalf: MovieClip;
+	var EntriesA: Array;
+	var SelectedEntry: MovieClip;
+	var TopHalf: MovieClip;
+	var bMultilineList: Boolean;
+	var bRepositionEntries: Boolean;
+	var bToFitList: Boolean;
+	var dispatchEvent: Function;
+	var fCenterY: Number;
+	var iMaxEntriesBottomHalf: Number;
+	var iMaxEntriesTopHalf: Number;
+	var iSelectedIndex: Number;
 
 	function CenteredList()
 	{
 		super();
-		this.TopHalf = this.TopHalf;
-		this.SelectedEntry = this.SelectedEntry;
-		this.BottomHalf = this.BottomHalf;
-		this.EntriesA = new Array();
-		gfx.events.EventDispatcher.initialize(this);
+		EntriesA = new Array();
+		EventDispatcher.initialize(this);
 		Mouse.addListener(this);
-		this.iSelectedIndex = 0;
-		this.fCenterY = this.SelectedEntry._y + this.SelectedEntry._height / 2;
-		this.bRepositionEntries = true;
-		this.iMaxEntriesTopHalf = 0;
-		while (this.TopHalf["Entry" + this.iMaxEntriesTopHalf] != undefined) 
-		{
-			++this.iMaxEntriesTopHalf;
+		iSelectedIndex = 0;
+		fCenterY = SelectedEntry._y + SelectedEntry._height / 2;
+		bRepositionEntries = true;
+		
+		iMaxEntriesTopHalf = 0;
+		while (TopHalf["Entry" + iMaxEntriesTopHalf] != undefined) {
+			++iMaxEntriesTopHalf;
 		}
-		this.iMaxEntriesBottomHalf = 0;
-		for (;;) 
-		{
-			if (this.BottomHalf["Entry" + this.iMaxEntriesBottomHalf] == undefined) 
-			{
-				return;
-			}
-			++this.iMaxEntriesBottomHalf;
+		
+		iMaxEntriesBottomHalf = 0;
+		while (BottomHalf["Entry" + iMaxEntriesTopHalf] != undefined) {
+			++iMaxEntriesBottomHalf;
 		}
 	}
 
 	function ClearList()
 	{
-		this.EntriesA.splice(0, this.EntriesA.length);
+		EntriesA.splice(0, EntriesA.length);
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
-		var __reg2 = false;
-		if (Shared.GlobalFunc.IsKeyPressed(details)) 
-		{
-			if (details.navEquivalent == gfx.ui.NavigationCode.UP) 
-			{
-				this.moveListDown();
-				__reg2 = true;
+		var bHandledInput: Boolean = false;
+		if (GlobalFunc.IsKeyPressed(details)) {
+			if (details.navEquivalent == NavigationCode.UP) {
+				moveListDown();
+				bHandledInput = true;
 			}
-			else if (details.navEquivalent == gfx.ui.NavigationCode.DOWN) 
+			else if (details.navEquivalent == NavigationCode.DOWN) 
 			{
-				this.moveListUp();
-				__reg2 = true;
+				moveListUp();
+				bHandledInput = true;
 			}
-			else if (details.navEquivalent == gfx.ui.NavigationCode.ENTER && this.iSelectedIndex != -1) 
+			else if (details.navEquivalent == NavigationCode.ENTER && iSelectedIndex != -1) 
 			{
-				this.dispatchEvent({type: "itemPress", index: this.iSelectedIndex, entry: this.EntriesA[this.iSelectedIndex]});
-				__reg2 = true;
+				dispatchEvent({type: "itemPress", index: iSelectedIndex, entry: EntriesA[iSelectedIndex]});
+				bHandledInput = true;
 			}
 		}
-		return __reg2;
+		return bHandledInput;
 	}
 
 	function onMouseWheel(delta)
 	{
-		var __reg2 = Mouse.getTopMostEntity();
-		for (;;) 
-		{
-			if (!(__reg2 && __reg2 != undefined && gfx.managers.FocusHandler.instance.getFocus(0) == this)) 
+		for (var item: MovieClip = Mouse.getTopMostEntity(); item && item != undefined && FocusHandler.instance.getFocus(0) == this; item = item._parent;) {
+			if (item == this) 
 			{
-				return;
-			}
-			if (__reg2 == this) 
-			{
-				if (delta < 0) 
-				{
-					this.moveListUp();
-				}
-				else if (delta > 0) 
-				{
-					this.moveListDown();
+				if (delta < 0) {
+					moveListUp();
+				} else if (delta > 0) {
+					moveListDown();
 				}
 			}
-			__reg2 = __reg2._parent;
 		}
 	}
 
 	function onPress(aiMouseIndex, aiKeyboardOrMouse)
 	{
-		var __reg2 = Mouse.getTopMostEntity();
-		for (;;) 
-		{
-			if (!(__reg2 && __reg2 != undefined)) 
+		
+		for (var item: MovieClip = Mouse.getTopMostEntity(); item && item != undefined; item = item._parent;) {
+			if (item == SelectedEntry) 
 			{
-				return;
+				dispatchEvent({type: "itemPress", index: iSelectedIndex, entry: EntriesA[iSelectedIndex], keyboardOrMouse: aiKeyboardOrMouse});
 			}
-			if (__reg2 == this.SelectedEntry) 
-			{
-				this.dispatchEvent({type: "itemPress", index: this.iSelectedIndex, entry: this.EntriesA[this.iSelectedIndex], keyboardOrMouse: aiKeyboardOrMouse});
-			}
-			__reg2 = __reg2._parent;
 		}
 	}
 
@@ -115,146 +96,126 @@ dynamic class Shared.CenteredList extends MovieClip
 	{
 		if (aiButtonIndex == 1) 
 		{
-			var __reg2 = Mouse.getTopMostEntity();
-			for (;;) 
-			{
-				if (!(__reg2 && __reg2 != undefined)) 
+			for (var item: MovieClip = Mouse.getTopMostEntity(); item && item != undefined; item = item._parent;) {
+				if (item == SelectedEntry) 
 				{
-					return;
+					dispatchEvent({type: "itemPressAux", index: iSelectedIndex, entry: EntriesA[iSelectedIndex], keyboardOrMouse: aiKeyboardOrMouse});
 				}
-				if (__reg2 == this.SelectedEntry) 
-				{
-					this.dispatchEvent({type: "itemPressAux", index: this.iSelectedIndex, entry: this.EntriesA[this.iSelectedIndex], keyboardOrMouse: aiKeyboardOrMouse});
-				}
-				__reg2 = __reg2._parent;
 			}
 		}
 	}
 
 	function get selectedTextString()
 	{
-		return this.EntriesA[this.iSelectedIndex].text;
+		return EntriesA[iSelectedIndex].text;
 	}
 
 	function get selectedIndex()
 	{
-		return this.iSelectedIndex;
+		return iSelectedIndex;
 	}
 
 	function set selectedIndex(aiNewIndex)
 	{
-		this.iSelectedIndex = aiNewIndex;
+		iSelectedIndex = aiNewIndex;
 	}
 
 	function get selectedEntry()
 	{
-		return this.EntriesA[this.iSelectedIndex];
+		return EntriesA[iSelectedIndex];
 	}
 
 	function get entryList()
 	{
-		return this.EntriesA;
+		return EntriesA;
 	}
 
 	function set entryList(anewArray)
 	{
-		this.EntriesA = anewArray;
+		EntriesA = anewArray;
 	}
 
 	function moveListUp()
 	{
-		if (this.iSelectedIndex < this.EntriesA.length - 1) 
+		if (iSelectedIndex < EntriesA.length - 1) 
 		{
-			++this.iSelectedIndex;
-			this.UpdateList();
-			this.dispatchEvent({type: "listMovedUp"});
+			++iSelectedIndex;
+			UpdateList();
+			dispatchEvent({type: "listMovedUp"});
 		}
 	}
 
 	function moveListDown()
 	{
-		if (this.iSelectedIndex > 0) 
+		if (iSelectedIndex > 0) 
 		{
-			--this.iSelectedIndex;
-			this.UpdateList();
-			this.dispatchEvent({type: "listMovedDown"});
+			--iSelectedIndex;
+			UpdateList();
+			dispatchEvent({type: "listMovedDown"});
 		}
 	}
 
 	function UpdateList()
 	{
-		var __reg2 = undefined;
-		this.iSelectedIndex = Math.min(Math.max(this.iSelectedIndex, 0), this.EntriesA.length - 1);
-		if (this.iSelectedIndex > 0) 
+		iSelectedIndex = Math.min(Math.max(iSelectedIndex, 0), EntriesA.length - 1);
+		if (iSelectedIndex > 0) 
 		{
-			this.UpdateTopHalf(this.EntriesA.slice(0, this.iSelectedIndex));
+			UpdateTopHalf(EntriesA.slice(0, iSelectedIndex));
 		}
 		else 
 		{
-			this.UpdateTopHalf(__reg2);
+			UpdateTopHalf();
 		}
-		this.SetEntry(this.SelectedEntry, this.EntriesA[this.iSelectedIndex]);
-		if (this.iSelectedIndex < this.EntriesA.length - 1) 
+		SetEntry(SelectedEntry, EntriesA[iSelectedIndex]);
+		if (iSelectedIndex < EntriesA.length - 1) 
 		{
-			this.UpdateBottomHalf(this.EntriesA.slice(this.iSelectedIndex + 1));
+			UpdateBottomHalf(EntriesA.slice(iSelectedIndex + 1));
 		}
 		else 
 		{
-			this.UpdateBottomHalf(__reg2);
+			UpdateBottomHalf();
 		}
-		this.RepositionEntries();
+		RepositionEntries();
 	}
 
 	function UpdateTopHalf(aEntryArray)
 	{
-		var __reg2 = this.iMaxEntriesTopHalf - 1;
-		for (;;) 
+		for (var i: Number =  iMaxEntriesTopHalf - 1; i > 0; i--) 
 		{
-			if (__reg2 < 0) 
+			var iEntryIndex: Number = i - (iMaxEntriesTopHalf - aEntryArray.length);
+			if (iEntryIndex >= 0 && iEntryIndex < aEntryArray.length) 
 			{
-				return;
-			}
-			var __reg3 = __reg2 - (this.iMaxEntriesTopHalf - aEntryArray.length);
-			if (__reg3 >= 0 && __reg3 < aEntryArray.length) 
-			{
-				this.SetEntry(this.TopHalf["Entry" + __reg2], aEntryArray[__reg3]);
+				SetEntry(TopHalf["Entry" + i], aEntryArray[iEntryIndex]);
 			}
 			else 
 			{
-				this.SetEntry(this.TopHalf["Entry" + __reg2]);
+				SetEntry(TopHalf["Entry" + i]);
 			}
-			--__reg2;
 		}
 	}
 
 	function UpdateBottomHalf(aTextArray)
 	{
-		var __reg2 = 0;
-		for (;;) 
+		for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++) 
 		{
-			if (__reg2 >= this.iMaxEntriesBottomHalf) 
+			if (i < aTextArray.length) 
 			{
-				return;
-			}
-			if (__reg2 < aTextArray.length) 
-			{
-				this.SetEntry(this.BottomHalf["Entry" + __reg2], aTextArray[__reg2]);
+				SetEntry(BottomHalf["Entry" + i], aTextArray[i]);
 			}
 			else 
 			{
-				this.SetEntry(this.BottomHalf["Entry" + __reg2]);
+				SetEntry(BottomHalf["Entry" + i]);
 			}
-			++__reg2;
 		}
 	}
 
 	function SetEntry(aEntryClip, aEntryObject)
 	{
-		if (this.bMultilineList == true) 
+		if (bMultilineList == true) 
 		{
 			aEntryClip.textField.verticalAutoSize = "top";
 		}
-		if (this.bToFitList == true) 
+		if (bToFitList == true) 
 		{
 			aEntryClip.textField.textAutoSize = "shrink";
 		}
@@ -275,70 +236,57 @@ dynamic class Shared.CenteredList extends MovieClip
 
 	function SetupMultilineList()
 	{
-		this.bMultilineList = true;
-		var __reg2 = 0;
-		while (__reg2 < this.iMaxEntriesTopHalf) 
-		{
-			this.TopHalf["Entry" + __reg2].textField.verticalAutoSize = "top";
-			++__reg2;
+		bMultilineList = true;
+		
+		for (var i: Number = 0; i < iMaxEntriesTopHalf; i++) {
+			TopHalf["Entry" + i].textField.verticalAutoSize = "top";
 		}
-		__reg2 = 0;
-		while (__reg2 < this.iMaxEntriesBottomHalf) 
-		{
-			this.BottomHalf["Entry" + __reg2].textField.verticalAutoSize = "top";
-			++__reg2;
+
+		for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++) {
+			BottomHalf["Entry" + i].textField.verticalAutoSize = "top";
 		}
-		if (this.SelectedEntry != undefined) 
+		
+		if (SelectedEntry != undefined) 
 		{
-			this.SelectedEntry.textField.verticalAutoSize = "top";
+			SelectedEntry.textField.verticalAutoSize = "top";
 		}
 	}
 
 	function SetupToFitList()
 	{
-		this.bToFitList = true;
+		bToFitList = true;
 		var __reg2 = 0;
-		while (__reg2 < this.iMaxEntriesTopHalf) 
-		{
-			this.TopHalf["Entry" + __reg2].textField.textAutoSize = "shrink";
-			++__reg2;
+		for (var i: Number = 0; i < iMaxEntriesTopHalf; i++) {
+			TopHalf["Entry" + i].textField.verticalAutoSize = "shrink";
 		}
-		__reg2 = 0;
-		while (__reg2 < this.iMaxEntriesBottomHalf) 
-		{
-			this.BottomHalf["Entry" + __reg2].textField.textAutoSize = "shrink";
-			++__reg2;
+
+		for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++) {
+			BottomHalf["Entry" + i].textField.verticalAutoSize = "shrink";
 		}
-		if (this.SelectedEntry != undefined) 
+		if (SelectedEntry != undefined) 
 		{
-			this.SelectedEntry.textField.textAutoSize = "shrink";
+			SelectedEntry.textField.textAutoSize = "shrink";
 		}
 	}
 
 	function RepositionEntries()
 	{
-		if (this.bRepositionEntries) 
-		{
-			var __reg3 = 0;
-			var __reg2 = 0;
-			while (__reg2 < this.iMaxEntriesTopHalf) 
-			{
-				this.TopHalf["Entry" + __reg2]._y = __reg3;
-				__reg3 = __reg3 + this.TopHalf["Entry" + __reg2]._height;
-				++__reg2;
+		if (bRepositionEntries) {		
+			var iyPosition = 0;
+			for (var i: Number = 0; i < iMaxEntriesTopHalf; i++) {
+				TopHalf["Entry" + __reg2]._y = iyPosition;
+				iyPosition += TopHalf["Entry" + i]._height;
 			}
-			__reg3 = 0;
-			__reg2 = 0;
-			while (__reg2 < this.iMaxEntriesBottomHalf) 
-			{
-				this.BottomHalf["Entry" + __reg2]._y = __reg3;
-				__reg3 = __reg3 + this.BottomHalf["Entry" + __reg2]._height;
-				++__reg2;
+			
+			iyPosition = 0;
+			for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++) {
+				BottomHalf["Entry" + i]._y = __reg3;
+				iyPosition += BottomHalf["Entry" + i]._height;
 			}
-			this.SelectedEntry._y = this.fCenterY - this.SelectedEntry._height / 2;
-			this.TopHalf._y = this.SelectedEntry._y - this.TopHalf._height;
-			this.BottomHalf._y = this.SelectedEntry._y + this.SelectedEntry._height;
+			
+			SelectedEntry._y = fCenterY - SelectedEntry._height / 2;
+			TopHalf._y = SelectedEntry._y - TopHalf._height;
+			BottomHalf._y = SelectedEntry._y + SelectedEntry._height;
 		}
 	}
-
 }

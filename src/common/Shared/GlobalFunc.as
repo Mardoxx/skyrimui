@@ -28,7 +28,7 @@ class Shared.GlobalFunc
 
 	static function RoundDecimal(aNumber: Number, aPrecision: Number): Number
 	{
-		var significantFigures = Math.pow(10, aPrecision);
+		var significantFigures: Number = Math.pow(10, aPrecision);
 		return Math.round(significantFigures * aNumber) / significantFigures;
 	}
 
@@ -55,7 +55,7 @@ class Shared.GlobalFunc
 			this.text = aText;
 			this.setTextFormat(textFormat);
 			return;
-		}
+		};
 	}
 
 	static function SetLockFunction(): Void
@@ -89,7 +89,7 @@ class Shared.GlobalFunc
 			{
 				this._x = minXY.x;
 			}
-		}
+		};
 	}
 
 	static function AddMovieExploreFunctions(): Void
@@ -97,26 +97,24 @@ class Shared.GlobalFunc
 		MovieClip.prototype.getMovieClips = function (): Array
 		{
 			var movieClips: Array = new Array();
-			for (var i: String in this) 
-			{
+			for (var i: Number = 0; i < this.length; i++) {
 				if (this[i] instanceof MovieClip && this[i] != this) 
 				{
 					movieClips.push(this[i]);
 				}
 			}
 			return movieClips;
-		}
+		};
 		MovieClip.prototype.showMovieClips = function (): Void
 		{
-			for (var i: String in this) 
-			{
+			for (var i: Number = 0; i < this.length; i++) {
 				if (this[i] instanceof MovieClip && this[i] != this) 
 				{
 					trace(this[i]);
 					this[i].showMovieClips();
 				}
 			}
-		}
+		};
 	}
 
 	static function AddReverseFunctions(): Void
@@ -138,18 +136,17 @@ class Shared.GlobalFunc
 				return;
 			}
 			this.gotoAndStop(1);
-		}
+		};
 		MovieClip.prototype.PlayForward = function (aFrameLabel: String): Void
 		{
 			delete (this.onEnterFrame);
 			this.gotoAndPlay(aFrameLabel);
-		}
-		;
+		};
 		MovieClip.prototype.PlayForward = function (aFrame: Number): Void
 		{
 			delete (this.onEnterFrame);
 			this.gotoAndPlay(aFrame);
-		}
+		};
 	}
 
 	static function GetTextField(aParentClip: MovieClip, aName: String): TextField
@@ -178,14 +175,12 @@ class Shared.GlobalFunc
 			{
 				Shared.GlobalFunc.RegisteredTextFields[this._name + aStartingClip._name] = this;
 			}
-		}
-		;
+		};
 	}
 
 	static function RegisterTextFields(aStartingClip: MovieClip) : Void
 	{
-		for (var i: String in aStartingClip) 
-		{
+		for (var i: Number = 0; i < aStartingClip.length; i++) {
 			if (aStartingClip[i] instanceof TextField) 
 			{
 				aStartingClip[i].RegisterTextField(aStartingClip);
@@ -195,16 +190,10 @@ class Shared.GlobalFunc
 
 	static function RegisterAllTextFieldsInTimeline(aStartingClip: MovieClip): Void
 	{
-		var i: Number = 1;
-		for (;;) 
+		for (var i: Number = 1; aStartingClip._totalFrames && i <= aStartingClip._totalFrames; i++) 
 		{
-			if (!(aStartingClip._totalFrames && i <= aStartingClip._totalFrames)) 
-			{
-				return;
-			}
 			aStartingClip.gotoAndStop(i);
 			Shared.GlobalFunc.RegisterTextFields(aStartingClip);
-			++i;
 		}
 	}
 
@@ -216,13 +205,12 @@ class Shared.GlobalFunc
 			{
 				Shared.GlobalFunc.RegisteredMovieClips[this._name + aStartingClip._name] = this;
 			}
-		}
+		};
 	}
 
 	static function RegisterMovieClips(aStartingClip: MovieClip): Void
 	{
-		for (var i: String in aStartingClip) 
-		{
+		for (var i: Number = 0; i < aStartingClip.length; i++) {
 			if (aStartingClip[i] instanceof MovieClip) 
 			{
 				aStartingClip[i].RegisterMovieClip(aStartingClip);
@@ -232,8 +220,7 @@ class Shared.GlobalFunc
 
 	static function RecursiveRegisterMovieClips(aStartingClip: MovieClip, aRootClip: MovieClip): Void
 	{
-		for (var i: String in aStartingClip) 
-		{
+		for (var i: Number = 0; i < aStartingClip.length; i++) {
 			if (aStartingClip[i] instanceof MovieClip) 
 			{
 				if (aStartingClip[i] != aStartingClip) 
@@ -247,16 +234,9 @@ class Shared.GlobalFunc
 
 	static function RegisterAllMovieClipsInTimeline(aStartingClip: MovieClip): Void
 	{
-		var i: Number = 1;
-		for (;;) 
-		{
-			if (!(aStartingClip._totalFrames && i <= aStartingClip._totalFrames)) 
-			{
-				return;
-			}
+		for (var i: Number = 0; aStartingClip._totalFrames && i <= aStartingClip._totalFrames; i++) {
 			aStartingClip.gotoAndStop(i);
 			Shared.GlobalFunc.RegisterMovieClips(aStartingClip);
-			++i;
 		}
 	}
 
