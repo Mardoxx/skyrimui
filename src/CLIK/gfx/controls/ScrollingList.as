@@ -238,7 +238,7 @@ dynamic class gfx.controls.ScrollingList extends gfx.controls.CoreList
 		this._dataProvider.requestItemRange(this._scrollPosition, Math.min(this._dataProvider.length - 1, this._scrollPosition + this.totalRenderers - 1), this, "populateData");
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details, pathToFocus)
 	{
 		if (pathToFocus == null) 
 		{

@@ -218,7 +218,7 @@ dynamic class gfx.core.UIComponent extends MovieClip
 		}
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details, pathToFocus)
 	{
 		if (pathToFocus && pathToFocus.length > 0) 
 		{

@@ -126,7 +126,7 @@ dynamic class gfx.controls.Slider extends gfx.core.UIComponent
 		this.invalidate();
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details, pathToFocus)
 	{
 		var __reg2 = details.value == "keyDown" || details.value == "keyHold";
 		if ((__reg0 = details.navEquivalent) === gfx.ui.NavigationCode.RIGHT) 

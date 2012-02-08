@@ -156,7 +156,7 @@ dynamic class gfx.controls.TextInput extends gfx.core.UIComponent
 		return this.textField.length;
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details, pathToFocus)
 	{
 		if (details.value != "keyDown" && details.value != "keyHold") 
 		{

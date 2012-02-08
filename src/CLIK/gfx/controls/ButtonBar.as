@@ -230,7 +230,7 @@ dynamic class gfx.controls.ButtonBar extends gfx.core.UIComponent
 		return item.toString();
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details, pathToFocus)
 	{
 		var __reg4 = details.value == "keyDown" || details.value == "keyHold";
 		var __reg2 = undefined;

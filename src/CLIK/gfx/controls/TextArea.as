@@ -122,7 +122,7 @@ dynamic class gfx.controls.TextArea extends gfx.controls.TextInput
 		return "[Scaleform TextArea " + this._name + "]";
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details, pathToFocus)
 	{
 		if (details.value != "keyDown" && details.value != "keyHold") 
 		{
