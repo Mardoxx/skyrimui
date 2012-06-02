@@ -1,25 +1,25 @@
-dynamic class DialogueCenteredList extends Shared.CenteredScrollingList
+﻿class DialogueCenteredList extends Shared.CenteredScrollingList
 {
-	var EntriesA;
-	var GetClipByIndex;
-	var SetEntry;
-	var _parent;
-	var bDisableInput;
-	var bRecenterSelection;
-	var doSetSelectedIndex;
-	var fCenterY;
-	var fListHeight;
-	var iListItemsShown;
-	var iMaxItemsShown;
-	var iNumTopHalfEntries;
-	var iPlatform;
-	var iScrollPosition;
-	var iSelectedIndex;
+	var EntriesA: Array;
+	
+	var bDisableInput: Boolean;
+	var bRecenterSelection: Boolean;
+	
+	var doSetSelectedIndex: Function;
+	
+	var fCenterY: Number;
+	var fListHeight: Number;
+	var iListItemsShown: Number;
+	var iMaxItemsShown: Number;
+	var iNumTopHalfEntries: Number;
+	var iPlatform: Number;
+	var iScrollPosition: Number;
+	var iSelectedIndex: Number;
 
 	function DialogueCenteredList()
 	{
 		super();
-		this.fCenterY = this.GetClipByIndex(this.iNumTopHalfEntries)._y + this.GetClipByIndex(this.iNumTopHalfEntries)._height / 2;
+		fCenterY = GetClipByIndex(iNumTopHalfEntries)._y + GetClipByIndex(iNumTopHalfEntries)._height / 2;
 	}
 
 	function SetEntryText(aEntryClip, aEntryObject)
@@ -27,156 +27,141 @@ dynamic class DialogueCenteredList extends Shared.CenteredScrollingList
 		super.SetEntryText(aEntryClip, aEntryObject);
 		if (aEntryClip.textField != undefined) 
 		{
-			aEntryClip.textField.textColor = aEntryObject.topicIsNew == undefined || aEntryObject.topicIsNew ? 16777215 : 6316128;
+			aEntryClip.textField.textColor = aEntryObject.topicIsNew == undefined || aEntryObject.topicIsNew ? 0xFFFFFF : 0x606060;
 		}
 	}
 
 	function UpdateList()
 	{
-		var __reg8 = 0;
-		var __reg6 = 0;
-		var __reg2 = 0;
-		while (__reg2 < this.iScrollPosition - this.iNumTopHalfEntries) 
-		{
-			++__reg2;
-		}
-		this.iListItemsShown = 0;
-		var __reg4 = 0;
-		while (__reg4 < this.iNumTopHalfEntries) 
-		{
-			var __reg5 = this.GetClipByIndex(__reg4);
-			if (this.iScrollPosition - this.iNumTopHalfEntries + __reg4 >= 0) 
+		var listItemSpacing = 0;
+		var listCumulativeHeight = 0;
+		
+		var centerIndex: Number = iScrollPosition - iNumTopHalfEntries - 1;
+		
+		iListItemsShown = 0;
+		
+		for (var i = 0;  i < iNumTopHalfEntries; i++) {
+			var listItem: MovieClip = GetClipByIndex(i);
+			if (iScrollPosition - iNumTopHalfEntries + i >= 0) 
 			{
-				this.SetEntry(__reg5, this.EntriesA[__reg2]);
-				__reg5._visible = true;
-				__reg5.itemIndex = __reg2;
-				this.EntriesA[__reg2].clipIndex = __reg4;
-				++__reg2;
+				SetEntry(listItem, EntriesA[centerIndex]);
+				listItem._visible = true;
+				listItem.itemIndex = centerIndex;
+				EntriesA[centerIndex].clipIndex = i;
+				++centerIndex;
 			}
 			else 
 			{
-				this.SetEntry(__reg5, {text: " "});
-				__reg5._visible = false;
-				__reg5.itemIndex = undefined;
+				SetEntry(listItem, {text: " "});
+				listItem._visible = false;
+				listItem.itemIndex = undefined;
 			}
-			__reg5._y = __reg8 + __reg6;
-			__reg6 = __reg6 + __reg5._height;
-			++this.iListItemsShown;
-			++__reg4;
+			listItem._y = listItemSpacing + listCumulativeHeight;
+			listCumulativeHeight += listItem._height;
+			++iListItemsShown;
 		}
-		if (this.bRecenterSelection || this.iPlatform != 0) 
+		
+		if (bRecenterSelection || iPlatform != 0) 
 		{
-			this.iSelectedIndex = __reg2;
+			iSelectedIndex = centerIndex;
 		}
-		while (__reg2 < this.EntriesA.length && this.iListItemsShown < this.iMaxItemsShown && __reg6 <= this.fListHeight) 
+		
+		for (var i = centerIndex; i < EntriesA.length && iListItemsShown < iMaxItemsShown && listCumulativeHeight <= fListHeight; i++)
 		{
-			__reg5 = this.GetClipByIndex(this.iListItemsShown);
-			this.SetEntry(__reg5, this.EntriesA[__reg2]);
-			this.EntriesA[__reg2].clipIndex = this.iListItemsShown;
-			__reg5.itemIndex = __reg2;
-			__reg5._y = __reg8 + __reg6;
-			__reg5._visible = true;
-			__reg6 = __reg6 + __reg5._height;
-			if (__reg6 <= this.fListHeight && this.iListItemsShown < this.iMaxItemsShown) 
+			listItem = GetClipByIndex(iListItemsShown);
+			SetEntry(listItem, EntriesA[i]);
+			EntriesA[i].clipIndex = iListItemsShown;
+			listItem.itemIndex = i;
+			listItem._y = listItemSpacing + listCumulativeHeight;
+			listItem._visible = true;
+			listCumulativeHeight += listItem._height;
+			if (listCumulativeHeight <= fListHeight && iListItemsShown < iMaxItemsShown) 
 			{
-				++this.iListItemsShown;
+				++iListItemsShown;
 			}
-			++__reg2;
 		}
-		var __reg7 = this.iListItemsShown;
-		while (__reg7 < this.iMaxItemsShown) 
-		{
-			this.GetClipByIndex(__reg7)._visible = false;
-			this.GetClipByIndex(__reg7).itemIndex = undefined;
-			++__reg7;
+		
+		for (var i: Number = iListItemsShown; i < iMaxItemsShown; i++) {
+			GetClipByIndex(i)._visible = false;
+			GetClipByIndex(i).itemIndex = undefined;
 		}
-		if (!this.bRecenterSelection) 
-		{
-			var __reg3 = Mouse.getTopMostEntity();
-			while (__reg3 != undefined) 
-			{
-				if (__reg3._parent == this && __reg3._visible && __reg3.itemIndex != undefined) 
-				{
-					this.doSetSelectedIndex(__reg3.itemIndex, 0);
+		
+		
+		if (!bRecenterSelection) {
+			for (var e = Mouse.getTopMostEntity(); e != undefined; e = e._parent) {
+				if (e._parent == this && e._visible && e.itemIndex != undefined) {
+					doSetSelectedIndex(e.itemIndex,0);
 				}
-				__reg3 = __reg3._parent;
 			}
 		}
-		this.bRecenterSelection = false;
-		this.RepositionEntries();
-		var __reg10 = 3;
-		this._parent.ScrollIndicators.Up._visible = this.scrollPosition > this.iNumTopHalfEntries;
-		this._parent.ScrollIndicators.Down._visible = this.EntriesA.length - this.scrollPosition - 1 > __reg10 || __reg6 > this.fListHeight;
+		
+		bRecenterSelection = false;
+		RepositionEntries();
+		var imaxItemsBelowShown: Number = 3;
+		_parent.ScrollIndicators.Up._visible = scrollPosition > iNumTopHalfEntries;
+		_parent.ScrollIndicators.Down._visible = EntriesA.length - scrollPosition - 1 > imaxItemsBelowShown || listCumulativeHeight > fListHeight;
 	}
 
 	function RepositionEntries()
 	{
-		var __reg4 = this.GetClipByIndex(this.iNumTopHalfEntries)._y + this.GetClipByIndex(this.iNumTopHalfEntries)._height / 2;
-		var __reg3 = this.fCenterY - __reg4;
-		var __reg2 = 0;
-		for (;;) 
+		var item_yOffset = GetClipByIndex(iNumTopHalfEntries)._y + GetClipByIndex(iNumTopHalfEntries)._height / 2;
+		var item_yPosition = fCenterY - item_yOffset;
+
+		for (var i = 0; i < iMaxItemsShown; i++) 
 		{
-			if (__reg2 >= this.iMaxItemsShown) 
-			{
-				return;
-			}
-			this.GetClipByIndex(__reg2)._y = this.GetClipByIndex(__reg2)._y + __reg3;
-			++__reg2;
+			GetClipByIndex(i)._y += item_yPosition;
 		}
+		
+		return;
 	}
 
 	function onMouseWheel(delta)
 	{
-		if (this.bDisableInput) 
+		if (bDisableInput) 
 		{
 			return;
 		}
-		var __reg2 = Mouse.getTopMostEntity();
-		this.iSelectedIndex = -1;
-		this.bRecenterSelection = true;
-		while (__reg2 != undefined) 
-		{
-			if (__reg2 == this) 
+		
+		iSelectedIndex = -1;
+		bRecenterSelection = true;
+		
+		for (var target = Mouse.getTopMostEntity(); target && target != undefined; target = target._parent) {
 			{
-				this.bRecenterSelection = false;
+				bRecenterSelection = false;
 			}
-			__reg2 = __reg2._parent;
 		}
+		
+		var listItem: MovieClip
+		
 		if (delta < 0) 
 		{
-			var __reg4 = this.GetClipByIndex(this.iNumTopHalfEntries + 1);
-			if (__reg4._visible == true) 
+			listItem = GetClipByIndex(iNumTopHalfEntries + 1);
+			if (listItem._visible == true) 
 			{
-				this.scrollPosition = this.scrollPosition + 1;
+				scrollPosition = scrollPosition + 1;
 			}
-			return;
-		}
-		if (delta > 0) 
-		{
-			var __reg3 = this.GetClipByIndex(this.iNumTopHalfEntries - 1);
-			if (__reg3._visible == true) 
+			
+		} else {
+			listItem = GetClipByIndex(iNumTopHalfEntries - 1);
+			if (listItem._visible == true) 
 			{
-				this.scrollPosition = this.scrollPosition - 1;
+				scrollPosition = scrollPosition - 1;
 			}
 		}
+		return;
 	}
 
 	function SetSelectedTopic(aiTopicIndex)
 	{
-		this.iSelectedIndex = 0;
-		this.iScrollPosition = 0;
-		var __reg2 = 0;
-		for (;;) 
+		iSelectedIndex = 0;
+		iScrollPosition = 0;
+		
+		for (var i: Number = 0; i < EntriesA.length; i++) 
 		{
-			if (__reg2 >= this.EntriesA.length) 
+			if (EntriesA[i].topicIndex == aiTopicIndex) 
 			{
-				return;
+				iScrollPosition = i;
 			}
-			if (this.EntriesA[__reg2].topicIndex == aiTopicIndex) 
-			{
-				this.iScrollPosition = __reg2;
-			}
-			++__reg2;
 		}
 	}
 

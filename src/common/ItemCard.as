@@ -579,6 +579,7 @@ class ItemCard extends MovieClip
 	{
 		PrevFocus = FocusHandler.instance.getFocus(0);
 		FocusHandler.instance.setFocus(ItemList, 0);
+        ItemList._visible = true;
 		ItemList.addEventListener("itemPress", this, "onListItemPress");
 		ItemList.addEventListener("listMovedUp", this, "onListSelectionChange");
 		ItemList.addEventListener("listMovedDown", this, "onListSelectionChange");
@@ -596,6 +597,7 @@ class ItemCard extends MovieClip
 		CardList_mc._alpha = 0;
 		ItemCardMeters[InventoryDefines.ICT_LIST] = undefined;
 		InputHandler = undefined;
+        ItemList._visible = true;
 		dispatchEvent({type: "subMenuAction", opening: false, menu: "list"});
 	}
 

@@ -207,7 +207,10 @@ dynamic class InventoryMenu extends ItemMenu
 	function onItemCardSubMenuAction(event)
 	{
 		super.onItemCardSubMenuAction(event);
-		gfx.io.GameDelegate.call("QuantitySliderOpen", [event.opening]);
+		if (event.menu == "quantity") 
+        {
+		    gfx.io.GameDelegate.call("QuantitySliderOpen", [event.opening]);
+		}
 		if (event.menu == "list") 
 		{
 			if (event.opening == true) 
