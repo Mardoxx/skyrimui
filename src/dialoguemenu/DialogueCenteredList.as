@@ -36,7 +36,7 @@
 		var listItemSpacing = 0;
 		var listCumulativeHeight = 0;
 		
-		var centerIndex: Number = iScrollPosition - iNumTopHalfEntries - 1;
+		var centerIndex: Number = iScrollPosition - iNumTopHalfEntries < 0 ? 0 : iScrollPosition - iNumTopHalfEntries;
 		
 		iListItemsShown = 0;
 		
