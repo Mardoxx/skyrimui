@@ -1,60 +1,75 @@
-dynamic class Console extends MovieClip
+﻿import Shared.GlobalFunc;
+import gfx.io.GameDelegate;
+
+class Console extends MovieClip
 {
 	static var PREVIOUS_COMMANDS: Number = 32;
 	static var HistoryCharBufferSize: Number = 8192;
 	static var ConsoleInstance = null;
-	var Commands = new Array();
-	var Animating;
-	var Background;
-	var CommandEntry;
-	var CommandHistory;
-	var CurrentSelection;
-	var CurrentSelectionYOffset;
-	var Hiding;
-	var OriginalHeight;
-	var OriginalWidth;
-	var PreviousCommandOffset;
-	var ScreenPercent;
-	var Shown;
-	var TextXOffset;
-	var _height;
+    
+	var Commands: Array = new Array();
+	
+	var Animating: Boolean;
+	var Hiding: Boolean;
+	var Shown: Boolean;
+	
+	var Background: MovieClip;
+	
+	var CurrentSelectionYOffset: Number;
+	var OriginalHeight: Number;
+	var OriginalWidth: Number;
+	var PreviousCommandOffset: Number;
+	var ScreenPercent: Number;
+	var TextXOffset: Number;
+    
+    var CurrentSelection: TextField;
+	var CommandHistory: TextField;
+	var CommandEntry: TextField;
 
 	function Console()
 	{
 		super();
 		_global.gfxExtensions = true;
-		Shared.GlobalFunc.MaintainTextFormat();
-		Console.ConsoleInstance = this;
-		this.Background = this.Background;
-		this.CommandEntry = this.CommandEntry;
-		this.CurrentSelection = this.CurrentSelection;
-		this.CurrentSelectionYOffset = this._height + this.CurrentSelection._y;
-		this.CommandHistory = this.CommandHistory;
-		this.TextXOffset = this.CommandEntry._x;
-		this.OriginalHeight = Stage.height;
-		this.OriginalWidth = Stage.width;
-		this.ScreenPercent = 100 * (this._height / Stage.height);
-		this.PreviousCommandOffset = 0;
-		this.Shown = false;
-		this.Animating = false;
-		this.Hiding = false;
-		this.CommandEntry.setNewTextFormat(this.CommandEntry.getTextFormat());
-		this.CommandEntry.text = "";
-		this.CommandEntry.noTranslate = true;
-		this.CurrentSelection.setNewTextFormat(this.CurrentSelection.getTextFormat());
-		this.CurrentSelection.text = "";
-		this.CurrentSelection.noTranslate = true;
-		this.CommandHistory.setNewTextFormat(this.CommandHistory.getTextFormat());
-		this.CommandHistory.text = "";
-		this.CommandHistory.noTranslate = true;
+		GlobalFunc.MaintainTextFormat();
+		
+		CurrentSelectionYOffset = _height + CurrentSelection._y;
+		TextXOffset = CommandEntry._x;
+		
+		// Unknown use 20120604
+		OriginalHeight = Stage.height;
+		OriginalWidth = Stage.width;
+		
+		ScreenPercent = 100 * (_height / Stage.height);
+		PreviousCommandOffset = 0;
+		
+		Shown = false;
+		Animating = false;
+		Hiding = false;
+		
+		CommandEntry.setNewTextFormat(CommandEntry.getTextFormat());
+		CommandEntry.text = "";
+		CommandEntry.noTranslate = true;
+		
+		CurrentSelection.setNewTextFormat(CurrentSelection.getTextFormat());
+		CurrentSelection.text = "";
+		CurrentSelection.noTranslate = true;
+		
+		CommandHistory.setNewTextFormat(CommandHistory.getTextFormat());
+		CommandHistory.text = "";
+		CommandHistory.noTranslate = true;
+		
 		Stage.align = "BL";
 		Stage.scaleMode = "noScale";
+		
 		Stage.addListener(this);
 		Key.addListener(this);
-		this.onResize();
+		
+		Console.ConsoleInstance = this;
+		
+		onResize();
 	}
 
-	static function Show()
+	static function Show(): Void
 	{
 		if (Console.ConsoleInstance != null && !Console.ConsoleInstance.Animating) 
 		{
@@ -66,7 +81,7 @@ dynamic class Console extends MovieClip
 		}
 	}
 
-	static function ShowComplete()
+	static function ShowComplete(): Void
 	{
 		if (Console.ConsoleInstance != null) 
 		{
@@ -75,7 +90,7 @@ dynamic class Console extends MovieClip
 		}
 	}
 
-	static function Hide()
+	static function Hide(): Void
 	{
 		if (Console.ConsoleInstance != null && !Console.ConsoleInstance.Animating) 
 		{
@@ -87,18 +102,18 @@ dynamic class Console extends MovieClip
 		}
 	}
 
-	static function HideComplete()
+	static function HideComplete(): Void
 	{
 		if (Console.ConsoleInstance != null) 
 		{
 			Console.ConsoleInstance.Shown = false;
 			Console.ConsoleInstance.Animating = false;
 			Console.ConsoleInstance.Hiding = false;
-			gfx.io.GameDelegate.call("HideComplete", []);
+			GameDelegate.call("HideComplete", []);
 		}
 	}
 
-	static function Minimize()
+	static function Minimize(): Void
 	{
 		if (Console.ConsoleInstance != null) 
 		{
@@ -106,7 +121,7 @@ dynamic class Console extends MovieClip
 		}
 	}
 
-	static function SetCurrentSelection(selectionText)
+	static function SetCurrentSelection(selectionText: String): Void
 	{
 		if (Console.ConsoleInstance != null) 
 		{
@@ -114,17 +129,17 @@ dynamic class Console extends MovieClip
 		}
 	}
 
-	static function QShown()
+	static function QShown(): Boolean
 	{
 		return Console.ConsoleInstance != null && Console.ConsoleInstance.Shown && !Console.ConsoleInstance.Animating;
 	}
 
-	static function QHiding()
+	static function QHiding(): Boolean
 	{
 		return Console.ConsoleInstance != null && Console.ConsoleInstance.Hiding;
 	}
 
-	static function PreviousCommand()
+	static function PreviousCommand(): Void
 	{
 		if (Console.ConsoleInstance != null) 
 		{
@@ -140,7 +155,7 @@ dynamic class Console extends MovieClip
 		}
 	}
 
-	static function NextCommand()
+	static function NextCommand(): Void
 	{
 		if (Console.ConsoleInstance != null) 
 		{
@@ -156,7 +171,7 @@ dynamic class Console extends MovieClip
 		}
 	}
 
-	static function AddHistory(aText)
+	static function AddHistory(aText: String): Void
 	{
 		if (Console.ConsoleInstance != null) 
 		{
@@ -169,7 +184,7 @@ dynamic class Console extends MovieClip
 		}
 	}
 
-	static function ClearHistory()
+	static function ClearHistory(): Void
 	{
 		if (Console.ConsoleInstance != null) 
 		{
@@ -177,100 +192,103 @@ dynamic class Console extends MovieClip
 		}
 	}
 
-	static function SetHistoryCharBufferSize(aNumChars)
+	static function SetHistoryCharBufferSize(aNumChars: Number): Void
 	{
 		Console.HistoryCharBufferSize = aNumChars;
 	}
 
-	static function SetTextColor(aColor)
+	static function SetTextColor(aColor: Number): Void
 	{
 		Console.ConsoleInstance.CommandEntry.textColor = aColor;
 		Console.ConsoleInstance.CurrentSelection.textColor = aColor;
 	}
 
-	static function SetTextSize(aPointSize)
+	static function SetTextSize(aPointSize: Number): Void
 	{
-		var __reg1 = undefined;
-		__reg1 = Console.ConsoleInstance.CurrentSelection.getNewTextFormat();
-		__reg1.size = Math.max(1, aPointSize);
-		Console.ConsoleInstance.CurrentSelection.setTextFormat(__reg1);
-		Console.ConsoleInstance.CurrentSelection.setNewTextFormat(__reg1);
-		__reg1 = Console.ConsoleInstance.CommandHistory.getNewTextFormat();
-		__reg1.size = Math.max(1, aPointSize - 2);
-		Console.ConsoleInstance.CommandHistory.setTextFormat(__reg1);
-		Console.ConsoleInstance.CommandHistory.setNewTextFormat(__reg1);
-		__reg1 = Console.ConsoleInstance.CommandEntry.getNewTextFormat();
-		__reg1.size = Math.max(1, aPointSize);
-		Console.ConsoleInstance.CommandEntry.setTextFormat(__reg1);
-		Console.ConsoleInstance.CommandEntry.setNewTextFormat(__reg1);
+		var textFormat: TextFormat = undefined;
+		
+		textFormat = Console.ConsoleInstance.CurrentSelection.getNewTextFormat();
+		textFormat.size = Math.max(1, aPointSize);
+		Console.ConsoleInstance.CurrentSelection.setTextFormat(textFormat);
+		Console.ConsoleInstance.CurrentSelection.setNewTextFormat(textFormat);
+		
+		textFormat = Console.ConsoleInstance.CommandHistory.getNewTextFormat();
+		textFormat.size = Math.max(1, aPointSize - 2);
+		Console.ConsoleInstance.CommandHistory.setTextFormat(textFormat);
+		Console.ConsoleInstance.CommandHistory.setNewTextFormat(textFormat);
+		
+		textFormat = Console.ConsoleInstance.CommandEntry.getNewTextFormat();
+		textFormat.size = Math.max(1, aPointSize);
+		Console.ConsoleInstance.CommandEntry.setTextFormat(textFormat);
+		Console.ConsoleInstance.CommandEntry.setNewTextFormat(textFormat);
+		
 		Console.PositionTextFields();
 	}
 
-	static function SetHistoryTextColor(aColor)
+	static function SetHistoryTextColor(aColor: Number): Void
 	{
 		Console.ConsoleInstance.CommandHistory.textColor = aColor;
 	}
 
-	static function SetSize(aPercent)
+	static function SetSize(aPercent: Number): Void
 	{
 		Console.ConsoleInstance.ScreenPercent = aPercent;
 		aPercent = aPercent / 100;
 		Console.ConsoleInstance.Background._height = Stage.height * aPercent;
+		
 		Console.PositionTextFields();
 	}
 
-	static function PositionTextFields()
+	static function PositionTextFields(): Void
 	{
-		var __reg2 = Console.ConsoleInstance.CurrentSelection;
-		var __reg1 = Console.ConsoleInstance.CommandHistory;
-		__reg2._y = Console.ConsoleInstance.CurrentSelectionYOffset - Console.ConsoleInstance.Background._height;
-		__reg1._y = __reg2._y + __reg2._height;
-		__reg1._height = Console.ConsoleInstance.CommandEntry._y - __reg1._y;
+		Console.ConsoleInstance.CurrentSelection._y = Console.ConsoleInstance.CurrentSelectionYOffset - Console.ConsoleInstance.Background._height;
+		Console.ConsoleInstance.CommandHistory._y = Console.ConsoleInstance.CurrentSelection._y + Console.ConsoleInstance.CurrentSelection._height;
+		Console.ConsoleInstance.CommandHistory._height = Console.ConsoleInstance.CommandEntry._y - Console.ConsoleInstance.CommandHistory._y;
 	}
 
-	function ResetCommandEntry()
+	function ResetCommandEntry(): Void
 	{
-		this.CommandEntry.text = "";
-		this.PreviousCommandOffset = 0;
+		CommandEntry.text = "";
+		PreviousCommandOffset = 0;
 	}
 
-	function onKeyDown()
+	function onKeyDown(): Void
 	{
 		if (Key.getCode() == 13 || Key.getCode() == 108) 
 		{
-			if (this.CommandEntry.text.length != 0) 
+			if (CommandEntry.text.length != 0) 
 			{
-				if (this.Commands.length >= Console.PREVIOUS_COMMANDS) 
+				if (Commands.length >= Console.PREVIOUS_COMMANDS) 
 				{
-					this.Commands.shift();
+					Commands.shift();
 				}
-				this.Commands.push(this.CommandEntry.text);
-				Console.AddHistory(this.CommandEntry.text + "\n");
-				gfx.io.GameDelegate.call("ExecuteCommand", [this.CommandEntry.text]);
-				this.ResetCommandEntry();
+				Commands.push(CommandEntry.text);
+				Console.AddHistory(CommandEntry.text + "\n");
+				GameDelegate.call("ExecuteCommand", [CommandEntry.text]);
+				ResetCommandEntry();
 			}
 			return;
 		}
 		if (Key.getCode() == 33) 
 		{
-			var __reg3 = this.CommandHistory.bottomScroll - this.CommandHistory.scroll;
-			var __reg2 = this.CommandHistory.scroll - __reg3;
-			this.CommandHistory.scroll = __reg2 <= 0 ? 0 : __reg2;
+			var imaxScrollIndex: Number = CommandHistory.bottomScroll - CommandHistory.scroll;
+			var iminScrollIndex: Number = CommandHistory.scroll - imaxScrollIndex;
+			CommandHistory.scroll = iminScrollIndex <= 0 ? 0 : iminScrollIndex;
 			return;
 		}
 		if (Key.getCode() == 34) 
 		{
-			__reg3 = this.CommandHistory.bottomScroll - this.CommandHistory.scroll;
-			__reg2 = this.CommandHistory.scroll + __reg3;
-			this.CommandHistory.scroll = __reg2 > this.CommandHistory.maxscroll ? this.CommandHistory.maxscroll : __reg2;
+			imaxScrollIndex = CommandHistory.bottomScroll - CommandHistory.scroll;
+			iminScrollIndex = CommandHistory.scroll + imaxScrollIndex;
+			CommandHistory.scroll = iminScrollIndex > CommandHistory.maxscroll ? CommandHistory.maxscroll : iminScrollIndex;
 		}
 	}
 
-	function onResize()
+	function onResize(): Void
 	{
-		this.Background._width = Stage.width;
-		this.CommandEntry._width = this.CommandHistory._width = this.CurrentSelection._width = Stage.width - this.TextXOffset * 2;
-		Console.SetSize(this.ScreenPercent);
+		Background._width = Stage.width;
+		CommandEntry._width = CommandHistory._width = CurrentSelection._width = Stage.width - TextXOffset * 2;
+		Console.SetSize(ScreenPercent);
 	}
 
 }

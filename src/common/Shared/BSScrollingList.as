@@ -1,6 +1,7 @@
 import Shared.GlobalFunc;
 import gfx.ui.InputDetails;
 import gfx.ui.NavigationCode;
+import gfx.events.EventDispatcher;
 
 class Shared.BSScrollingList extends MovieClip
 {
@@ -43,7 +44,7 @@ class Shared.BSScrollingList extends MovieClip
 		bDisableSelection = false;
 		bDisableInput = false;
 		bMouseDrivenNav = false;
-		gfx.events.EventDispatcher.initialize(this);
+		EventDispatcher.initialize(this);
 		Mouse.addListener(this);
 		iSelectedIndex = -1;
 		iScrollPosition = 0;

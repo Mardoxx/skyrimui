@@ -1,16 +1,20 @@
+import Shared.ButtonChange;
+import Shared.PlatformChangeUser.PlatformChange;
+
 class Shared.PlatformChangeUser extends MovieClip
 {
-	static var PlatformChange: Shared.ButtonChange;
+	static var PlatformChange: ButtonChange;
+	
 	function PlatformChangeUser()
 	{
 		super();
-		Shared.PlatformChangeUser.PlatformChange = new Shared.ButtonChange();
+		PlatformChange = new ButtonChange();
 	}
 
-	function RegisterPlatformChangeListener(aCrossPlatformButton)
+	function RegisterPlatformChangeListener(aCrossPlatformButton: Object): Void
 	{
-		Shared.PlatformChangeUser.PlatformChange.addEventListener("platformChange", aCrossPlatformButton, "SetPlatform");
-		Shared.PlatformChangeUser.PlatformChange.addEventListener("SwapPS3Button", aCrossPlatformButton, "SetPS3Swap");
+		PlatformChange.addEventListener("platformChange", aCrossPlatformButton, "SetPlatform");
+		PlatformChange.addEventListener("SwapPS3Button", aCrossPlatformButton, "SetPS3Swap");
 	}
 
 }

@@ -1,138 +1,131 @@
-dynamic class Shared.ListFilterer
+﻿import gfx.events.EventDispatcher;
+
+class Shared.ListFilterer
 {
-	var EntryMatchesFunc;
-	var _filterArray;
-	var dispatchEvent;
-	var iItemFilter;
+	var EntryMatchesFunc: Function;
+	var _filterArray: Array;
+	var dispatchEvent: Function;
+	var iItemFilter: Number;
 
 	function ListFilterer()
 	{
-		this.iItemFilter = 4294967295;
-		this.EntryMatchesFunc = this.EntryMatchesFilter;
-		gfx.events.EventDispatcher.initialize(this);
+		iItemFilter = 0xFFFFFFFF;
+		EntryMatchesFunc = EntryMatchesFilter;
+		EventDispatcher.initialize(this);
 	}
 
-	function get itemFilter()
+	function get itemFilter(): Number
 	{
-		return this.iItemFilter;
+		return iItemFilter;
 	}
 
-	function set itemFilter(aiNewFilter)
+	function set itemFilter(aiNewFilter: Number): Void
 	{
-		var __reg2 = this.iItemFilter != aiNewFilter;
-		this.iItemFilter = aiNewFilter;
-		if (__reg2 == true) 
+		var bfilterChanged: Boolean = iItemFilter != aiNewFilter;
+		iItemFilter = aiNewFilter;
+		if (bfilterChanged == true) 
 		{
-			this.dispatchEvent({type: "filterChange"});
+			dispatchEvent({type: "filterChange"});
 		}
 	}
 
-	function get filterArray()
+	function get filterArray(): Array
 	{
-		return this._filterArray;
+		return _filterArray;
 	}
 
-	function set filterArray(aNewArray)
+	function set filterArray(aNewArray: Array): Void
 	{
-		this._filterArray = aNewArray;
+		_filterArray = aNewArray;
 	}
 
-	function SetPartitionedFilterMode(abPartition)
+	function SetPartitionedFilterMode(abPartition: Boolean): Void
 	{
-		this.EntryMatchesFunc = abPartition ? this.EntryMatchesPartitionedFilter : this.EntryMatchesFilter;
+		EntryMatchesFunc = abPartition ? EntryMatchesPartitionedFilter : EntryMatchesFilter;
 	}
 
-	function EntryMatchesFilter(aEntry)
+	function EntryMatchesFilter(aEntry: Object): Boolean
 	{
-		return aEntry != undefined && (aEntry.filterFlag == undefined || (aEntry.filterFlag & this.iItemFilter) != 0);
+		return aEntry != undefined && (aEntry.filterFlag == undefined || (aEntry.filterFlag & iItemFilter) != 0);
 	}
 
-	function EntryMatchesPartitionedFilter(aEntry)
+	function EntryMatchesPartitionedFilter(aEntry: Object): Boolean
 	{
-		var __reg3 = false;
+		var bmatchFound = false;
 		if (aEntry != undefined) 
 		{
-			if (this.iItemFilter == 4294967295) 
+			if (iItemFilter == 0xFFFFFFFF) 
 			{
-				__reg3 = true;
+				bmatchFound = true;
 			}
 			else 
 			{
-				var __reg2 = aEntry.filterFlag;
-				var __reg4 = __reg2 & 255;
-				var __reg7 = (__reg2 & 65280) >>> 8;
-				var __reg6 = (__reg2 & 16711680) >>> 16;
-				var __reg5 = (__reg2 & 4278190080) >>> 24;
-				__reg3 = __reg4 == this.iItemFilter || __reg7 == this.iItemFilter || __reg6 == this.iItemFilter || __reg5 == this.iItemFilter;
+				var ifilterFlag: Number = aEntry.filterFlag;
+				var byte0: Number = (ifilterFlag & 0x000000FF);
+				var byte1: Number = (ifilterFlag & 0x0000FF00) >>> 8;
+				var byte2: Number = (ifilterFlag & 0x00FF0000) >>> 16;
+				var byte3: Number = (ifilterFlag & 0xFF000000) >>> 24;
+				bmatchFound = byte0 == iItemFilter || byte1 == iItemFilter || byte2 == iItemFilter || byte3 == iItemFilter;
 			}
 		}
-		return __reg3;
+		return bmatchFound;
 	}
 
-	function GetPrevFilterMatch(aiStartIndex)
+	function GetPrevFilterMatch(aiStartIndex: Number): Number
 	{
-		var __reg3 = undefined;
+		var iPrevMatch: Number = undefined;
 		if (aiStartIndex != undefined) 
 		{
-			var __reg2 = aiStartIndex - 1;
-			while (__reg2 >= 0 && __reg3 == undefined) 
+			for (var i = aiStartIndex - 1; i >=0 && iPrevMatch == undefined; i--)
 			{
-				if (this.EntryMatchesFunc(this._filterArray[__reg2])) 
-				{
-					__reg3 = __reg2;
+				if (EntryMatchesFunc(_filterArray[i])) {
+					iPrevMatch = i;
 				}
-				--__reg2;
 			}
 		}
-		return __reg3;
+		return iPrevMatch;
 	}
 
-	function GetNextFilterMatch(aiStartIndex)
+	function GetNextFilterMatch(aiStartIndex: Number): Number
 	{
-		var __reg3 = undefined;
+		var iNextMatch: Number = undefined;
 		if (aiStartIndex != undefined) 
 		{
-			var __reg2 = aiStartIndex + 1;
-			while (__reg2 < this._filterArray.length && __reg3 == undefined) 
+			for (var i = aiStartIndex + 1; i < _filterArray.length && iNextMatch == undefined; i++)
 			{
-				if (this.EntryMatchesFunc(this._filterArray[__reg2])) 
+				if (EntryMatchesFunc(_filterArray[i])) 
 				{
-					__reg3 = __reg2;
+					iNextMatch = i;
 				}
-				++__reg2;
 			}
 		}
-		return __reg3;
+		return iNextMatch;
 	}
 
-	function ClampIndex(aiStartIndex)
+	function ClampIndex(aiStartIndex: Number): Number
 	{
-		var __reg2 = aiStartIndex;
-		if (aiStartIndex != undefined && !this.EntryMatchesFunc(this._filterArray[__reg2])) 
+		var iClampIndex = aiStartIndex;
+		if (aiStartIndex != undefined && !EntryMatchesFunc(_filterArray[iClampIndex])) 
 		{
-			var __reg4 = this.GetNextFilterMatch(__reg2);
-			var __reg3 = this.GetPrevFilterMatch(__reg2);
-			if (__reg4 == undefined) 
+			var iNextMatch: Number = GetNextFilterMatch(iClampIndex);
+			var iPrevMatch: Number = GetPrevFilterMatch(iClampIndex);
+			if (iNextMatch == undefined) 
 			{
-				if (__reg3 == undefined) 
+				if (iPrevMatch == undefined) 
 				{
-					__reg2 = -1;
+					iClampIndex = -1;
+				} else {
+					iClampIndex = iPrevMatch;
 				}
-				else 
-				{
-					__reg2 = __reg3;
-				}
+			} else {
+				iClampIndex = iNextMatch;
 			}
-			else 
+			if (iNextMatch != undefined && iPrevMatch != undefined && iPrevMatch != iNextMatch && iClampIndex == iNextMatch && _filterArray[iPrevMatch].text == _filterArray[aiStartIndex].text) 
 			{
-				__reg2 = __reg4;
-			}
-			if (__reg4 != undefined && __reg3 != undefined && __reg3 != __reg4 && __reg2 == __reg4 && this._filterArray[__reg3].text == this._filterArray[aiStartIndex].text) 
-			{
-				__reg2 = __reg3;
+				iClampIndex = iPrevMatch;
 			}
 		}
-		return __reg2;
+		return iClampIndex;
 	}
 
 }

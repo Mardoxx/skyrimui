@@ -182,7 +182,7 @@ class ItemCard extends MovieClip
 		var _iItemType: Number = aUpdateObj.type;
 		
 		
-		switch (aUpdateObj.type) {
+		switch (_iItemType) {
 			case InventoryDefines.ICT_ARMOR:
 				if (aUpdateObj.effects.length == 0) {
 					gotoAndStop("Apparel_reg");
@@ -444,10 +444,8 @@ class ItemCard extends MovieClip
 				break;
 			
 			case InventoryDefines.ICT_KEY:
-				break;
-				
+			case InventoryDefines.ICT_NONE:            
 			default:
-				_iItemType === InventoryDefines.ICT_NONE;
 				gotoAndStop("Empty");
 		}
 		
@@ -493,7 +491,6 @@ class ItemCard extends MovieClip
 				ButtonRect._alpha = 100;
 				EnchantingSlider_mc._alpha = 100;
 				CardList_mc._alpha = 0;
-				return;
 				break;
 				
 			case QuantitySlider_mc: 
@@ -506,7 +503,6 @@ class ItemCard extends MovieClip
 				EnchantingSlider_mc._alpha = 0;
 				CardList_mc._alpha = 0;
 				break;
-				return;
 				
 			case CardList_mc: 
 				QuantitySlider_mc._y = -100;
@@ -517,7 +513,6 @@ class ItemCard extends MovieClip
 				ButtonRect._alpha = 0;
 				EnchantingSlider_mc._alpha = 0;
 				CardList_mc._alpha = 100;
-				return;
 				break;
 				
 			case ButtonRect: 
@@ -529,11 +524,7 @@ class ItemCard extends MovieClip
 				ButtonRect._alpha = 100;
 				EnchantingSlider_mc._alpha = 0;
 				CardList_mc._alpha = 0;
-				return;
 				break;
-				
-			default:
-				return;
 		}
 	}
 

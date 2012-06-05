@@ -1,44 +1,48 @@
-dynamic class Shared.VerticalCenteredList extends Shared.CenteredList
+import gfx.ui.InputDetails;
+import gfx.ui.NavigationCode;
+import Shared.GlobalFunc;
+
+class Shared.VerticalCenteredList extends Shared.CenteredList
 {
-	var EntriesA;
-	var SelectedEntry;
-	var bRepositionEntries;
-	var dispatchEvent;
-	var iSelectedIndex;
+	var EntriesA: Array;
+	var SelectedEntry: Object;
+	var bRepositionEntries: Boolean;
+	var dispatchEvent: Function;
+	var iSelectedIndex: Number;
 	var moveListDown;
 	var moveListUp;
 
 	function VerticalCenteredList()
 	{
 		super();
-		this.bRepositionEntries = false;
+		bRepositionEntries = false;
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
-		var __reg2 = false;
-		if (Shared.GlobalFunc.IsKeyPressed(details)) 
+		var bHandledInput: Boolean = false;
+		if (GlobalFunc.IsKeyPressed(details)) 
 		{
-			if (details.navEquivalent == gfx.ui.NavigationCode.PAGE_DOWN) 
+			if (details.navEquivalent == NavigationCode.PAGE_DOWN) 
 			{
-				this.moveListDown();
-				__reg2 = true;
+				moveListDown();
+				bHandledInput = true;
 			}
-			else if (details.navEquivalent == gfx.ui.NavigationCode.PAGE_UP) 
+			else if (details.navEquivalent == NavigationCode.PAGE_UP) 
 			{
-				this.moveListUp();
-				__reg2 = true;
+				moveListUp();
+				bHandledInput = true;
 			}
-			else if (details.navEquivalent == gfx.ui.NavigationCode.ENTER && this.iSelectedIndex != -1) 
+			else if (details.navEquivalent == NavigationCode.ENTER && iSelectedIndex != -1) 
 			{
-				this.dispatchEvent({type: "itemPress", index: this.iSelectedIndex, entry: this.EntriesA[this.iSelectedIndex]});
-				__reg2 = true;
+				dispatchEvent({type: "itemPress", index: iSelectedIndex, entry: EntriesA[iSelectedIndex]});
+				bHandledInput = true;
 			}
 		}
-		return __reg2;
+		return bHandledInput;
 	}
 
-	function SetEntry(aEntryClip, aEntryObject)
+	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object): Void
 	{
 		if (aEntryObject.text == undefined) 
 		{
@@ -52,7 +56,7 @@ dynamic class Shared.VerticalCenteredList extends Shared.CenteredList
 		{
 			aEntryClip.textField.SetText(aEntryObject.text);
 		}
-		if (aEntryObject == this.SelectedEntry) 
+		if (aEntryObject == SelectedEntry) 
 		{
 			aEntryClip.EquipLeftIcon_mc._visible = true;
 			aEntryClip.EquipRightIcon_mc._visible = true;

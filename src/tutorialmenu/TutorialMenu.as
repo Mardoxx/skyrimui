@@ -1,7 +1,9 @@
+import Shared.ButtonTextArtHolder;
+
 class TutorialMenu extends MovieClip
 {
-	var ButtonArtHolder: Shared.ButtonTextArtHolder;
-	var ButtonHolder: Shared.ButtonTextArtHolder;
+	var ButtonArtHolder: ButtonTextArtHolder;
+	var ButtonHolder: ButtonTextArtHolder;
 	var ButtonRect;
 	var HelpScrollingText;
 	var HelpText;
