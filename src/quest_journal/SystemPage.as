@@ -711,13 +711,17 @@ class SystemPage extends MovieClip
 	
 		switch (aiState) {
 			case SystemPage.SAVE_LOAD_STATE:
+				SystemDivider.gotoAndStop("Left");
+				BottomBar_mc.SetButtonInfo(1, "$Delete", {PCArt: "X", XBoxArt: "360_X", PS3Art: "PS3_X"});
+				BottomBar_mc.SetButtonVisibility(1, true);
+				break;
+				
 			case SystemPage.INPUT_MAPPING_STATE:
 				SystemDivider.gotoAndStop("Left");
 			case SystemPage.OPTIONS_LISTS_STATE:
 				BottomBar_mc.SetButtonInfo(1, "$Defaults", {PCArt: "T", XBoxArt: "360_Y", PS3Art: "PS3_Y"});
 				BottomBar_mc.SetButtonVisibility(1, true, 100);
 				break;
-				
 				
 			case SystemPage.SETTINGS_CATEGORY_STATE:
 			case SystemPage.PC_QUIT_LIST_STATE:

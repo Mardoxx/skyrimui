@@ -1,4 +1,4 @@
-dynamic class MainSaveLoadList extends Shared.BSScrollingList
+class MainSaveLoadList extends Shared.BSScrollingList
 {
 
 	function MainSaveLoadList()
@@ -6,21 +6,15 @@ dynamic class MainSaveLoadList extends Shared.BSScrollingList
 		super();
 	}
 
-	function SetEntry(aEntryClip, aEntryObject)
+	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object: Void
 	{
 		super.SetEntry(aEntryClip, aEntryObject);
-		if (aEntryObject.fileNum != undefined) 
-		{
-			if (aEntryObject.fileNum < 10) 
-			{
+		if (aEntryObject.fileNum != undefined) {
+			if (aEntryObject.fileNum < 10) {
 				aEntryClip.SaveNumber.SetText("00" + aEntryObject.fileNum);
-			}
-			else if (aEntryObject.fileNum < 100) 
-			{
+			} else if (aEntryObject.fileNum < 100) {
 				aEntryClip.SaveNumber.SetText("0" + aEntryObject.fileNum);
-			}
-			else 
-			{
+			} else {
 				aEntryClip.SaveNumber.SetText(aEntryObject.fileNum);
 			}
 			return;
@@ -28,13 +22,13 @@ dynamic class MainSaveLoadList extends Shared.BSScrollingList
 		aEntryClip.SaveNumber.SetText(" ");
 	}
 
-	function moveSelectionUp()
+	function moveSelectionUp(): Void
 	{
 		super.moveSelectionUp();
 		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
 	}
 
-	function moveSelectionDown()
+	function moveSelectionDown(): Void
 	{
 		super.moveSelectionDown();
 		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);

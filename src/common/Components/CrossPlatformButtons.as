@@ -2,6 +2,7 @@ import Shared.ButtonChange;
 
 class Components.CrossPlatformButtons extends gfx.controls.Button
 {
+    var border: MovieClip;
 	var ButtonArt: MovieClip;
 	var ButtonArt_mc: MovieClip;
 	var CurrentPlatform: Number;
