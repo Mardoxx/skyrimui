@@ -143,15 +143,15 @@ class DialogueMenu extends MovieClip
 
 	function PopulateDialogueLists()
 	{
-		var topicDataStride: Number = 3;
-		var topicTextOffset: Number = 0;
-		var topicIsNewOffset: Number = 1;
-		var topicIndexOffset: Number = 2;
+		var TOPIC_TEXT: Number = 0;
+		var TOPIC_ISNEW: Number = 1;
+		var TOPIC_INDEX: Number = 2;
+		var TOPIC_STRIDE: Number = 3;
 		
 		TopicList.ClearList();
 		
-		for (var i: Number = 0; i < arguments.length - 1; i += topicDataStride) {
-			var topicData: Object = {text: arguments[i + topicTextOffset], topicIsNew: arguments[i + topicIsNewOffset], topicIndex: arguments[i + topicIndexOffset]};
+		for (var i: Number = 0; i < arguments.length - 1; i += TOPIC_STRIDE) {
+			var topicData: Object = {text: arguments[i + TOPIC_TEXT], topicIsNew: arguments[i + TOPIC_ISNEW], topicIndex: arguments[i + TOPIC_INDEX]};
 			TopicList.entryList.push(topicData);
 		}
 		if (arguments[arguments.length - 1] != -1) {

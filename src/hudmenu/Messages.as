@@ -13,63 +13,49 @@ class Messages extends MovieClip
 	function Messages()
 	{
 		super();
-		this.MessageArray = new Array();
-		this.ShownMessageArray = new Array();
-		this.ShownCount = 0;
-		this.bAnimating = false;
+		MessageArray = new Array();
+		ShownMessageArray = new Array();
+		ShownCount = 0;
+		bAnimating = false;
 	}
 
 	function Update(): Void
 	{
-		var bqueuedMessage: Boolean = this.MessageArray.length > 0;
-		if (bqueuedMessage && !this.bAnimating && this.ShownCount < Messages.MAX_SHOWN) 
-		{
-			this.ShownMessageArray.push(this.attachMovie("MessageText", "Text" + Messages.InstanceCounter++, this.getNextHighestDepth(), {_x: 0, _y: 0}));
-			this.ShownMessageArray[this.ShownMessageArray.length - 1].TextFieldClip.tf1.html = true;
-			this.ShownMessageArray[this.ShownMessageArray.length - 1].TextFieldClip.tf1.textAutoSize = "shrink";
-			this.ShownMessageArray[this.ShownMessageArray.length - 1].TextFieldClip.tf1.htmlText = this.MessageArray.shift();
-			this.bAnimating = true;
-			this.ySpacing = 0;
-			
-			this.onEnterFrame = function (): Void
+		var bqueuedMessage: Boolean = MessageArray.length > 0;
+		if (bqueuedMessage && !bAnimating && ShownCount < Messages.MAX_SHOWN) {
+			ShownMessageArray.push(attachMovie("MessageText", "Text" + Messages.InstanceCounter++, getNextHighestDepth(), {_x: 0, _y: 0}));
+			ShownMessageArray[ShownMessageArray.length - 1].TextFieldClip.tf1.html = true;
+			ShownMessageArray[ShownMessageArray.length - 1].TextFieldClip.tf1.textAutoSize = "shrink";
+			ShownMessageArray[ShownMessageArray.length - 1].TextFieldClip.tf1.htmlText = MessageArray.shift();
+			bAnimating = true;
+			ySpacing = 0;
+			onEnterFrame = function (): Void
 			{
-				if (this.ySpacing < Messages.Y_SPACING) 
-				{
-					var i: Number = 0;
-					while (i < this.ShownMessageArray.length - 1) 
-					{
-						this.ShownMessageArray[i]._y = this.ShownMessageArray[i]._y + 2;
-						++i;
+				if (ySpacing < Messages.Y_SPACING) {
+					for (var i: Number = 0; i < ShownMessageArray.length - 1; i++) {
+						ShownMessageArray[i]._y = ShownMessageArray[i]._y + 2;
 					}
-					++this.ySpacing;
+					++ySpacing;
 					return;
 				}
-				this.bAnimating = false;
-				if (!bqueuedMessage || this.ShownCount == Messages.MAX_SHOWN) 
-				{
-					this.ShownMessageArray[0].gotoAndPlay("FadeOut");
-				}
-				delete this.onEnterFrame;
-			}
-			;
-			++this.ShownCount;
+				bAnimating = false;
+				if (!bqueuedMessage || ShownCount == Messages.MAX_SHOWN) 
+					ShownMessageArray[0].gotoAndPlay("FadeOut");
+				delete onEnterFrame;
+			};
+			++ShownCount;
 		}
-		var i: Number = 0;
-		while (i < this.ShownMessageArray.length) 
-		{
-			if (this.ShownMessageArray[i]._currentFrame >= Messages.END_ANIM_FRAME) 
-			{
-				var aShownMessageArray: Array = this.ShownMessageArray.splice(i, 1);
+		for (var i: Number = 0; i < ShownMessageArray.length - 1; i++) {
+			if (ShownMessageArray[i]._currentFrame >= Messages.END_ANIM_FRAME) {
+				var aShownMessageArray: Array = ShownMessageArray.splice(i, 1);
 				aShownMessageArray[0].removeMovieClip();
-				--this.ShownCount;
-				this.bAnimating = false;
+				--ShownCount;
+				bAnimating = false;
 			}
-			++i;
 		}
-		if (!bqueuedMessage && !this.bAnimating && this.ShownMessageArray.length > 0) 
-		{
-			this.bAnimating = true;
-			this.ShownMessageArray[0].gotoAndPlay("FadeOut");
+		if (!bqueuedMessage && !bAnimating && ShownMessageArray.length > 0) {
+			bAnimating = true;
+			ShownMessageArray[0].gotoAndPlay("FadeOut");
 		}
 	}
 
