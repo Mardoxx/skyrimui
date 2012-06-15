@@ -1,4 +1,4 @@
-import gfx.events.EventDispatcher;
+﻿import gfx.events.EventDispatcher;
 import gfx.ui.InputDetails;
 import gfx.ui.NavigationCode;
 import gfx.managers.FocusHandler;
@@ -69,7 +69,7 @@ class Shared.CenteredList extends MovieClip
 
 	function onMouseWheel(delta)
 	{
-		for (var item: MovieClip = Mouse.getTopMostEntity(); item && item != undefined && FocusHandler.instance.getFocus(0) == this; item = item._parent;) {
+		for (var item: Object = Mouse.getTopMostEntity(); item && item != undefined && FocusHandler.instance.getFocus(0) == this; item = item._parent) {
 			if (item == this) 
 			{
 				if (delta < 0) {
@@ -84,7 +84,7 @@ class Shared.CenteredList extends MovieClip
 	function onPress(aiMouseIndex, aiKeyboardOrMouse)
 	{
 		
-		for (var item: MovieClip = Mouse.getTopMostEntity(); item && item != undefined; item = item._parent;) {
+		for (var item: Object = Mouse.getTopMostEntity(); item && item != undefined; item = item._parent) {
 			if (item == SelectedEntry) 
 			{
 				dispatchEvent({type: "itemPress", index: iSelectedIndex, entry: EntriesA[iSelectedIndex], keyboardOrMouse: aiKeyboardOrMouse});
@@ -96,7 +96,7 @@ class Shared.CenteredList extends MovieClip
 	{
 		if (aiButtonIndex == 1) 
 		{
-			for (var item: MovieClip = Mouse.getTopMostEntity(); item && item != undefined; item = item._parent;) {
+			for (var item: Object = Mouse.getTopMostEntity(); item && item != undefined; item = item._parent) {
 				if (item == SelectedEntry) 
 				{
 					dispatchEvent({type: "itemPressAux", index: iSelectedIndex, entry: EntriesA[iSelectedIndex], keyboardOrMouse: aiKeyboardOrMouse});
@@ -274,13 +274,13 @@ class Shared.CenteredList extends MovieClip
 		if (bRepositionEntries) {		
 			var iyPosition = 0;
 			for (var i: Number = 0; i < iMaxEntriesTopHalf; i++) {
-				TopHalf["Entry" + __reg2]._y = iyPosition;
+				TopHalf["Entry" + i]._y = iyPosition;
 				iyPosition += TopHalf["Entry" + i]._height;
 			}
 			
 			iyPosition = 0;
 			for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++) {
-				BottomHalf["Entry" + i]._y = __reg3;
+				BottomHalf["Entry" + i]._y = iyPosition;
 				iyPosition += BottomHalf["Entry" + i]._height;
 			}
 			
