@@ -16,6 +16,7 @@ class InventoryDefines
 	static var ICT_SPELL_DEFAULT: Number = 13;
 	static var ICT_LIST: Number = 14;
 	static var ICT_CRAFT_ENCHANTING: Number = 15;
+	static var ICT_HOUSE_PART: Number = 16;
 	static var ES_NONE: Number = 0;
 	static var ES_EQUIPPED: Number = 1;
 	static var ES_LEFT_EQUIPPED: Number = 2;

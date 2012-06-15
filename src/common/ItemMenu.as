@@ -144,6 +144,27 @@ class ItemMenu extends MovieClip
 	{
 	}
 
+	function SelectCategory(aiIndex)
+	{
+		var bvalidCategory: Boolean = false;
+		if (InventoryLists_mc.CategoriesList.entryList[aiIndex].filterFlag == 1) 
+		{
+			var scrollIndex: Number = 0;
+			
+			for(var i: Number = aiIndex - 1; i >= 0; i--) {
+				if (InventoryLists_mc.CategoriesList.entryList[i].filterFlag == 1) {
+					++scrollIndex;
+				}
+			}
+			if (scrollIndex != InventoryLists_mc.CategoriesList.scrollPosition) {
+				InventoryLists_mc.CategoriesList.scrollPosition = scrollIndex;
+			}
+			InventoryLists_mc.ShowItemsList();
+			bvalidCategory = true;
+		}
+		return bvalidCategory;
+	}
+	
 	function onItemHighlightChange(event: Object): Void
 	{
 		if (event.index != -1) 

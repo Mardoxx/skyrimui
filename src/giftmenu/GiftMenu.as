@@ -68,5 +68,11 @@ dynamic class GiftMenu extends ItemMenu
 		super.onHideItemsList(event);
 		this.BottomBar_mc.SetButtonsText("", "$Exit");
 	}
+	
+	function onItemCardSubMenuAction(event)
+	{
+		super.onItemCardSubMenuAction(event);
+		gfx.io.GameDelegate.call("QuantitySliderOpen", [event.opening]);
+	}
 
 }

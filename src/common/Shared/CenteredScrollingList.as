@@ -82,10 +82,11 @@ class Shared.CenteredScrollingList extends Shared.BSScrollingList
 		return aEntry.divider == true || aEntry.flag == 0;
 	}
     
-	function IsSelectionAboveDivider()
+	// No longer needed? 20120615
+	/* function IsSelectionAboveDivider()
 	{
 		return iDividerIndex == -1 || selectedIndex < iDividerIndex;
-	}
+	} */
 
 	function get dividerIndex()
 	{

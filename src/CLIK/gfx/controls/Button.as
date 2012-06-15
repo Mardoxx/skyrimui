@@ -573,7 +573,7 @@ dynamic class gfx.controls.Button extends gfx.core.UIComponent
 	function doubleClickExpired()
 	{
 		clearInterval(this.doubleClickInterval);
-		delete this.doubleClickInterval;
+		delete(this.doubleClickInterval);
 	}
 
 	function beginButtonRepeat(controllerIdx, button)
@@ -590,7 +590,7 @@ dynamic class gfx.controls.Button extends gfx.core.UIComponent
 	function clearRepeatInterval()
 	{
 		clearInterval(this.buttonRepeatInterval);
-		delete this.buttonRepeatInterval;
+		delete(this.buttonRepeatInterval);
 	}
 
 }

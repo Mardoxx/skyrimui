@@ -51,7 +51,7 @@ class ObjectiveText extends MovieClip
 		if (aObjectiveArrayA.length > 0) 
 			gfx.io.GameDelegate.call("PlaySound", ["UIObjectiveNew"]);
 		while (MovieClipsA.length) {
-			delete eval(MovieClipsA.shift());
+			delete(eval(MovieClipsA.shift()));
 		}
 		var aMaxObjectives: Number = Math.min(aObjectiveArrayA.length, Math.min(aCount, 3)); // Shows a max of 3 objectives
 		ObjectiveText.ArraySize = aCount;

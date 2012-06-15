@@ -141,6 +141,7 @@ class BarterMenu extends ItemMenu
 	function onItemCardSubMenuAction(event: Object): Void
 	{
 		super.onItemCardSubMenuAction(event);
+		GameDelegate.call("QuantitySliderOpen", [event.opening]);
 		if (event.menu == "quantity") 
 		{
 			if (event.opening) 

@@ -25,6 +25,7 @@ dynamic class RaceSexPanels extends MovieClip
 	var _currentframe;
 	var _parent;
 	var _x;
+	var bLimitedMenu;
 	var bShowTextEntry;
 	var gotoAndPlay;
 	var gotoAndStop;
@@ -163,6 +164,10 @@ dynamic class RaceSexPanels extends MovieClip
 			this._CategoriesList.entryList.push(__reg4);
 			__reg3 = __reg3 + __reg8;
 		}
+		if (this.bLimitedMenu) 
+		{
+			this._CategoriesList.__set__selectedIndex(RaceSexPanels.BODY_CATEGORY);
+		}
 		this._CategoriesList.UpdateList();
 	}
 
@@ -176,7 +181,7 @@ dynamic class RaceSexPanels extends MovieClip
 		var __reg3 = 0;
 		while (__reg3 < arguments.length) 
 		{
-			var __reg4 = {text: arguments[__reg3 + __reg5], flag: RaceSexPanels.RACE_CATEGORY, raceDescription: arguments[__reg3 + __reg6].length <= 0 ? "No race description for " + arguments[__reg3 + __reg5] : arguments[__reg3 + __reg6], equipState: arguments[__reg3 + __reg12]};
+			var __reg4 = {text: arguments[__reg3 + __reg5], flag: this.bLimitedMenu ? RaceSexPanels.BODY_CATEGORY : RaceSexPanels.RACE_CATEGORY, raceDescription: arguments[__reg3 + __reg6].length <= 0 ? "No race description for " + arguments[__reg3 + __reg5] : arguments[__reg3 + __reg6], equipState: arguments[__reg3 + __reg12]};
 			if (__reg4.equipState > 0) 
 			{
 				this._CategoriesList.entryList[__reg4.flag].savedItemIndex = __reg3 / __reg7;
@@ -186,7 +191,14 @@ dynamic class RaceSexPanels extends MovieClip
 			__reg3 = __reg3 + __reg7;
 		}
 		this._SubList1.UpdateList();
-		this._CategoriesList.selectedIndex = RaceSexPanels.RACE_CATEGORY;
+		if (this.bLimitedMenu) 
+		{
+			this._CategoriesList.__set__selectedIndex(RaceSexPanels.BODY_CATEGORY);
+		}
+		else 
+		{
+			this._CategoriesList.__set__selectedIndex(RaceSexPanels.RACE_CATEGORY);
+		}
 		this.ShowItemsList();
 	}
 
@@ -277,7 +289,10 @@ dynamic class RaceSexPanels extends MovieClip
 		{
 			this._CategoriesList.selectedEntry.savedItemIndex = this._SubList2.selectedIndex;
 		}
-		this._CategoriesList.moveListDown();
+		 if (this.bLimitedMenu != true || this._CategoriesList.__get__selectedIndex() > RaceSexPanels.BODY_CATEGORY) 
+		{
+			this._CategoriesList.moveListDown();
+		}
 	}
 
 	function onFiltersListMoveUp()

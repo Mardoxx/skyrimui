@@ -22,7 +22,7 @@ dynamic class FavoritesCenteredList extends Shared.CenteredScrollingList
 		{
 			if (aEntryObject.hotkey != undefined && aEntryObject.hotkey != -1) 
 			{
-				aEntryClip.textField.SetText(aEntryObject.hotkey + 1 + ". " + aEntryObject.text);
+				AppendHotkeyText(aEntryClip.textField, aEntryObject.hotkey, aEntryObject.text);
 			}
 			else 
 			{
@@ -60,6 +60,16 @@ dynamic class FavoritesCenteredList extends Shared.CenteredScrollingList
 			return;
 		}
 		aEntryClip._alpha = 100;
+	}
+	
+	function AppendHotkeyText(atfText, aiHotkey, astrItemName)
+	{
+		if (aiHotkey >= 0 && aiHotkey <= 7) {
+			atfText.SetText(aiHotkey + 1 + ". " + astrItemName);
+			return;
+		}
+		atfText.SetText("$HK" + aiHotkey);
+		atfText.SetText(atfText.text + ". " + astrItemName);
 	}
 
 	function InvalidateData()

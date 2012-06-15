@@ -55,6 +55,7 @@ class SystemPage extends MovieClip
 	var bSavingSettings: Boolean;
 	var bSettingsChanged: Boolean;
 	var bUpdated: Boolean;
+	var bShowKinectTunerButton: Boolean;
 	
 	var iCurrentState: Number;
 	var iDebounceRemapModeID: Number;
@@ -82,6 +83,7 @@ class SystemPage extends MovieClip
 		bSettingsChanged = false;
 		bMenuClosing = false;
 		bSavingSettings = false;
+		bShowKinectTunerButton = false;
 		iPlatform = 0;
 	}
 
@@ -134,6 +136,7 @@ class SystemPage extends MovieClip
 		if (!bUpdated) {
 			currentState = SystemPage.MAIN_STATE;
 			GameDelegate.call("SetVersionText", [VersionText]);
+			GameDelegate.call("ShouldShowKinectTunerOption", [], this, "SetShouldShowKinectTunerOption");
 			GameDelegate.call("SetSaveDisabled", [CategoryList.entryList[0], CategoryList.entryList[1], CategoryList.entryList[2], CategoryList.entryList[3], CategoryList.entryList[5]]);
 			BottomBar_mc.SetButtonVisibility(1, false, 50);
 			CategoryList.UpdateList();
@@ -146,6 +149,7 @@ class SystemPage extends MovieClip
 	function endPage(): Void
 	{
 		BottomBar_mc.SetButtonVisibility(1, false, 100);
+		BottomBar_mc.SetButtonVisibility(2, false, 100);
 	}
 
 	function get currentState(): Number
@@ -185,6 +189,10 @@ class SystemPage extends MovieClip
 			} else if ((details.navEquivalent == NavigationCode.GAMEPAD_Y || details.code == 84) && (iCurrentState == SystemPage.OPTIONS_LISTS_STATE || iCurrentState == SystemPage.INPUT_MAPPING_STATE) && BottomBar_mc.IsButtonVisible(1)) {
 				ConfirmTextField.SetText("$Reset settings to default values?");
 				StartState(SystemPage.DEFAULT_SETTINGS_CONFIRM_STATE);
+				bhandledInput = true;
+			} else if (details.navEquivalent == NavigationCode.GAMEPAD_R1 && iCurrentState == SystemPage.OPTIONS_LISTS_STATE && BottomBar_mc.IsButtonVisible(2)) 
+			{
+				gfx.io.GameDelegate.call("OpenKinectTuner", []);
 				bhandledInput = true;
 			} else if (!pathToFocus[0].handleInput(details, pathToFocus.slice(1))) {
 				if (details.navEquivalent == NavigationCode.ENTER) {
@@ -514,7 +522,7 @@ class SystemPage extends MovieClip
 		
 		switch (SettingsList.selectedIndex) {
 			case 0:
-				List_mc.entryList = [{text: "$Invert Y", movieType: 2}, {text: "$Look Sensitivity", movieType: 0}, {text: "$Vibration", movieType: 2}, {text: "$360 Controller", movieType: 2}, {text: "$Difficulty", movieType: 1, options: ["$Very Easy", "$Easy", "$Normal", "$Hard", "$Very Hard"]}, {text: "$Show Floating Markers", movieType: 2}, {text: "$Save on Rest", movieType: 2}, {text: "$Save on Wait", movieType: 2}, {text: "$Save on Travel", movieType: 2}, {text: "$Save on Pause", movieType: 1, options: ["$5 Mins", "$10 Mins", "$15 Mins", "$30 Mins", "$45 Mins", "$60 Mins", "$Disabled"]}];
+				List_mc.entryList = [{text: "$Invert Y", movieType: 2}, {text: "$Look Sensitivity", movieType: 0}, {text: "$Vibration", movieType: 2}, {text: "$360 Controller", movieType: 2}, {text: "$Difficulty", movieType: 1, options: ["$Very Easy", "$Easy", "$Normal", "$Hard", "$Very Hard"]}, {text: "$Show Floating Markers", movieType: 2}, {text: "$Save on Rest", movieType: 2}, {text: "$Save on Wait", movieType: 2}, {text: "$Save on Travel", movieType: 2}, {text: "$Save on Pause", movieType: 1, options: ["$5 Mins", "$10 Mins", "$15 Mins", "$30 Mins", "$45 Mins", "$60 Mins", "$Disabled"]}, {text: "$Use Kinect Commands", movieType: 2}];
 				GameDelegate.call("RequestGameplayOptions", [List_mc.entryList]);
 				break;
 				
@@ -713,7 +721,7 @@ class SystemPage extends MovieClip
 			case SystemPage.SAVE_LOAD_STATE:
 				SystemDivider.gotoAndStop("Left");
 				BottomBar_mc.SetButtonInfo(1, "$Delete", {PCArt: "X", XBoxArt: "360_X", PS3Art: "PS3_X"});
-				BottomBar_mc.SetButtonVisibility(1, true);
+				BottomBar_mc.SetButtonVisibility(1, true, 100);
 				break;
 				
 			case SystemPage.INPUT_MAPPING_STATE:
@@ -721,6 +729,10 @@ class SystemPage extends MovieClip
 			case SystemPage.OPTIONS_LISTS_STATE:
 				BottomBar_mc.SetButtonInfo(1, "$Defaults", {PCArt: "T", XBoxArt: "360_Y", PS3Art: "PS3_Y"});
 				BottomBar_mc.SetButtonVisibility(1, true, 100);
+				if (aiState == SystemPage.OPTIONS_LISTS_STATE && this.bShowKinectTunerButton && this.iPlatform == 2 && this.SettingsList.selectedIndex == 0) {
+					this.BottomBar_mc.SetButtonInfo(2, "$Kinect Tuner", {PCArt: "K", XBoxArt: "360_RB", PS3Art: "PS3_RB"});
+					this.BottomBar_mc.SetButtonVisibility(2, true, 100);
+				}
 				break;
 				
 			case SystemPage.SETTINGS_CATEGORY_STATE:
@@ -751,6 +763,7 @@ class SystemPage extends MovieClip
 				SystemDivider.gotoAndStop("Right");
 			case SystemPage.OPTIONS_LISTS_STATE:
 				BottomBar_mc.SetButtonVisibility(1, false);
+				BottomBar_mc.SetButtonVisibility(2, false);
 				break;
 				
 			case SystemPage.HELP_LIST_STATE:
@@ -887,5 +900,10 @@ class SystemPage extends MovieClip
 	{
 		bMenuClosing = false;
 		onCancelPress();
+	}
+	
+	function SetShouldShowKinectTunerOption(abFlag: Boolean): Void
+	{
+		bShowKinectTunerButton = abFlag == true;
 	}
 }

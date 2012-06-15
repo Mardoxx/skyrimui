@@ -282,6 +282,20 @@ class HUDMenu extends Shared.PlatformChangeUser
 		LocationLockBase.HorseMode = true;
 		TutorialLockInstance.HorseMode = true;
 		
+		Health.WarHorseMode = true;
+		CompassShoutMeterHolder.WarHorseMode = true;
+		MessagesBlock.WarHorseMode = true;
+		SubtitleTextHolder.WarHorseMode = true;
+		QuestUpdateBaseInstance.WarHorseMode = true;
+		EnemyHealth_mc.WarHorseMode = true;
+		FloatingQuestMarker_mc.WarHorseMode = true;
+		LocationLockBase.WarHorseMode = true;
+		TutorialLockInstance.WarHorseMode = true;
+		CrosshairInstance.WarHorseMode = true;
+		Stamina.WarHorseMode = true;
+		RightChargeMeterAnim.WarHorseMode = true;
+		ArrowInfoInstance.WarHorseMode = true;
+		
 		MessagesBlock.CartMode = true;
 		SubtitleTextHolder.CartMode = true;
 		TutorialLockInstance.CartMode = true;
@@ -291,23 +305,8 @@ class HUDMenu extends Shared.PlatformChangeUser
 
 	function ShowElements(aMode: String, abShow: Boolean): Void
 	{
-skse.Log("ShowElements(aMode=" + aMode + ", abShow = " + String(abShow) + ")");
 		var HUDMode: String = "All";
-		var aHUDMode = this.HUDModes.length - 1;
-
-skse.Log("HudModes:")
-for (i in HUDModes) {
-		skse.Log(HUDModes[i]);
-}
-skse.Log("=====");
-
-for (var i in HudElements) {
-	skse.Log(HudElements[i]._name);
-	for (var j in HudElements[i]) {
-		skse.Log(" - " + j);
-	}
-}
-skse.Log("=====");
+		var aHUDMode = HUDModes.length - 1;
 
 		if (abShow) {
 			while (aHUDMode >= 0) {

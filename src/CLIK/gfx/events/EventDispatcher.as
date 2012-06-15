@@ -89,10 +89,10 @@ dynamic class gfx.events.EventDispatcher
 	{
 		if (event == undefined) 
 		{
-			delete this._listeners;
+			delete(this._listeners);
 			return;
 		}
-		delete this._listeners[event];
+		delete(this._listeners[event]);
 	}
 
 	function dispatchQueue(dispatch, event)
