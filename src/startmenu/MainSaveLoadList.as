@@ -1,4 +1,4 @@
-class MainSaveLoadList extends Shared.BSScrollingList
+﻿class MainSaveLoadList extends Shared.BSScrollingList
 {
 
 	function MainSaveLoadList()
@@ -6,7 +6,7 @@ class MainSaveLoadList extends Shared.BSScrollingList
 		super();
 	}
 
-	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object: Void
+	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object): Void
 	{
 		super.SetEntry(aEntryClip, aEntryObject);
 		if (aEntryObject.fileNum != undefined) {
