@@ -35,7 +35,7 @@ class Shared.CenteredList extends MovieClip
 		}
 		
 		iMaxEntriesBottomHalf = 0;
-		while (BottomHalf["Entry" + iMaxEntriesTopHalf] != undefined) {
+		while (BottomHalf["Entry" + iMaxEntriesBottomHalf] != undefined) {
 			++iMaxEntriesBottomHalf;
 		}
 	}

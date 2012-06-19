@@ -166,7 +166,7 @@ dynamic class RaceSexPanels extends MovieClip
 		}
 		if (this.bLimitedMenu) 
 		{
-			this._CategoriesList.__set__selectedIndex(RaceSexPanels.BODY_CATEGORY);
+			this._CategoriesList.selectedIndex = RaceSexPanels.BODY_CATEGORY;
 		}
 		this._CategoriesList.UpdateList();
 	}
@@ -193,11 +193,11 @@ dynamic class RaceSexPanels extends MovieClip
 		this._SubList1.UpdateList();
 		if (this.bLimitedMenu) 
 		{
-			this._CategoriesList.__set__selectedIndex(RaceSexPanels.BODY_CATEGORY);
+			this._CategoriesList.selectedIndex = RaceSexPanels.BODY_CATEGORY;
 		}
 		else 
 		{
-			this._CategoriesList.__set__selectedIndex(RaceSexPanels.RACE_CATEGORY);
+			this._CategoriesList.selectedIndex = RaceSexPanels.RACE_CATEGORY;
 		}
 		this.ShowItemsList();
 	}
@@ -268,7 +268,8 @@ dynamic class RaceSexPanels extends MovieClip
 
 	function moveCategoriesUp()
 	{
-		if ((__reg0 = this._CategoriesList.selectedIndex) === RaceSexPanels.RACE_CATEGORY) 
+		var __reg0 = this._CategoriesList.selectedIndex;
+		if (__reg0 === RaceSexPanels.RACE_CATEGORY) 
 		{
 			this._CategoriesList.selectedEntry.savedItemIndex = this._SubList1.selectedIndex;
 		}
@@ -281,7 +282,8 @@ dynamic class RaceSexPanels extends MovieClip
 
 	function moveCategoriesDown()
 	{
-		if ((__reg0 = this._CategoriesList.selectedIndex) === RaceSexPanels.RACE_CATEGORY) 
+		var __reg0 = this._CategoriesList.selectedIndex;
+		if (__reg0 === RaceSexPanels.RACE_CATEGORY) 
 		{
 			this._CategoriesList.selectedEntry.savedItemIndex = this._SubList1.selectedIndex;
 		}
@@ -289,7 +291,7 @@ dynamic class RaceSexPanels extends MovieClip
 		{
 			this._CategoriesList.selectedEntry.savedItemIndex = this._SubList2.selectedIndex;
 		}
-		 if (this.bLimitedMenu != true || this._CategoriesList.__get__selectedIndex() > RaceSexPanels.BODY_CATEGORY) 
+		 if (this.bLimitedMenu != true || this._CategoriesList.selectedIndex > RaceSexPanels.BODY_CATEGORY) 
 		{
 			this._CategoriesList.moveListDown();
 		}
@@ -451,7 +453,8 @@ dynamic class RaceSexPanels extends MovieClip
 
 	function ShowItemsList()
 	{
-		if ((__reg0 = this._CategoriesList.selectedIndex) === RaceSexPanels.RACE_CATEGORY) 
+		var __reg0 = this._CategoriesList.selectedIndex;
+		if (__reg0 === RaceSexPanels.RACE_CATEGORY) 
 		{
 			this.gotoAndPlay("narrowPanel2Show");
 			this.FadeTextEntry(false);
@@ -474,7 +477,8 @@ dynamic class RaceSexPanels extends MovieClip
 
 	function HideItemsList()
 	{
-		if ((__reg0 = this._CategoriesList.selectedIndex) === RaceSexPanels.RACE_CATEGORY) 
+		var __reg0 = this._CategoriesList.selectedIndex;
+		if (__reg0 === RaceSexPanels.RACE_CATEGORY) 
 		{
 			this.gotoAndPlay("narrowPanel2Hide");
 			gfx.managers.FocusHandler.instance.setFocus(this._CategoriesList, 0);
