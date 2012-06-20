@@ -45,7 +45,7 @@ class Messages extends MovieClip
 			};
 			++ShownCount;
 		}
-		for (var i: Number = 0; i < ShownMessageArray.length - 1; i++) {
+		for (var i: Number = 0; i < ShownMessageArray.length; i++) {
 			if (ShownMessageArray[i]._currentFrame >= Messages.END_ANIM_FRAME) {
 				var aShownMessageArray: Array = ShownMessageArray.splice(i, 1);
 				aShownMessageArray[0].removeMovieClip();
