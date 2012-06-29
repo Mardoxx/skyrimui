@@ -1,14 +1,12 @@
-Builds to ./bin/* to <Skyrim Dir>/Data/Interface/*
+Builds with: Adobe Flash Professional v10.0.2, v11.5.1.349
 
-./_extras/bin
-    blank build directory, remove ./bin and replace with ./_extras/bin for clean
-    builds
+Copy ./bin/* to <Skyrim Dir>/Data/Interface
+
 ./_extras/fonts
-    fonts used in fla's
-./_extras/game
-    files that go in <Skyrim Dir>/Data/Interface incase you accidentally delete
-    them.
+	fonts used in fla's
+./_extras/translates
+	files that go in <Skyrim Dir>/Data/Interface incase you accidentally delete them.
 ./bin
-    build directory
+	build directory
 ./src
-    source directory
+	source directory
