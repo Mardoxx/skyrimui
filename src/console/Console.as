@@ -6,14 +6,19 @@ class Console extends MovieClip
 	static var PREVIOUS_COMMANDS: Number = 32;
 	static var HistoryCharBufferSize: Number = 8192;
 	static var ConsoleInstance = null;
-    
+	
+	/* Stage Elements */
+	var Background: MovieClip;
+	
+	var CurrentSelection: TextField;
+	var CommandHistory: TextField;
+	var CommandEntry: TextField;
+	
 	var Commands: Array = new Array();
 	
 	var Animating: Boolean;
 	var Hiding: Boolean;
 	var Shown: Boolean;
-	
-	var Background: MovieClip;
 	
 	var CurrentSelectionYOffset: Number;
 	var OriginalHeight: Number;
@@ -21,10 +26,7 @@ class Console extends MovieClip
 	var PreviousCommandOffset: Number;
 	var ScreenPercent: Number;
 	var TextXOffset: Number;
-    
-    var CurrentSelection: TextField;
-	var CommandHistory: TextField;
-	var CommandEntry: TextField;
+	
 
 	function Console()
 	{
@@ -35,7 +37,6 @@ class Console extends MovieClip
 		CurrentSelectionYOffset = _height + CurrentSelection._y;
 		TextXOffset = CommandEntry._x;
 		
-		// Unknown use 20120604
 		OriginalHeight = Stage.height;
 		OriginalWidth = Stage.width;
 		
@@ -71,8 +72,7 @@ class Console extends MovieClip
 
 	static function Show(): Void
 	{
-		if (Console.ConsoleInstance != null && !Console.ConsoleInstance.Animating) 
-		{
+		if (Console.ConsoleInstance != null && !Console.ConsoleInstance.Animating) {
 			Console.ConsoleInstance._parent._y = Console.ConsoleInstance.OriginalHeight;
 			Console.ConsoleInstance._parent.gotoAndPlay("show_anim");
 			Selection.setFocus(Console.ConsoleInstance.CommandEntry, 0);
@@ -83,8 +83,7 @@ class Console extends MovieClip
 
 	static function ShowComplete(): Void
 	{
-		if (Console.ConsoleInstance != null) 
-		{
+		if (Console.ConsoleInstance != null) {
 			Console.ConsoleInstance.Shown = true;
 			Console.ConsoleInstance.Animating = false;
 		}
@@ -92,8 +91,7 @@ class Console extends MovieClip
 
 	static function Hide(): Void
 	{
-		if (Console.ConsoleInstance != null && !Console.ConsoleInstance.Animating) 
-		{
+		if (Console.ConsoleInstance != null && !Console.ConsoleInstance.Animating) {
 			Console.ConsoleInstance._parent.gotoAndPlay("hide_anim");
 			Selection.setFocus(null, 0);
 			Console.ConsoleInstance.ResetCommandEntry();
@@ -104,8 +102,7 @@ class Console extends MovieClip
 
 	static function HideComplete(): Void
 	{
-		if (Console.ConsoleInstance != null) 
-		{
+		if (Console.ConsoleInstance != null) {
 			Console.ConsoleInstance.Shown = false;
 			Console.ConsoleInstance.Animating = false;
 			Console.ConsoleInstance.Hiding = false;
@@ -116,17 +113,13 @@ class Console extends MovieClip
 	static function Minimize(): Void
 	{
 		if (Console.ConsoleInstance != null) 
-		{
 			Console.ConsoleInstance._parent._y = Console.ConsoleInstance.OriginalHeight - Console.ConsoleInstance.CommandHistory._y;
-		}
 	}
 
 	static function SetCurrentSelection(selectionText: String): Void
 	{
 		if (Console.ConsoleInstance != null) 
-		{
 			Console.ConsoleInstance.CurrentSelection.text = selectionText;
-		}
 	}
 
 	static function QShown(): Boolean
@@ -141,45 +134,32 @@ class Console extends MovieClip
 
 	static function PreviousCommand(): Void
 	{
-		if (Console.ConsoleInstance != null) 
-		{
+		if (Console.ConsoleInstance != null) {
 			if (Console.ConsoleInstance.PreviousCommandOffset < Console.ConsoleInstance.Commands.length) 
-			{
 				++Console.ConsoleInstance.PreviousCommandOffset;
-			}
 			if (0 != Console.ConsoleInstance.Commands.length && 0 != Console.ConsoleInstance.PreviousCommandOffset) 
-			{
 				Console.ConsoleInstance.CommandEntry.text = Console.ConsoleInstance.Commands[Console.ConsoleInstance.Commands.length - Console.ConsoleInstance.PreviousCommandOffset];
 				Selection.setSelection(Console.ConsoleInstance.CommandEntry.length, Console.ConsoleInstance.CommandEntry.length);
-			}
 		}
 	}
 
 	static function NextCommand(): Void
 	{
-		if (Console.ConsoleInstance != null) 
-		{
+		if (Console.ConsoleInstance != null) {
 			if (Console.ConsoleInstance.PreviousCommandOffset > 1) 
-			{
 				--Console.ConsoleInstance.PreviousCommandOffset;
-			}
 			if (0 != Console.ConsoleInstance.Commands.length && 0 != Console.ConsoleInstance.PreviousCommandOffset) 
-			{
 				Console.ConsoleInstance.CommandEntry.text = Console.ConsoleInstance.Commands[Console.ConsoleInstance.Commands.length - Console.ConsoleInstance.PreviousCommandOffset];
 				Selection.setSelection(Console.ConsoleInstance.CommandEntry.length, Console.ConsoleInstance.CommandEntry.length);
-			}
 		}
 	}
 
 	static function AddHistory(aText: String): Void
 	{
-		if (Console.ConsoleInstance != null) 
-		{
+		if (Console.ConsoleInstance != null) {
 			Console.ConsoleInstance.CommandHistory.text = Console.ConsoleInstance.CommandHistory.text + aText;
 			if (Console.ConsoleInstance.CommandHistory.text.length > Console.HistoryCharBufferSize) 
-			{
 				Console.ConsoleInstance.CommandHistory.text = Console.ConsoleInstance.CommandHistory.text.substr(0 - Console.HistoryCharBufferSize);
-			}
 			Console.ConsoleInstance.CommandHistory.scroll = Console.ConsoleInstance.CommandHistory.maxscroll;
 		}
 	}
@@ -187,9 +167,7 @@ class Console extends MovieClip
 	static function ClearHistory(): Void
 	{
 		if (Console.ConsoleInstance != null) 
-		{
 			Console.ConsoleInstance.CommandHistory.text = "";
-		}
 	}
 
 	static function SetHistoryCharBufferSize(aNumChars: Number): Void
@@ -254,14 +232,10 @@ class Console extends MovieClip
 
 	function onKeyDown(): Void
 	{
-		if (Key.getCode() == 13 || Key.getCode() == 108) 
-		{
-			if (CommandEntry.text.length != 0) 
-			{
+		if (Key.getCode() == 13 || Key.getCode() == 108) {
+			if (CommandEntry.text.length != 0) {
 				if (Commands.length >= Console.PREVIOUS_COMMANDS) 
-				{
 					Commands.shift();
-				}
 				Commands.push(CommandEntry.text);
 				Console.AddHistory(CommandEntry.text + "\n");
 				GameDelegate.call("ExecuteCommand", [CommandEntry.text]);
@@ -269,15 +243,13 @@ class Console extends MovieClip
 			}
 			return;
 		}
-		if (Key.getCode() == 33) 
-		{
+		if (Key.getCode() == 33) {
 			var imaxScrollIndex: Number = CommandHistory.bottomScroll - CommandHistory.scroll;
 			var iminScrollIndex: Number = CommandHistory.scroll - imaxScrollIndex;
 			CommandHistory.scroll = iminScrollIndex <= 0 ? 0 : iminScrollIndex;
 			return;
 		}
-		if (Key.getCode() == 34) 
-		{
+		if (Key.getCode() == 34) {
 			imaxScrollIndex = CommandHistory.bottomScroll - CommandHistory.scroll;
 			iminScrollIndex = CommandHistory.scroll + imaxScrollIndex;
 			CommandHistory.scroll = iminScrollIndex > CommandHistory.maxscroll ? CommandHistory.maxscroll : iminScrollIndex;

@@ -4,7 +4,9 @@ import Shared.GlobalFunc;
 
 class BookBottomBar extends MovieClip
 {
-	var ButtonRect: Object;
+	/* Stage Elements */
+	var ButtonRect: MovieClip;
+	
 	var PageTurnButton: CrossPlatformButtons;
 	var TakeButton: CrossPlatformButtons;
 
