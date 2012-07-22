@@ -92,8 +92,7 @@ class ItemCard extends MovieClip
 	function SetupItemName(aPrevName: String): Void
 	{
 		ItemName = ItemText.ItemTextField;
-		if (ItemName != undefined) 
-		{
+		if (ItemName != undefined) {
 			ItemName.textAutoSize = "shrink";
 			ItemName.htmlText = aPrevName;
 			ItemName.selectable = false;
@@ -115,8 +114,7 @@ class ItemCard extends MovieClip
 		ButtonRect_mc.CancelGamepadButton._visible = aiPlatform != 0;
 		ButtonRect_mc.AcceptMouseButton._visible = aiPlatform == 0;
 		ButtonRect_mc.CancelMouseButton._visible = aiPlatform == 0;
-		if (aiPlatform != 0) 
-		{
+		if (aiPlatform != 0) {
 			ButtonRect_mc.AcceptGamepadButton.SetPlatform(aiPlatform, abPS3Switch);
 			ButtonRect_mc.CancelGamepadButton.SetPlatform(aiPlatform, abPS3Switch);
 		}
@@ -125,8 +123,7 @@ class ItemCard extends MovieClip
 
 	function onAcceptMouseClick(): Void
 	{
-		if (ButtonRect_mc._alpha == 100 && ButtonRect_mc.AcceptMouseButton._visible == true && InputHandler != undefined) 
-		{
+		if (ButtonRect_mc._alpha == 100 && ButtonRect_mc.AcceptMouseButton._visible == true && InputHandler != undefined) {
 			var inputEnterObj: Object = {value: "keyDown", navEquivalent: NavigationCode.ENTER};
 			InputHandler(inputEnterObj);
 		}
@@ -134,8 +131,7 @@ class ItemCard extends MovieClip
 
 	function onCancelMouseClick(): Void
 	{
-		if (ButtonRect_mc._alpha == 100 && ButtonRect_mc.CancelMouseButton._visible == true && InputHandler != undefined) 
-		{
+		if (ButtonRect_mc._alpha == 100 && ButtonRect_mc.CancelMouseButton._visible == true && InputHandler != undefined) {
 			var inputTabObj: Object = {value: "keyDown", navEquivalent: NavigationCode.TAB};
 			InputHandler(inputTabObj);
 		}
@@ -143,9 +139,8 @@ class ItemCard extends MovieClip
 
 	function FadeInCard(): Void
 	{
-		if (bFadedIn) {
+		if (bFadedIn)
 			return;
-		}
 		_visible = true;
 		_parent.gotoAndPlay("fadeIn");
 		bFadedIn = true;
@@ -153,8 +148,7 @@ class ItemCard extends MovieClip
 
 	function FadeOutCard(): Void
 	{
-		if (bFadedIn) 
-		{
+		if (bFadedIn) {
 			_parent.gotoAndPlay("fadeOut");
 			bFadedIn = false;
 		}
@@ -184,11 +178,10 @@ class ItemCard extends MovieClip
 		
 		switch (_iItemType) {
 			case InventoryDefines.ICT_ARMOR:
-				if (aUpdateObj.effects.length == 0) {
+				if (aUpdateObj.effects.length == 0)
 					gotoAndStop("Apparel_reg");
-				} else {
+				else
 					gotoAndStop("Apparel_Enchanted");
-				}
 				ApparelArmorValue.textAutoSize = "shrink";
 				ApparelArmorValue.SetText(aUpdateObj.armor);
 				ApparelEnchantedLabel.textAutoSize = "shrink";
@@ -201,9 +194,8 @@ class ItemCard extends MovieClip
 					gotoAndStop("Weapons_reg");
 				} else {
 					gotoAndStop("Weapons_Enchanted");
-					if (ItemCardMeters[InventoryDefines.ICT_WEAPON] == undefined) {
+					if (ItemCardMeters[InventoryDefines.ICT_WEAPON] == undefined)
 						ItemCardMeters[InventoryDefines.ICT_WEAPON] = new DeltaMeter(WeaponChargeMeter.MeterInstance);
-					}
 					if (aUpdateObj.usedCharge != undefined && aUpdateObj.charge != undefined) {
 						ItemCardMeters[InventoryDefines.ICT_WEAPON].SetPercent(aUpdateObj.usedCharge);
 						ItemCardMeters[InventoryDefines.ICT_WEAPON].SetDeltaPercent(aUpdateObj.charge);
@@ -261,26 +253,24 @@ class ItemCard extends MovieClip
 				
 			case InventoryDefines.ICT_SPELL:
 				var bCastTime: Boolean = aUpdateObj.castTime == 0;
-				if (bCastTime) {
+				if (bCastTime)
 					gotoAndStop("Magic_time_label");
-				} else {
+				else
 					gotoAndStop("Magic_reg");
-				}
 				SkillLevelText.text = aUpdateObj.castLevel.toString();
 				MagicEffectsLabel.SetText(aUpdateObj.effects, true);
 				MagicEffectsLabel.textAutoSize = "shrink";
 				MagicCostValue.textAutoSize = "shrink";
 				MagicCostTimeValue.textAutoSize = "shrink";
-				if (bCastTime) {
+				if (bCastTime)
 					MagicCostTimeValue.text = aUpdateObj.spellCost.toString();
-				} else {
+				else
 					MagicCostValue.text = aUpdateObj.spellCost.toString();
-				}
 				break;
 				
 			case InventoryDefines.ICT_INGREDIENT:
 				gotoAndStop("Ingredients_reg");
-				for (var i = 0; i < 4; i++) {
+				for (var i: Number = 0; i < 4; i++) {
 					this["EffectLabel" + i].textAutoSize = "shrink";
 					if (aUpdateObj["itemEffect" + i] != undefined && aUpdateObj["itemEffect" + i] != "") {
 						this["EffectLabel" + i].textColor = 0xFFFFFF;
@@ -301,13 +291,11 @@ class ItemCard extends MovieClip
 			case InventoryDefines.ICT_SHOUT:
 				gotoAndStop("Shouts_reg");
 				var iLastWord: Number = 0;
-				var i: Number = 0;
-				for (var i = 0; i < 3; i++) {
-					if (aUpdateObj["word" + i] != undefined && aUpdateObj["word" + i] != "" && aUpdateObj["unlocked" + i] == true) {
+				for (var i: Number = 0; i < 3; i++) {
+					if (aUpdateObj["word" + i] != undefined && aUpdateObj["word" + i] != "" && aUpdateObj["unlocked" + i] == true)
 						iLastWord = i;
-					}
 				}
-				for (var i = 0; i < 3; i++) {
+				for (var i: Number = 0; i < 3; i++) {
 					var strDragonWord: String = aUpdateObj["dragonWord" + i] == undefined ? "" : aUpdateObj["dragonWord" + i];
 					var strWord: String = aUpdateObj["word" + i] == undefined ? "" : aUpdateObj["word" + i];
 					var bWordKnown: Boolean = aUpdateObj["unlocked" + i] == true;
@@ -341,26 +329,23 @@ class ItemCard extends MovieClip
 					if (iEffectTimeRemaining >= 3600) {
 						iEffectTimeRemaining = Math.floor(iEffectTimeRemaining / 3600);
 						ActiveEffectTimeValue.text = iEffectTimeRemaining.toString();
-						if (iEffectTimeRemaining == 1) {
+						if (iEffectTimeRemaining == 1)
 							SecsText.text = "$hour";
-						} else {
+						else
 							SecsText.text = "$hours";
-						}
 					} else if (iEffectTimeRemaining >= 60) {
 						iEffectTimeRemaining = Math.floor(iEffectTimeRemaining / 60);
 						ActiveEffectTimeValue.text = iEffectTimeRemaining.toString();
-						if (iEffectTimeRemaining == 1) {
+						if (iEffectTimeRemaining == 1)
 							SecsText.text = "$min";
-						} else {
+						else
 							SecsText.text = "$mins";
-						}
 					} else {
 						ActiveEffectTimeValue.text = iEffectTimeRemaining.toString();
-						if (iEffectTimeRemaining == 1) {
+						if (iEffectTimeRemaining == 1)
 							SecsText.text = "$sec";
-						} else {
+						else
 							SecsText.text = "$secs";
-						}
 					}
 				} else {
 					ActiveEffectTimeValue._alpha = 0;
@@ -387,28 +372,26 @@ class ItemCard extends MovieClip
 				
 			case InventoryDefines.ICT_CRAFT_ENCHANTING:
 				if (aUpdateObj.type == InventoryDefines.ICT_HOUSE_PART) {
-					gotoAndStop("Magic_short");
-				if (aUpdateObj.effects == undefined) {
-					MagicEffectsLabel.SetText("", true);
-				} else {
-					MagicEffectsLabel.SetText(aUpdateObj.effects, true);
-				}
+						gotoAndStop("Magic_short");
+					if (aUpdateObj.effects == undefined)
+						MagicEffectsLabel.SetText("", true);
+					else
+						MagicEffectsLabel.SetText(aUpdateObj.effects, true);
 				} else if (aUpdateObj.sliderShown == true) {
 					gotoAndStop("Craft_Enchanting");
-					ItemCardMeters[InventoryDefines.ICT_WEAPON] = new Components.DeltaMeter(ChargeMeter_Default.MeterInstance);
-					if (aUpdateObj.totalCharges != undefined && aUpdateObj.totalCharges != 0) {
+					ItemCardMeters[InventoryDefines.ICT_WEAPON] = new DeltaMeter(ChargeMeter_Default.MeterInstance);
+					if (aUpdateObj.totalCharges != undefined && aUpdateObj.totalCharges != 0)
 						TotalChargesValue.text = aUpdateObj.totalCharges;
-					}
 				} else if (aUpdateObj.damage == undefined) {
 					if (aUpdateObj.armor == undefined) {
 						if (aUpdateObj.soulLVL == undefined) {
 							if (QuantitySlider_mc._alpha == 0) {
 								gotoAndStop("Craft_Enchanting_Enchantment");
-								ItemCardMeters[InventoryDefines.ICT_WEAPON] = new Components.DeltaMeter(ChargeMeter_Enchantment.MeterInstance);
+								ItemCardMeters[InventoryDefines.ICT_WEAPON] = new DeltaMeter(ChargeMeter_Enchantment.MeterInstance);
 							}
 						} else {
 							gotoAndStop("Craft_Enchanting_SoulGem");
-							ItemCardMeters[InventoryDefines.ICT_WEAPON] = new Components.DeltaMeter(ChargeMeter_SoulGem.MeterInstance);
+							ItemCardMeters[InventoryDefines.ICT_WEAPON] = new DeltaMeter(ChargeMeter_SoulGem.MeterInstance);
 							SoulLevel.text = aUpdateObj.soulLVL;
 						}
 					} else {
@@ -418,26 +401,23 @@ class ItemCard extends MovieClip
 					}
 				} else {
 					gotoAndStop("Craft_Enchanting_Weapon");
-					ItemCardMeters[InventoryDefines.ICT_WEAPON] = new Components.DeltaMeter(ChargeMeter_Weapon.MeterInstance);
+					ItemCardMeters[InventoryDefines.ICT_WEAPON] = new DeltaMeter(ChargeMeter_Weapon.MeterInstance);
 					WeaponDamageValue.SetText(aUpdateObj.damage);
 				}
-				if (aUpdateObj.usedCharge == 0 && aUpdateObj.totalCharges == 0) {
+				if (aUpdateObj.usedCharge == 0 && aUpdateObj.totalCharges == 0)
 					ItemCardMeters[InventoryDefines.ICT_WEAPON].DeltaMeterMovieClip._parent._parent._alpha = 0;
-				} else if (aUpdateObj.usedCharge != undefined) {
+				else if (aUpdateObj.usedCharge != undefined)
 					ItemCardMeters[InventoryDefines.ICT_WEAPON].SetPercent(aUpdateObj.usedCharge);
-				}
 				if (aUpdateObj.effects != undefined && aUpdateObj.effects.length > 0) {
-					if (EnchantmentLabel != undefined) {
+					if (EnchantmentLabel != undefined)
 						EnchantmentLabel.SetText(aUpdateObj.effects, true);
-					}
 					EnchantmentLabel.textAutoSize = "shrink";
 					WeaponChargeMeter._alpha = 100;
 					Enchanting_Background._alpha = 60;
 					Enchanting_Slim_Background._alpha = 0;
 				} else {
-					if (EnchantmentLabel != undefined) {
+					if (EnchantmentLabel != undefined)
 						EnchantmentLabel.SetText("", true);
-					}
 					WeaponChargeMeter._alpha = 0;
 					Enchanting_Slim_Background._alpha = 60;
 					Enchanting_Background._alpha = 0;
@@ -447,17 +427,15 @@ class ItemCard extends MovieClip
 			case InventoryDefines.ICT_HOUSE_PART:
 				if (aUpdateObj.type == InventoryDefines.ICT_HOUSE_PART) {
 					gotoAndStop("Magic_short");
-					if (aUpdateObj.effects == undefined) {
+					if (aUpdateObj.effects == undefined)
 						MagicEffectsLabel.SetText("", true);
-					} else {
+					else
 						MagicEffectsLabel.SetText(aUpdateObj.effects, true);
-					}
 				} else if (aUpdateObj.sliderShown == true) {
 					gotoAndStop("Craft_Enchanting");
 					ItemCardMeters[InventoryDefines.ICT_WEAPON] = new DeltaMeter(ChargeMeter_Default.MeterInstance);
-					if (aUpdateObj.totalCharges != undefined && aUpdateObj.totalCharges != 0) {
+					if (aUpdateObj.totalCharges != undefined && aUpdateObj.totalCharges != 0)
 						TotalChargesValue.text = aUpdateObj.totalCharges;
-					}
 				} else if (aUpdateObj.damage == undefined) {
 					if (aUpdateObj.armor == undefined) {
 						if (aUpdateObj.soulLVL == undefined) {
@@ -481,24 +459,21 @@ class ItemCard extends MovieClip
 					WeaponDamageValue.SetText(aUpdateObj.damage);
 				}
 				
-				if (aUpdateObj.usedCharge == 0 && aUpdateObj.totalCharges == 0) {
+				if (aUpdateObj.usedCharge == 0 && aUpdateObj.totalCharges == 0)
 					ItemCardMeters[InventoryDefines.ICT_WEAPON].DeltaMeterMovieClip._parent._parent._alpha = 0;
-				} else if (aUpdateObj.usedCharge != undefined) {
+				else if (aUpdateObj.usedCharge != undefined)
 					ItemCardMeters[InventoryDefines.ICT_WEAPON].SetPercent(aUpdateObj.usedCharge);
-				}
 				
 				if (aUpdateObj.effects != undefined && aUpdateObj.effects.length > 0) {
-					if (EnchantmentLabel != undefined) {
+					if (EnchantmentLabel != undefined)
 						EnchantmentLabel.SetText(aUpdateObj.effects, true);
-					}
 					EnchantmentLabel.textAutoSize = "shrink";
 					WeaponChargeMeter._alpha = 100;
 					Enchanting_Background._alpha = 60;
 					Enchanting_Slim_Background._alpha = 0;
 				} else {
-					if (EnchantmentLabel != undefined) {
+					if (EnchantmentLabel != undefined)
 						EnchantmentLabel.SetText("", true);
-					}
 					WeaponChargeMeter._alpha = 0;
 					Enchanting_Slim_Background._alpha = 60;
 					Enchanting_Background._alpha = 0;
@@ -506,7 +481,7 @@ class ItemCard extends MovieClip
 				break;
 			
 			case InventoryDefines.ICT_KEY:
-			case InventoryDefines.ICT_NONE:			
+			case InventoryDefines.ICT_NONE:
 			default:
 				gotoAndStop("Empty");
 		}
@@ -519,12 +494,10 @@ class ItemCard extends MovieClip
 		}
 		ItemValueText.textAutoSize = "shrink";
 		ItemWeightText.textAutoSize = "shrink";
-		if (aUpdateObj.value != undefined && ItemValueText != undefined) {
+		if (aUpdateObj.value != undefined && ItemValueText != undefined)
 			ItemValueText.SetText(aUpdateObj.value.toString());
-		}
-		if (aUpdateObj.weight != undefined && ItemWeightText != undefined) {
+		if (aUpdateObj.weight != undefined && ItemWeightText != undefined)
 			ItemWeightText.SetText(RoundDecimal(aUpdateObj.weight, 1).toString());
-		}
 		StolenTextInstance._visible = aUpdateObj.stolen == true;
 		LastUpdateObj = aUpdateObj;
 	}
@@ -677,12 +650,10 @@ class ItemCard extends MovieClip
 
 	function StartEditName(aInitialText: String, aiMaxChars: Number): Void
 	{
-		if (Selection.getFocus() != ItemName) 
-		{
+		if (Selection.getFocus() != ItemName) {
 			PrevFocus = FocusHandler.instance.getFocus(0);
-			if (aInitialText != undefined) {
+			if (aInitialText != undefined)
 				ItemName.text = aInitialText;
-			}
 			ItemName.type = "input";
 			ItemName.noTranslate = true;
 			ItemName.selectable = true;
@@ -714,44 +685,35 @@ class ItemCard extends MovieClip
 	{
 		var bHandledInput: Boolean = false;
 		if (pathToFocus.length > 0 && pathToFocus[0].handleInput != undefined) 
-		{
 			pathToFocus[0].handleInput(details, pathToFocus.slice(1));
-		}
-		if (InputHandler != undefined) 
-		{
+		if (InputHandler != undefined)
 			bHandledInput = InputHandler(details);
-		}
 		return bHandledInput;
 	}
 
 	function HandleQuantityMenuInput(details: Object): Boolean
 	{
 		var bValidKeyPressed: Boolean = false;
-		if (GlobalFunc.IsKeyPressed(details)) 
-		{
-			if (details.navEquivalent == NavigationCode.ENTER) 
-			{
+		if (GlobalFunc.IsKeyPressed(details))
+			if (details.navEquivalent == NavigationCode.ENTER) {
 				HideQuantityMenu(false);
-				if (QuantitySlider_mc.value > 0) {
+				if (QuantitySlider_mc.value > 0)
 					dispatchEvent({type: "quantitySelect", amount: Math.floor(QuantitySlider_mc.value)});
-				} else {
+				else
 					itemInfo = LastUpdateObj;
-				}
 				bValidKeyPressed = true;
 			} else if (details.navEquivalent == NavigationCode.TAB) {
 				HideQuantityMenu(true);
 				itemInfo = LastUpdateObj;
 				bValidKeyPressed = true;
 			}
-		}
 		return bValidKeyPressed;
 	}
 
 	function HandleListMenuInput(details: Object): Boolean
 	{
 		var bValidKeyPressed: Boolean = false;
-		if (GlobalFunc.IsKeyPressed(details) && details.navEquivalent == NavigationCode.TAB) 
-		{
+		if (GlobalFunc.IsKeyPressed(details) && details.navEquivalent == NavigationCode.TAB) {
 			HideListMenu();
 			bValidKeyPressed = true;
 		}
@@ -761,10 +723,8 @@ class ItemCard extends MovieClip
 	function HandleConfirmMessageInput(details: Object): Boolean
 	{
 		var bValidKeyPressed: Boolean = false;
-		if (GlobalFunc.IsKeyPressed(details)) 
-		{
-			if (details.navEquivalent == NavigationCode.ENTER) 
-			{
+		if (GlobalFunc.IsKeyPressed(details)) {
+			if (details.navEquivalent == NavigationCode.ENTER) {
 				HideConfirmMessage();
 				dispatchEvent({type: "messageConfirm"});
 				bValidKeyPressed = true;
@@ -781,13 +741,11 @@ class ItemCard extends MovieClip
 	function HandleEditNameInput(details: Object): Boolean
 	{
 		Selection.setFocus(ItemName, 0);
-		if (GlobalFunc.IsKeyPressed(details)) 
-		{
-			if (details.navEquivalent == NavigationCode.ENTER && details.code != 32) {
+		if (GlobalFunc.IsKeyPressed(details)) {
+			if (details.navEquivalent == NavigationCode.ENTER && details.code != 32)
 				dispatchEvent({type: "endEditItemName", useNewName: true, newName: ItemName.text});
-			} else if (details.navEquivalent == NavigationCode.TAB) {
+			else if (details.navEquivalent == NavigationCode.TAB)
 				dispatchEvent({type: "endEditItemName", useNewName: false, newName: ""});
-			}
 		}
 		return true;
 	}
@@ -797,8 +755,7 @@ class ItemCard extends MovieClip
 		var currentValue_tf: TextField = EnchantingSlider_mc._alpha <= 0 ? SliderValueText : TotalChargesValue;
 		var iCurrentValue: Number = Number(currentValue_tf.text);
 		var iNewValue: Number = Math.floor(QuantitySlider_mc.value);
-		if (iCurrentValue != iNewValue) 
-		{
+		if (iCurrentValue != iNewValue) {
 			currentValue_tf.SetText(iNewValue.toString());
 			GameDelegate.call("PlaySound", ["UIMenuPrevNext"]);
 			dispatchEvent({type: "sliderChange", value: iNewValue});
@@ -814,9 +771,7 @@ class ItemCard extends MovieClip
 	function onListMouseSelectionChange(event: Object): Void
 	{
 		if (event.keyboardOrMouse == 0) 
-		{
 			onListSelectionChange(event);
-		}
 	}
 
 	function onListSelectionChange(event: Object): Void

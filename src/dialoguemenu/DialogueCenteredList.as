@@ -40,7 +40,7 @@
 		
 		iListItemsShown = 0;
 		
-		for (var i = 0;  i < iNumTopHalfEntries; i++) {
+		for (var i: Number = 0;  i < iNumTopHalfEntries; i++) {
 			var listItem: MovieClip = GetClipByIndex(i);
 			if (iScrollPosition - iNumTopHalfEntries + i >= 0) 
 			{
@@ -107,7 +107,7 @@
 		var item_yOffset = GetClipByIndex(iNumTopHalfEntries)._y + GetClipByIndex(iNumTopHalfEntries)._height / 2;
 		var item_yPosition = fCenterY - item_yOffset;
 
-		for (var i = 0; i < iMaxItemsShown; i++) 
+		for (var i: Number = 0; i < iMaxItemsShown; i++) 
 		{
 			GetClipByIndex(i)._y += item_yPosition;
 		}

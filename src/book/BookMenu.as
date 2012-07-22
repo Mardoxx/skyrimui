@@ -136,7 +136,7 @@ class BookMenu extends MovieClip
 
 	function ShowPageAtOffset(aiPageOffset: Number): Void
 	{
-		for (var i = 0; i < BookPages.length; i++)
+		for (var i: Number = 0; i < BookPages.length; i++)
 			if (BookPages[i].pageNum == iPageSetIndex + aiPageOffset) 
 				BookPages[i]._visible = true;
 			else
@@ -169,7 +169,7 @@ class BookMenu extends MovieClip
 	
 	function UpdatePages(): Void
 	{
-		for (var i = 0; i < BookMenu.CACHED_PAGES; i++) {
+		for (var i: Number = 0; i < BookMenu.CACHED_PAGES; i++) {
 			var bCachedPage: Boolean = false;
 			
 			for (var j = 0; j < BookPages.length && !bCachedPage; j++)
@@ -180,7 +180,7 @@ class BookMenu extends MovieClip
 				CreateDisplayPage(PageInfoA[iPageSetIndex + i].pageTop, PageInfoA[iPageSetIndex + i].pageTop + PageInfoA[iPageSetIndex + i].pageHeight, iPageSetIndex + i);
 		}
 		
-		for (var i = 0; i < BookPages.length; i++)
+		for (var i: Number = 0; i < BookPages.length; i++)
 			if (BookPages[i].pageNum < iPageSetIndex || BookPages[i].pageNum >= iPageSetIndex + BookMenu.CACHED_PAGES) 
 				BookPages.splice(i, 1)[0].removeMovieClip();
 	}

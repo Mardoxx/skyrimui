@@ -11,18 +11,14 @@ class Shared.GlobalFunc
 	{
 		var normVal: Number = aTargetMin + (aSource - aSourceMin) / (aSourceMax - aSourceMin) * (aTargetMax - aTargetMin);
 		if (abClamp) 
-		{
 			normVal = Math.min(Math.max(normVal, aTargetMin), aTargetMax);
-		}
 		return normVal;
 	}
 
 	static function IsKeyPressed(aInputInfo: Object, abProcessKeyHeldDown: Boolean): Boolean
 	{
 		if (abProcessKeyHeldDown == undefined) 
-		{
 			abProcessKeyHeldDown = true;
-		}
 		return aInputInfo.value == "keyDown" || (abProcessKeyHeldDown && aInputInfo.value == "keyHold");
 	}
 
@@ -37,14 +33,11 @@ class Shared.GlobalFunc
 		TextField.prototype.SetText = function (aText: String, abHTMLText: String)
 		{
 			if (aText == undefined || aText == "") 
-			{
 				aText = " ";
-			}
-			var textFormat: Object = this.getTextFormat();
-			if (abHTMLText) 
-			{
+			var textFormat: TextFormat = this.getTextFormat();
+			if (abHTMLText) {
 				var letterSpacing: Number = textFormat.letterSpacing;
-				var kerning: Number = textFormat.kerning;
+				var kerning: Boolean = textFormat.kerning;
 				this.htmlText = aText;
 				textFormat = this.getTextFormat();
 				textFormat.letterSpacing = letterSpacing;
@@ -74,21 +67,13 @@ class Shared.GlobalFunc
 			//  (maxXY.x, minXY.y)|_____________|(minXY.x, minXY.y)
 			
 			if (aPosition == "T" || aPosition == "TL" || aPosition == "TR") 
-			{
 				this._y = maxXY.y;
-			}
 			if (aPosition == "B" || aPosition == "BL" || aPosition == "BR") 
-			{
 				this._y = minXY.y;
-			}
 			if (aPosition == "L" || aPosition == "TL" || aPosition == "BL") 
-			{
 				this._x = maxXY.x;
-			}
 			if (aPosition == "R" || aPosition == "TR" || aPosition == "BR") 
-			{
 				this._x = minXY.x;
-			}
 		};
 	}
 
@@ -97,23 +82,18 @@ class Shared.GlobalFunc
 		MovieClip.prototype.getMovieClips = function (): Array
 		{
 			var movieClips: Array = new Array();
-			for (var i: Number = 0; i < this.length; i++) {
+			for (var i: Number = 0; i < this.length; i++)
 				if (this[i] instanceof MovieClip && this[i] != this) 
-				{
 					movieClips.push(this[i]);
-				}
-			}
 			return movieClips;
 		};
 		MovieClip.prototype.showMovieClips = function (): Void
 		{
-			for (var i: Number = 0; i < this.length; i++) {
-				if (this[i] instanceof MovieClip && this[i] != this) 
-				{
+			for (var i: Number = 0; i < this.length; i++)
+				if (this[i] instanceof MovieClip && this[i] != this) {
 					trace(this[i]);
 					this[i].showMovieClips();
 				}
-			}
 		};
 	}
 
@@ -121,13 +101,11 @@ class Shared.GlobalFunc
 	{
 		MovieClip.prototype.PlayReverse = function (): Void
 		{
-			if (this._currentframe > 1) 
-			{
+			if (this._currentframe > 1) {
 				this.gotoAndStop(this._currentframe - 1);
 				this.onEnterFrame = function ()
 				{
-					if (this._currentframe > 1) 
-					{
+					if (this._currentframe > 1) {
 						this.gotoAndStop(this._currentframe - 1);
 						return;
 					}
@@ -152,18 +130,14 @@ class Shared.GlobalFunc
 	static function GetTextField(aParentClip: MovieClip, aName: String): TextField
 	{
 		if (Shared.GlobalFunc.RegisteredTextFields[aName + aParentClip._name] != undefined) 
-		{
 			return Shared.GlobalFunc.RegisteredTextFields[aName + aParentClip._name];
-		}
 		trace(aName + " is not registered a TextField name.");
 	}
 
 	static function GetMovieClip(aParentClip: MovieClip, aName: String): MovieClip
 	{
 		if (Shared.GlobalFunc.RegisteredMovieClips[aName + aParentClip._name] != undefined) 
-		{
 			return Shared.GlobalFunc.RegisteredMovieClips[aName + aParentClip._name];
-		}
 		trace(aName + " is not registered a MovieClip name.");
 	}
 
@@ -172,26 +146,20 @@ class Shared.GlobalFunc
 		TextField.prototype.RegisterTextField = function (aStartingClip): Void
 		{
 			if (Shared.GlobalFunc.RegisteredTextFields[this._name + aStartingClip._name] == undefined) 
-			{
 				Shared.GlobalFunc.RegisteredTextFields[this._name + aStartingClip._name] = this;
-			}
 		};
 	}
 
 	static function RegisterTextFields(aStartingClip: MovieClip) : Void
 	{
-		for (var i: Number = 0; i < aStartingClip.length; i++) {
+		for (var i: Number = 0; i < aStartingClip.length; i++)
 			if (aStartingClip[i] instanceof TextField) 
-			{
 				aStartingClip[i].RegisterTextField(aStartingClip);
-			}
-		}
 	}
 
 	static function RegisterAllTextFieldsInTimeline(aStartingClip: MovieClip): Void
 	{
-		for (var i: Number = 1; aStartingClip._totalFrames && i <= aStartingClip._totalFrames; i++) 
-		{
+		for (var i: Number = 1; aStartingClip._totalFrames && i <= aStartingClip._totalFrames; i++) {
 			aStartingClip.gotoAndStop(i);
 			Shared.GlobalFunc.RegisterTextFields(aStartingClip);
 		}
@@ -202,31 +170,23 @@ class Shared.GlobalFunc
 		MovieClip.prototype.RegisterMovieClip = function (aStartingClip): Void
 		{
 			if (Shared.GlobalFunc.RegisteredMovieClips[this._name + aStartingClip._name] == undefined) 
-			{
 				Shared.GlobalFunc.RegisteredMovieClips[this._name + aStartingClip._name] = this;
-			}
 		};
 	}
 
 	static function RegisterMovieClips(aStartingClip: MovieClip): Void
 	{
-		for (var i: Number = 0; i < aStartingClip.length; i++) {
+		for (var i: Number = 0; i < aStartingClip.length; i++)
 			if (aStartingClip[i] instanceof MovieClip) 
-			{
 				aStartingClip[i].RegisterMovieClip(aStartingClip);
-			}
-		}
 	}
 
 	static function RecursiveRegisterMovieClips(aStartingClip: MovieClip, aRootClip: MovieClip): Void
 	{
 		for (var i: Number = 0; i < aStartingClip.length; i++) {
-			if (aStartingClip[i] instanceof MovieClip) 
-			{
+			if (aStartingClip[i] instanceof MovieClip) {
 				if (aStartingClip[i] != aStartingClip) 
-				{
 					Shared.GlobalFunc.RecursiveRegisterMovieClips(aStartingClip[i], aRootClip);
-				}
 				aStartingClip[i].RegisterMovieClip(aRootClip);
 			}
 		}
@@ -247,15 +207,11 @@ class Shared.GlobalFunc
 		var strLength: Number = astrText.length;
 		var trimStr: String = undefined;
 		while (astrText.charAt(i) == " " || astrText.charAt(i) == "\n" || astrText.charAt(i) == "\r" || astrText.charAt(i) == "\t") 
-		{
 			++i;
-		}
 		trimStr = astrText.substring(i);
 		j = trimStr.length - 1;
 		while (trimStr.charAt(j) == " " || trimStr.charAt(j) == "\n" || trimStr.charAt(j) == "\r" || trimStr.charAt(j) == "\t") 
-		{
 			--j;
-		}
 		trimStr = trimStr.substring(0, j + 1);
 		return trimStr;
 	}

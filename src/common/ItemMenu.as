@@ -48,24 +48,18 @@ class ItemMenu extends MovieClip
 		ItemsListInputCatcher.onMouseDown = function ()
 		{
 			if (_parent.bFadedIn == true && Mouse.getTopMostEntity() == this) 
-			{
 				_parent.onItemsListInputCatcherClick();
-			}
-		}
+		};
 		RestoreCategoryRect.onRollOver = function ()
 		{
 			if (_parent.bFadedIn == true && _parent.InventoryLists_mc.currentState == InventoryLists.TWO_PANELS) 
-			{
 				_parent.InventoryLists_mc.RestoreCategoryIndex();
-			}
-		}
+		};
 		ExitMenuRect.onMouseDown = function ()
 		{
 			if (_parent.bFadedIn == true && Mouse.getTopMostEntity() == this) 
-			{
 				_parent.onExitMenuRectClick();
-			}
-		}
+		};
 	}
 
 	function PositionElements(): Void
@@ -83,8 +77,7 @@ class ItemMenu extends MovieClip
 		RestoreCategoryRect._x = ExitMenuRect._x + InventoryLists_mc.CategoriesList._parent._width;
 		ItemsListInputCatcher._x = RestoreCategoryRect._x + RestoreCategoryRect._width;
 		ItemsListInputCatcher._width = _root._width - ItemsListInputCatcher._x;
-		if (MouseRotationRect != undefined) 
-		{
+		if (MouseRotationRect != undefined) {
 			MovieClip(MouseRotationRect).Lock("T");
 			MouseRotationRect._x = ItemCard_mc._parent._x;
 			MouseRotationRect._width = ItemCard_mc._parent._width;
@@ -108,15 +101,9 @@ class ItemMenu extends MovieClip
 	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
 		if (bFadedIn) 
-		{
 			if (!pathToFocus[0].handleInput(details, pathToFocus.slice(1))) 
-			{
 				if (GlobalFunc.IsKeyPressed(details) && details.navEquivalent == NavigationCode.TAB) 
-				{
 					GameDelegate.call("CloseMenu", []);
-				}
-			}
-		}
 		return true;
 	}
 
@@ -126,11 +113,10 @@ class ItemMenu extends MovieClip
 			if ((topMostEntity == MouseRotationRect && ShouldProcessItemsListInput(false)) || (!bFadedIn && delta == -1)) {
 				GameDelegate.call("ZoomItemModel", [delta]);
 			} else if (topMostEntity == ItemsListInputCatcher && ShouldProcessItemsListInput(false)) {
-				if (delta == 1) {
+				if (delta == 1)
 					InventoryLists_mc.ItemsList.moveSelectionUp();
-				} else if (delta == -1) {
+				else if (delta == -1)
 					InventoryLists_mc.ItemsList.moveSelectionDown();
-				}
 			}
 		}
 	}
@@ -147,18 +133,14 @@ class ItemMenu extends MovieClip
 	function SelectCategory(aiIndex)
 	{
 		var bvalidCategory: Boolean = false;
-		if (InventoryLists_mc.CategoriesList.entryList[aiIndex].filterFlag == 1) 
-		{
+		if (InventoryLists_mc.CategoriesList.entryList[aiIndex].filterFlag == 1) {
 			var scrollIndex: Number = 0;
 			
-			for(var i: Number = aiIndex - 1; i >= 0; i--) {
-				if (InventoryLists_mc.CategoriesList.entryList[i].filterFlag == 1) {
+			for(var i: Number = aiIndex - 1; i >= 0; i--)
+				if (InventoryLists_mc.CategoriesList.entryList[i].filterFlag == 1)
 					++scrollIndex;
-				}
-			}
-			if (scrollIndex != InventoryLists_mc.CategoriesList.scrollPosition) {
+			if (scrollIndex != InventoryLists_mc.CategoriesList.scrollPosition)
 				InventoryLists_mc.CategoriesList.scrollPosition = scrollIndex;
-			}
 			InventoryLists_mc.ShowItemsList();
 			bvalidCategory = true;
 		}
@@ -167,8 +149,7 @@ class ItemMenu extends MovieClip
 	
 	function onItemHighlightChange(event: Object): Void
 	{
-		if (event.index != -1) 
-		{
+		if (event.index != -1) {
 			GameDelegate.call("UpdateItem3D", [true]);
 			GameDelegate.call("RequestItemCardInfo", [], this, "UpdateItemCardInfo");
 			return;
@@ -178,8 +159,7 @@ class ItemMenu extends MovieClip
 
 	function onShowItemsList(event: Object): Void
 	{
-		if (event.index != -1) 
-		{
+		if (event.index != -1) {
 			GameDelegate.call("UpdateItem3D", [true]);
 			GameDelegate.call("RequestItemCardInfo", [], this, "UpdateItemCardInfo");
 			ItemCard_mc.FadeInCard();
@@ -196,16 +176,11 @@ class ItemMenu extends MovieClip
 
 	function onItemSelect(event: Object): Void
 	{
-		if (event.entry.enabled) 
-		{
+		if (event.entry.enabled) {
 			if (event.entry.count > InventoryDefines.QUANTITY_MENU_COUNT_LIMIT) 
-			{
 				ItemCard_mc.ShowQuantityMenu(event.entry.count);
-			}
 			else 
-			{
 				onQuantityMenuSelect({amount: 1});
-			}
 			return;
 		}
 		GameDelegate.call("DisabledItemSelect", []);
@@ -229,16 +204,14 @@ class ItemMenu extends MovieClip
 
 	function onItemCardSubMenuAction(event: Object): Void
 	{
-		if (event.opening == true) 
-		{
+		if (event.opening == true) {
 			InventoryLists_mc.ItemsList.disableSelection = true;
 			InventoryLists_mc.ItemsList.disableInput = true;
 			InventoryLists_mc.CategoriesList.disableSelection = true;
 			InventoryLists_mc.CategoriesList.disableInput = true;
 			return;
 		}
-		if (event.opening == false) 
-		{
+		if (event.opening == false) {
 			InventoryLists_mc.ItemsList.disableSelection = false;
 			InventoryLists_mc.ItemsList.disableInput = false;
 			InventoryLists_mc.CategoriesList.disableSelection = false;
@@ -249,16 +222,12 @@ class ItemMenu extends MovieClip
 	function ShouldProcessItemsListInput(abCheckIfOverRect: Boolean): Boolean
 	{
 		var bInTwoPanelsWithItems: Boolean = bFadedIn == true && InventoryLists_mc.currentState == InventoryLists.TWO_PANELS && InventoryLists_mc.ItemsList.numUnfilteredItems > 0 && !InventoryLists_mc.ItemsList.disableSelection && !InventoryLists_mc.ItemsList.disableInput;
-		if (bInTwoPanelsWithItems && iPlatform == 0 && abCheckIfOverRect) 
-		{
+		if (bInTwoPanelsWithItems && iPlatform == 0 && abCheckIfOverRect) {
 			var topMostEntity: Object = Mouse.getTopMostEntity();
 			var bFoundInputRect: Boolean = false;
-			while (!bFoundInputRect && topMostEntity && topMostEntity != undefined) 
-			{
+			while (!bFoundInputRect && topMostEntity && topMostEntity != undefined) {
 				if (topMostEntity == ItemsListInputCatcher || topMostEntity == InventoryLists_mc.ItemsList) 
-				{
 					bFoundInputRect = true;
-				}
 				topMostEntity = topMostEntity._parent;
 			}
 			bInTwoPanelsWithItems = bInTwoPanelsWithItems && bFoundInputRect;
@@ -283,9 +252,7 @@ class ItemMenu extends MovieClip
 	function onItemsListInputCatcherClick(): Void
 	{
 		if (ShouldProcessItemsListInput(false)) 
-		{
 			onItemSelect({entry: InventoryLists_mc.ItemsList.selectedEntry, keyboardOrMouse: 0});
-		}
 	}
 
 	function onMouseRotationFastClick(): Void
@@ -295,8 +262,7 @@ class ItemMenu extends MovieClip
 
 	function ToggleMenuFade(): Void
 	{
-		if (bFadedIn) 
-		{
+		if (bFadedIn) {
 			_parent.gotoAndPlay("fadeOut");
 			bFadedIn = false;
 			InventoryLists_mc.ItemsList.disableSelection = true;
@@ -320,9 +286,8 @@ class ItemMenu extends MovieClip
 	function RestoreIndices(): Void
 	{
 		InventoryLists_mc.CategoriesList.RestoreScrollPosition(arguments[0], true);
-		for (var i = 0; i < arguments.length; i++) {
+		for (var i: Number = 0; i < arguments.length; i++)
 			InventoryLists_mc.CategoriesList.entryList[i - 1].savedItemIndex = arguments[i];
-		}
 		InventoryLists_mc.CategoriesList.UpdateList();
 	}
 
@@ -330,9 +295,8 @@ class ItemMenu extends MovieClip
 	{
 		var Indices: Array = new Array();
 		Indices.push(InventoryLists_mc.CategoriesList.scrollPosition);
-		for (var i = 0; i < InventoryLists_mc.CategoriesList.entryList.length; i++) {
+		for (var i: Number = 0; i < InventoryLists_mc.CategoriesList.entryList.length; i++)
 			Indices.push(InventoryLists_mc.CategoriesList.entryList[i].savedItemIndex);
-		}
 		GameDelegate.call("SaveIndices", [Indices]);
 	}
 

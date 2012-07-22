@@ -5,6 +5,7 @@ class Shared.ListFilterer
 	var EntryMatchesFunc: Function;
 	var _filterArray: Array;
 	var dispatchEvent: Function;
+	var addEventListener: Function;
 	var iItemFilter: Number;
 
 	function ListFilterer()
@@ -24,9 +25,7 @@ class Shared.ListFilterer
 		var bfilterChanged: Boolean = iItemFilter != aiNewFilter;
 		iItemFilter = aiNewFilter;
 		if (bfilterChanged == true) 
-		{
 			dispatchEvent({type: "filterChange"});
-		}
 	}
 
 	function get filterArray(): Array
@@ -52,14 +51,10 @@ class Shared.ListFilterer
 	function EntryMatchesPartitionedFilter(aEntry: Object): Boolean
 	{
 		var bmatchFound = false;
-		if (aEntry != undefined) 
-		{
-			if (iItemFilter == 0xFFFFFFFF) 
-			{
+		if (aEntry != undefined) {
+			if (iItemFilter == 0xFFFFFFFF) {
 				bmatchFound = true;
-			}
-			else 
-			{
+			} else {
 				var ifilterFlag: Number = aEntry.filterFlag;
 				var byte0: Number = (ifilterFlag & 0x000000FF);
 				var byte1: Number = (ifilterFlag & 0x0000FF00) >>> 8;
@@ -75,14 +70,9 @@ class Shared.ListFilterer
 	{
 		var iPrevMatch: Number = undefined;
 		if (aiStartIndex != undefined) 
-		{
 			for (var i = aiStartIndex - 1; i >=0 && iPrevMatch == undefined; i--)
-			{
-				if (EntryMatchesFunc(_filterArray[i])) {
+				if (EntryMatchesFunc(_filterArray[i]))
 					iPrevMatch = i;
-				}
-			}
-		}
 		return iPrevMatch;
 	}
 
@@ -90,40 +80,28 @@ class Shared.ListFilterer
 	{
 		var iNextMatch: Number = undefined;
 		if (aiStartIndex != undefined) 
-		{
 			for (var i = aiStartIndex + 1; i < _filterArray.length && iNextMatch == undefined; i++)
-			{
 				if (EntryMatchesFunc(_filterArray[i])) 
-				{
 					iNextMatch = i;
-				}
-			}
-		}
 		return iNextMatch;
 	}
 
 	function ClampIndex(aiStartIndex: Number): Number
 	{
 		var iClampIndex = aiStartIndex;
-		if (aiStartIndex != undefined && !EntryMatchesFunc(_filterArray[iClampIndex])) 
-		{
+		if (aiStartIndex != undefined && !EntryMatchesFunc(_filterArray[iClampIndex])) {
 			var iNextMatch: Number = GetNextFilterMatch(iClampIndex);
 			var iPrevMatch: Number = GetPrevFilterMatch(iClampIndex);
-			if (iNextMatch == undefined) 
-			{
+			if (iNextMatch == undefined) {
 				if (iPrevMatch == undefined) 
-				{
 					iClampIndex = -1;
-				} else {
+				else
 					iClampIndex = iPrevMatch;
-				}
 			} else {
 				iClampIndex = iNextMatch;
 			}
-			if (iNextMatch != undefined && iPrevMatch != undefined && iPrevMatch != iNextMatch && iClampIndex == iNextMatch && _filterArray[iPrevMatch].text == _filterArray[aiStartIndex].text) 
-			{
+			if (iNextMatch != undefined && iPrevMatch != undefined && iPrevMatch != iNextMatch && iClampIndex == iNextMatch && _filterArray[iPrevMatch].text == _filterArray[aiStartIndex].text)
 				iClampIndex = iPrevMatch;
-			}
 		}
 		return iClampIndex;
 	}

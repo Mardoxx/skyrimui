@@ -13,10 +13,8 @@
 	{
 		super.Update();
 		var iCurrentFrame = meterMovieClip._currentframe;
-		if (iCurrentPercent <= 0) 
-		{
-			if (iCurrentFrame == iEmpty) 
-			{
+		if (iCurrentPercent <= 0) {
+			if (iCurrentFrame == iEmpty) {
 				meterMovieClip.gotoAndPlay(iEmpty + 1);
 				var iCurrentFrame1: Number = meterMovieClip._currentframe;
 			}

@@ -1,7 +1,7 @@
 Related repositories
 --------------------
-### Unofficial UI SDK
-https://github.com/Mardoxx/skyrimui
+### SkyUI
+https://github.com/schlangster/skyui
 
 ### SkyUI SKSE plugins, patches and additions
 https://github.com/schlangster/skyui.plugins

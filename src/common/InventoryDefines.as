@@ -17,11 +17,13 @@ class InventoryDefines
 	static var ICT_LIST: Number = 14;
 	static var ICT_CRAFT_ENCHANTING: Number = 15;
 	static var ICT_HOUSE_PART: Number = 16;
+	
 	static var ES_NONE: Number = 0;
 	static var ES_EQUIPPED: Number = 1;
 	static var ES_LEFT_EQUIPPED: Number = 2;
 	static var ES_RIGHT_EQUIPPED: Number = 3;
 	static var ES_BOTH_EQUIPPED: Number = 4;
+	
 	static var QUANTITY_MENU_COUNT_LIMIT: Number = 5;
 
 	function InventoryDefines()
