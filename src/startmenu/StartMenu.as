@@ -1,3 +1,6 @@
+import gfx.io.GameDelegate;
+import gfx.managers.FocusHandler;
+
 class StartMenu extends MovieClip
 {
 	static var PRESS_START_STATE: String = "PressStart";
@@ -53,14 +56,14 @@ class StartMenu extends MovieClip
 		_parent.Lock("BR");
 		Logo_mc.Lock("BL");
 		Logo_mc._y = Logo_mc._y - 80;
-		gfx.io.GameDelegate.addCallBack("sendMenuProperties", this, "setupMainMenu");
-		gfx.io.GameDelegate.addCallBack("ConfirmNewGame", this, "ShowConfirmScreen");
-		gfx.io.GameDelegate.addCallBack("ConfirmContinue", this, "ShowConfirmScreen");
-		gfx.io.GameDelegate.addCallBack("FadeOutMenu", this, "DoFadeOutMenu");
-		gfx.io.GameDelegate.addCallBack("FadeInMenu", this, "DoFadeInMenu");
-		gfx.io.GameDelegate.addCallBack("onProfileChange", this, "onProfileChange");
-		gfx.io.GameDelegate.addCallBack("StartLoadingDLC", this, "StartLoadingDLC");
-		gfx.io.GameDelegate.addCallBack("DoneLoadingDLC", this, "DoneLoadingDLC");
+		GameDelegate.addCallBack("sendMenuProperties", this, "setupMainMenu");
+		GameDelegate.addCallBack("ConfirmNewGame", this, "ShowConfirmScreen");
+		GameDelegate.addCallBack("ConfirmContinue", this, "ShowConfirmScreen");
+		GameDelegate.addCallBack("FadeOutMenu", this, "DoFadeOutMenu");
+		GameDelegate.addCallBack("FadeInMenu", this, "DoFadeInMenu");
+		GameDelegate.addCallBack("onProfileChange", this, "onProfileChange");
+		GameDelegate.addCallBack("StartLoadingDLC", this, "StartLoadingDLC");
+		GameDelegate.addCallBack("DoneLoadingDLC", this, "DoneLoadingDLC");
 		MainList.addEventListener("itemPress", this, "onMainButtonPress");
 		MainList.addEventListener("listPress", this, "onMainListPress");
 		MainList.addEventListener("listMovedUp", this, "onMainListMoveUp");
@@ -163,7 +166,7 @@ class StartMenu extends MovieClip
 			if (Shared.GlobalFunc.IsKeyPressed(details) && (details.navEquivalent == gfx.ui.NavigationCode.GAMEPAD_START || details.navEquivalent == gfx.ui.NavigationCode.ENTER)) {
 				EndState(StartMenu.PRESS_START_STATE);
 			}
-			gfx.io.GameDelegate.call("EndPressStartState", []);
+			GameDelegate.call("EndPressStartState", []);
 		} else if (pathToFocus.length > 0 && !pathToFocus[0].handleInput(details, pathToFocus.slice(1))) {
 			if (Shared.GlobalFunc.IsKeyPressed(details)) {
 				if (details.navEquivalent == gfx.ui.NavigationCode.ENTER) {
@@ -188,20 +191,20 @@ class StartMenu extends MovieClip
 		switch(strCurrentState) {
 			case StartMenu.MAIN_CONFIRM_STATE:
 				if (MainList.selectedEntry.index == StartMenu.NEW_INDEX) {
-					gfx.io.GameDelegate.call("PlaySound", ["UIStartNewGame"]);
+					GameDelegate.call("PlaySound", ["UIStartNewGame"]);
 					FadeOutAndCall("StartNewGame");
 				} else if (MainList.selectedEntry.index == StartMenu.CONTINUE_INDEX) {
-					gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
+					GameDelegate.call("PlaySound", ["UIMenuOK"]);
 					FadeOutAndCall("ContinueLastSavedGame");
 				} else if (MainList.selectedEntry.index == StartMenu.QUIT_INDEX) {
-					gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
-					gfx.io.GameDelegate.call("QuitToDesktop", []);
+					GameDelegate.call("PlaySound", ["UIMenuOK"]);
+					GameDelegate.call("QuitToDesktop", []);
 				}
 				break;
 				
 			case StartMenu.SAVE_LOAD_CONFIRM_STATE:
 			case "SaveLoadConfirmStartAnim":
-				gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
+				GameDelegate.call("PlaySound", ["UIMenuOK"]);
 				FadeOutAndCall("LoadGame", [SaveLoadListHolder.selectedIndex]);
 				break;
 				
@@ -225,8 +228,8 @@ class StartMenu extends MovieClip
 				break;
 				
 			case StartMenu.MARKETPLACE_CONFIRM_STATE:	
-				gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
-				gfx.io.GameDelegate.call("OpenMarketplace", []);
+				GameDelegate.call("PlaySound", ["UIMenuOK"]);
+				GameDelegate.call("OpenMarketplace", []);
 				StartState(StartMenu.MAIN_STATE);
 				break;
 		}
@@ -260,7 +263,7 @@ class StartMenu extends MovieClip
 			case StartMenu.DELETE_SAVE_CONFIRM_STATE:
 			case StartMenu.DLC_STATE:
 			case StartMenu.MARKETPLACE_CONFIRM_STATE:
-				gfx.io.GameDelegate.call("PlaySound", ["UIMenuCancel"]);
+				GameDelegate.call("PlaySound", ["UIMenuCancel"]);
 				EndState();
 				break;
 		}
@@ -271,26 +274,26 @@ class StartMenu extends MovieClip
 		if (strCurrentState == StartMenu.MAIN_STATE || iPlatform == 0) {
 			switch(event.entry.index) {
 				case StartMenu.CONTINUE_INDEX:
-					gfx.io.GameDelegate.call("CONTINUE", []);
-					gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
+					GameDelegate.call("CONTINUE", []);
+					GameDelegate.call("PlaySound", ["UIMenuOK"]);
 					break;
 					
 				case StartMenu.NEW_INDEX:
-					gfx.io.GameDelegate.call("NEW", []);
-					gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
+					GameDelegate.call("NEW", []);
+					GameDelegate.call("PlaySound", ["UIMenuOK"]);
 					break;
 				
 				case StartMenu.QUIT_INDEX:
 					ShowConfirmScreen("$Quit to desktop?  Any unsaved progress will be lost.");
-					gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
+					GameDelegate.call("PlaySound", ["UIMenuOK"]);
 					break;
 					
 				case StartMenu.LOAD_INDEX:
 					if (event.entry.disabled) {
-						gfx.io.GameDelegate.call("OnDisabledLoadPress", []);
+						GameDelegate.call("OnDisabledLoadPress", []);
 					} else {
 						SaveLoadListHolder.isSaving = false;
-						gfx.io.GameDelegate.call("LOAD", [SaveLoadListHolder.List_mc.entryList, SaveLoadListHolder.batchSize]);
+						GameDelegate.call("LOAD", [SaveLoadListHolder.List_mc.entryList, SaveLoadListHolder.batchSize]);
 					}
 					break;
 			
@@ -303,7 +306,7 @@ class StartMenu extends MovieClip
 					break;
 					
 				default:
-					gfx.io.GameDelegate.call("PlaySound", ["UIMenuCancel"]);
+					GameDelegate.call("PlaySound", ["UIMenuCancel"]);
 					break;
 			}
 		}
@@ -317,9 +320,9 @@ class StartMenu extends MovieClip
 	function onPCQuitButtonPress(event: Object): Void
 	{
 		if (event.index == 0) {
-			gfx.io.GameDelegate.call("QuitToMainMenu", []);
+			GameDelegate.call("QuitToMainMenu", []);
 		} else if (event.index == 1) {
-			gfx.io.GameDelegate.call("QuitToDesktop", []);
+			GameDelegate.call("QuitToDesktop", []);
 		}
 		return;
 	}
@@ -331,7 +334,7 @@ class StartMenu extends MovieClip
 
 	function onMainListMoveUp(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+		GameDelegate.call("PlaySound", ["UIMenuFocus"]);
 		if (event.scrollChanged == true) {
 			MainList._parent.gotoAndPlay("moveUp");
 		}
@@ -339,7 +342,7 @@ class StartMenu extends MovieClip
 
 	function onMainListMoveDown(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+		GameDelegate.call("PlaySound", ["UIMenuFocus"]);
 		if (event.scrollChanged == true) {
 			MainList._parent.gotoAndPlay("moveDown");
 		}
@@ -348,7 +351,7 @@ class StartMenu extends MovieClip
 	function onMainListMouseSelectionChange(event: Object): Void
 	{
 		if (event.keyboardOrMouse == 0 && event.index != -1) {
-			gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+			GameDelegate.call("PlaySound", ["UIMenuFocus"]);
 		}
 	}
 
@@ -387,17 +390,17 @@ class StartMenu extends MovieClip
 		strFadeOutCallback = strCallback;
 		fadeOutParams = paramList;
 		_parent.gotoAndPlay("fadeOut");
-		gfx.io.GameDelegate.call("fadeOutStarted", []);
+		GameDelegate.call("fadeOutStarted", []);
 	}
 
 	function onFadeOutCompletion(): Void
 	{
 		if (strFadeOutCallback != undefined && strFadeOutCallback.length > 0) {
 			if (fadeOutParams != undefined) {
-				gfx.io.GameDelegate.call(strFadeOutCallback, fadeOutParams);
+				GameDelegate.call(strFadeOutCallback, fadeOutParams);
 				return;
 			}
-			gfx.io.GameDelegate.call(strFadeOutCallback, []);
+			GameDelegate.call(strFadeOutCallback, []);
 		}
 	}
 
@@ -413,7 +416,7 @@ class StartMenu extends MovieClip
 		}
 		strCurrentState = strStateName + "StartAnim";
 		gotoAndPlay(strCurrentState);
-		gfx.managers.FocusHandler.instance.setFocus(this, 0);
+		FocusHandler.instance.setFocus(this, 0);
 	}
 
 	function EndState(): Void
@@ -433,17 +436,17 @@ class StartMenu extends MovieClip
 	{
 		switch (strNewState) {
 			case StartMenu.MAIN_STATE:
-				gfx.managers.FocusHandler.instance.setFocus(MainList, 0);
+				FocusHandler.instance.setFocus(MainList, 0);
 				break;
 			
 			case StartMenu.SAVE_LOAD_STATE:
-				gfx.managers.FocusHandler.instance.setFocus(SaveLoadListHolder.List_mc, 0);
+				FocusHandler.instance.setFocus(SaveLoadListHolder.List_mc, 0);
 				SaveLoadListHolder.List_mc.disableSelection = false;
 				break;
 				
 			case StartMenu.DLC_STATE:
 				iLoadDLCListTimerID = setInterval(this, "DoLoadDLCList", 500);
-				gfx.managers.FocusHandler.instance.setFocus(DLCList_mc, 0);
+				FocusHandler.instance.setFocus(DLCList_mc, 0);
 				break;
 				
 			case StartMenu.MAIN_CONFIRM_STATE:
@@ -451,7 +454,7 @@ class StartMenu extends MovieClip
 			case StartMenu.DELETE_SAVE_CONFIRM_STATE:
 			case StartMenu.PRESS_START_STATE:
 			case StartMenu.MARKETPLACE_CONFIRM_STATE:
-				gfx.managers.FocusHandler.instance.setFocus(ButtonRect, 0);
+				FocusHandler.instance.setFocus(ButtonRect, 0);
 				break;
 		}
 	}
@@ -466,18 +469,18 @@ class StartMenu extends MovieClip
 	function OnSaveListOpenSuccess(): Void
 	{
 		if (SaveLoadListHolder.numSaves > 0) {
-			gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
+			GameDelegate.call("PlaySound", ["UIMenuOK"]);
 			StartState(StartMenu.SAVE_LOAD_STATE);
 			return;
 		}
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuCancel"]);
+		GameDelegate.call("PlaySound", ["UIMenuCancel"]);
 	}
 
 	function onSaveHighlight(event: Object): Void
 	{
 		DeleteSaveButton._alpha = event.index == -1 ? 50 : 100;
 		if (iPlatform == 0) {
-			gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+			GameDelegate.call("PlaySound", ["UIMenuFocus"]);
 		}
 	}
 
@@ -527,7 +530,7 @@ class StartMenu extends MovieClip
 	function onLoadingDLCMessageFadeCompletion(): Void
 	{
 		clearInterval(iLoadDLCContentMessageTimerID);
-		gfx.io.GameDelegate.call("DoLoadDLCPlugins", []);
+		GameDelegate.call("DoLoadDLCPlugins", []);
 	}
 
 	function DoneLoadingDLC(): Void
@@ -539,7 +542,7 @@ class StartMenu extends MovieClip
 	{
 		clearInterval(iLoadDLCListTimerID);
 		DLCList_mc.entryList.splice(0, DLCList_mc.entryList.length);
-		gfx.io.GameDelegate.call("LoadDLC", [DLCList_mc.entryList], this, "UpdateDLCPanel");
+		GameDelegate.call("LoadDLC", [DLCList_mc.entryList], this, "UpdateDLCPanel");
 	}
 
 	function UpdateDLCPanel(abMarketplaceAvail: Boolean, abNewDLCAvail: Boolean): Void
