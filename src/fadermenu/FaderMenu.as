@@ -4,14 +4,15 @@ import Shared.GlobalFunc;
 class FaderMenu extends MovieClip
 {
 	var FadeRect: MovieClip;
-    var mc_FadeRect: MovieClip;
-    
+	var mc_FadeRect: MovieClip;
+	
 	var fFadeDuration: Number;
 	var fFadeElapsedSecs: Number;
 	var fMinNumSeconds: Number;
 	var fTotalElapsedSecs: Number;
 	var iEndAlpha: Number;
 	var iStartAlpha: Number;
+	
 
 	function FaderMenu()
 	{
@@ -31,57 +32,46 @@ class FaderMenu extends MovieClip
 		GameDelegate.addCallBack("UpdateFade", this, "updateFade");
 	}
 
-	function initFade()
+	function initFade(): Void
 	{
-		if (FadeRect._alpha > 0 && FadeRect._alpha < 100) 
-		{
-			if (arguments[0]) 
-			{
+		if (FadeRect._alpha > 0 && FadeRect._alpha < 100) {
+			if (arguments[0]) {
 				fFadeElapsedSecs = (100 - FadeRect._alpha) / 100 * arguments[2];
-			}
-			else 
-			{
+			} else {
 				fFadeElapsedSecs = FadeRect._alpha / 100 * arguments[2];
 			}
-		}
-		else 
-		{
+		} else {
 			fFadeElapsedSecs = 0;
 			fTotalElapsedSecs = 0;
 		}
-		if (arguments[0]) 
-		{
+		
+		if (arguments[0]) {
 			iStartAlpha = 100;
 			iEndAlpha = 0;
 			FadeRect._alpha = 100;
-		}
-		else 
-		{
+		} else {
 			iStartAlpha = 0;
 			iEndAlpha = 100;
 			FadeRect._alpha = 0;
 		}
-		if (arguments[1]) 
-		{
+		
+		if (arguments[1]) {
 			(new Color(FadeRect)).setRGB(0x000000);
-		}
-		else 
-		{
+		} else {
 			(new Color(FadeRect)).setRGB(0xFFFFFF);
 		}
+		
 		fFadeDuration = arguments[2];
 		fMinNumSeconds = arguments[3] == undefined ? 0 : arguments[3];
 	}
 
-	function updateFade(afElapsedSecs)
+	function updateFade(afElapsedSecs: Number): Void
 	{
 		fTotalElapsedSecs = fTotalElapsedSecs + afElapsedSecs;
-		if (fTotalElapsedSecs >= fMinNumSeconds) 
-		{
+		if (fTotalElapsedSecs >= fMinNumSeconds) {
 			fFadeElapsedSecs = Math.min(fFadeElapsedSecs + afElapsedSecs, fFadeDuration);
 			FadeRect._alpha = GlobalFunc.Lerp(iStartAlpha, iEndAlpha, 0, fFadeDuration, fFadeElapsedSecs);
-			if (fFadeElapsedSecs == fFadeDuration) 
-			{
+			if (fFadeElapsedSecs == fFadeDuration) {
 				GameDelegate.call("FadeDone", []);
 			}
 		}

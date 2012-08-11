@@ -1,4 +1,8 @@
-dynamic class CraftingMenu extends MovieClip
+import gfx.managers.FocusHandler;
+import gfx.io.GameDelegate;
+import Shared.GlobalFunc;
+
+class CraftingMenu extends MovieClip
 {
 	static var MT_SINGLE_PANEL: Number = 0;
 	static var MT_DOUBLE_PANEL: Number = 1;
@@ -7,6 +11,7 @@ dynamic class CraftingMenu extends MovieClip
 	static var EXIT_BUTTON: Number = 1;
 	static var AUX_BUTTON: Number = 2;
 	static var CRAFT_BUTTON: Number = 3;
+	
 	var AdditionalDescription;
 	var AdditionalDescriptionHolder;
 	var BottomBarInfo;
@@ -33,177 +38,167 @@ dynamic class CraftingMenu extends MovieClip
 	var _bCanCraft;
 	var _bCanFadeItemInfo;
 	var _bItemCardAdditionalDescription;
-	var _parent;
 	var bCanExpandPanel;
 	var bHideAdditionalDescription;
 
 	function CraftingMenu()
 	{
 		super();
-		this._bCanCraft = false;
-		this.bCanExpandPanel = true;
-		this._bCanFadeItemInfo = true;
-		this.bHideAdditionalDescription = false;
-		this._bItemCardAdditionalDescription = false;
-		this.ButtonText = new Array("", "", "", "");
-		this.Platform = 0;
-		this.CategoryList = this.InventoryLists;
-		this.ItemInfo = this.ItemInfoHolder.ItemInfo;
+		_bCanCraft = false;
+		bCanExpandPanel = true;
+		_bCanFadeItemInfo = true;
+		bHideAdditionalDescription = false;
+		_bItemCardAdditionalDescription = false;
+		ButtonText = new Array("", "", "", "");
+		Platform = 0;
+		CategoryList = InventoryLists;
+		ItemInfo = ItemInfoHolder.ItemInfo;
 		Mouse.addListener(this);
 	}
 
-	function Initialize()
+	function Initialize(): Void
 	{
-		this.ItemInfoHolder = this.ItemInfoHolder;
-		this.ItemInfoHolder.gotoAndStop("default");
-		this.ItemInfo.addEventListener("endEditItemName", this, "OnEndEditItemName");
-		this.ItemInfo.addEventListener("subMenuAction", this, "OnSubMenuAction");
-		this.BottomBarInfo = this.BottomBarInfo;
-		this.AdditionalDescriptionHolder = this.ItemInfoHolder.AdditionalDescriptionHolder;
-		this.AdditionalDescription = this.AdditionalDescriptionHolder.AdditionalDescription;
-		this.AdditionalDescription.textAutoSize = "shrink";
-		this.MenuName = this.CategoryList.CategoriesList._parent.CategoryLabel;
-		this.MenuName.autoSize = "left";
-		this.MenuNameHolder._visible = false;
-		this.MenuDescription = this.MenuDescriptionHolder.MenuDescription;
-		this.MenuDescription.autoSize = "center";
-		this.BottomBarInfo.SetButtonsArt([{PCArt: "E", XBoxArt: "360_A", PS3Art: "PS3_A"}, {PCArt: "Tab", XBoxArt: "360_B", PS3Art: "PS3_B"}, {PCArt: "F", XBoxArt: "360_Y", PS3Art: "PS3_Y"}, {PCArt: "R", XBoxArt: "360_X", PS3Art: "PS3_X"}]);
-		if (this.ItemListTweener == undefined) 
-		{
-			if (this.CategoryList != undefined) 
-			{
-				this.MenuType = CraftingMenu.MT_DOUBLE_PANEL;
-				gfx.managers.FocusHandler.instance.setFocus(this.CategoryList, 0);
-				this.CategoryList.ShowCategoriesList();
-				this.CategoryList.addEventListener("itemHighlightChange", this, "OnItemHighlightChange");
-				this.CategoryList.addEventListener("showItemsList", this, "OnShowItemsList");
-				this.CategoryList.addEventListener("hideItemsList", this, "OnHideItemsList");
-				this.CategoryList.addEventListener("categoryChange", this, "OnCategoryListChange");
-				this.ItemList = this.CategoryList.ItemsList;
-				this.ItemList.addEventListener("itemPress", this, "OnItemSelect");
+		ItemInfoHolder = ItemInfoHolder;
+		ItemInfoHolder.gotoAndStop("default");
+		ItemInfo.addEventListener("endEditItemName", this, "OnEndEditItemName");
+		ItemInfo.addEventListener("subMenuAction", this, "OnSubMenuAction");
+		BottomBarInfo = BottomBarInfo;
+		AdditionalDescriptionHolder = ItemInfoHolder.AdditionalDescriptionHolder;
+		AdditionalDescription = AdditionalDescriptionHolder.AdditionalDescription;
+		AdditionalDescription.textAutoSize = "shrink";
+		MenuName = CategoryList.CategoriesList._parent.CategoryLabel;
+		MenuName.autoSize = "left";
+		MenuNameHolder._visible = false;
+		MenuDescription = MenuDescriptionHolder.MenuDescription;
+		MenuDescription.autoSize = "center";
+		BottomBarInfo.SetButtonsArt([{PCArt: "E", XBoxArt: "360_A", PS3Art: "PS3_A"}, {PCArt: "Tab", XBoxArt: "360_B", PS3Art: "PS3_B"}, {PCArt: "F", XBoxArt: "360_Y", PS3Art: "PS3_Y"}, {PCArt: "R", XBoxArt: "360_X", PS3Art: "PS3_X"}]);
+		if (ItemListTweener == undefined) {
+			if (CategoryList != undefined) {
+				MenuType = CraftingMenu.MT_DOUBLE_PANEL;
+				FocusHandler.instance.setFocus(CategoryList, 0);
+				CategoryList.ShowCategoriesList();
+				CategoryList.addEventListener("itemHighlightChange", this, "OnItemHighlightChange");
+				CategoryList.addEventListener("showItemsList", this, "OnShowItemsList");
+				CategoryList.addEventListener("hideItemsList", this, "OnHideItemsList");
+				CategoryList.addEventListener("categoryChange", this, "OnCategoryListChange");
+				ItemList = CategoryList.ItemsList;
+				ItemList.addEventListener("itemPress", this, "OnItemSelect");
 			}
+		} else {
+			MenuType = CraftingMenu.MT_SINGLE_PANEL;
+			ItemList = ItemListTweener.List_mc;
+			ItemListTweener.gotoAndPlay("showList");
+			FocusHandler.instance.setFocus(ItemList, 0);
+			ItemList.addEventListener("listMovedUp", this, "OnItemListMovedUp");
+			ItemList.addEventListener("listMovedDown", this, "OnItemListMovedDown");
+			ItemList.addEventListener("itemPress", this, "OnItemListPressed");
 		}
-		else 
+		BottomBarInfo["Button" + CraftingMenu.CRAFT_BUTTON].addEventListener("press", this, "onCraftButtonPress");
+		BottomBarInfo["Button" + CraftingMenu.EXIT_BUTTON].addEventListener("click", this, "onExitButtonPress");
+		BottomBarInfo["Button" + CraftingMenu.EXIT_BUTTON].disabled = false;
+		BottomBarInfo["Button" + CraftingMenu.AUX_BUTTON].addEventListener("click", this, "onAuxButtonPress");
+		BottomBarInfo["Button" + CraftingMenu.AUX_BUTTON].disabled = false;
+		ItemsListInputCatcher.onMouseDown = function ()
 		{
-			this.MenuType = CraftingMenu.MT_SINGLE_PANEL;
-			this.ItemList = this.ItemListTweener.List_mc;
-			this.ItemListTweener.gotoAndPlay("showList");
-			gfx.managers.FocusHandler.instance.setFocus(this.ItemList, 0);
-			this.ItemList.addEventListener("listMovedUp", this, "OnItemListMovedUp");
-			this.ItemList.addEventListener("listMovedDown", this, "OnItemListMovedDown");
-			this.ItemList.addEventListener("itemPress", this, "OnItemListPressed");
-		}
-		this.BottomBarInfo["Button" + CraftingMenu.CRAFT_BUTTON].addEventListener("press", this, "onCraftButtonPress");
-		this.BottomBarInfo["Button" + CraftingMenu.EXIT_BUTTON].addEventListener("click", this, "onExitButtonPress");
-		this.BottomBarInfo["Button" + CraftingMenu.EXIT_BUTTON].disabled = false;
-		this.BottomBarInfo["Button" + CraftingMenu.AUX_BUTTON].addEventListener("click", this, "onAuxButtonPress");
-		this.BottomBarInfo["Button" + CraftingMenu.AUX_BUTTON].disabled = false;
-		this.ItemsListInputCatcher.onMouseDown = function ()
-		{
-			if (Mouse.getTopMostEntity() == this) 
-			{
-				this._parent.onItemsListInputCatcherClick();
+			if (Mouse.getTopMostEntity() == this) {
+				_parent.onItemsListInputCatcherClick();
 			}
-		}
-		;
-		this.RestoreCategoryRect.onRollOver = function ()
+		};
+		RestoreCategoryRect.onRollOver = function ()
 		{
-			if (this._parent.CategoryList.currentState == InventoryLists.TWO_PANELS) 
-			{
-				this._parent.CategoryList.RestoreCategoryIndex();
+			if (_parent.CategoryList.currentState == InventoryLists.TWO_PANELS) {
+				_parent.CategoryList.RestoreCategoryIndex();
 			}
-		}
-		;
-		this.ExitMenuRect.onPress = function ()
+		};
+		ExitMenuRect.onPress = function ()
 		{
-			gfx.io.GameDelegate.call("CloseMenu", []);
-		}
-		;
-		this.bCanCraft = false;
-		this.PositionElements();
-		this.SetPlatform(this.Platform);
+			GameDelegate.call("CloseMenu", []);
+		};
+		bCanCraft = false;
+		PositionElements();
+		SetPlatform(Platform);
 	}
 
-	function get bCanCraft()
+	function get bCanCraft(): Boolean
 	{
-		return this._bCanCraft;
+		return _bCanCraft;
 	}
 
-	function set bCanCraft(abCanCraft)
+	function set bCanCraft(abCanCraft: Boolean): Void
 	{
-		this._bCanCraft = abCanCraft;
-		this.UpdateButtonText();
+		_bCanCraft = abCanCraft;
+		UpdateButtonText();
 	}
 
 	function onCraftButtonPress()
 	{
-		if (this.bCanCraft) 
+		if (bCanCraft) 
 		{
-			gfx.io.GameDelegate.call("CraftButtonPress", []);
+			GameDelegate.call("CraftButtonPress", []);
 		}
 	}
 
 	function onExitButtonPress()
 	{
-		gfx.io.GameDelegate.call("CloseMenu", []);
+		GameDelegate.call("CloseMenu", []);
 	}
 
 	function onAuxButtonPress()
 	{
-		gfx.io.GameDelegate.call("AuxButtonPress", []);
+		GameDelegate.call("AuxButtonPress", []);
 	}
 
 	function get bCanFadeItemInfo()
 	{
-		gfx.io.GameDelegate.call("CanFadeItemInfo", [], this, "SetCanFadeItemInfo");
-		return this._bCanFadeItemInfo;
+		GameDelegate.call("CanFadeItemInfo", [], this, "SetCanFadeItemInfo");
+		return _bCanFadeItemInfo;
 	}
 
 	function SetCanFadeItemInfo(abCanFade)
 	{
-		this._bCanFadeItemInfo = abCanFade;
+		_bCanFadeItemInfo = abCanFade;
 	}
 
 	function get bItemCardAdditionalDescription()
 	{
-		return this._bItemCardAdditionalDescription;
+		return _bItemCardAdditionalDescription;
 	}
 
 	function set bItemCardAdditionalDescription(abItemCardDesc)
 	{
-		this._bItemCardAdditionalDescription = abItemCardDesc;
+		_bItemCardAdditionalDescription = abItemCardDesc;
 		if (abItemCardDesc) 
 		{
-			this.AdditionalDescription.text = "";
+			AdditionalDescription.text = "";
 		}
 	}
 
 	function SetPartitionedFilterMode(abPartitioned)
 	{
-		this.CategoryList.ItemsList.filterer.SetPartitionedFilterMode(abPartitioned);
+		CategoryList.ItemsList.filterer.SetPartitionedFilterMode(abPartitioned);
 	}
 
 	function GetItemShown()
 	{
-		return this.ItemList.selectedIndex >= 0 && (this.CategoryList == undefined || this.CategoryList.currentState == InventoryLists.TWO_PANELS || this.CategoryList.currentState == InventoryLists.TRANSITIONING_TO_TWO_PANELS);
+		return ItemList.selectedIndex >= 0 && (CategoryList == undefined || CategoryList.currentState == InventoryLists.TWO_PANELS || CategoryList.currentState == InventoryLists.TRANSITIONING_TO_TWO_PANELS);
 	}
 
 	function GetNumCategories()
 	{
-		return this.CategoryList != undefined && this.CategoryList.CategoriesList != undefined ? this.CategoryList.CategoriesList.entryList.length : 0;
+		return CategoryList != undefined && CategoryList.CategoriesList != undefined ? CategoryList.CategoriesList.entryList.length : 0;
 	}
 
 	function onMouseUp()
 	{
-		if (this.ItemInfo.bEditNameMode && !this.ItemInfo.hitTest(_root._xmouse, _root._ymouse)) 
+		if (ItemInfo.bEditNameMode && !ItemInfo.hitTest(_root._xmouse, _root._ymouse)) 
 		{
-			this.OnEndEditItemName({useNewName: false, newName: ""});
+			OnEndEditItemName({useNewName: false, newName: ""});
 		}
 	}
 
 	function onMouseWheel(delta)
 	{
-		if (this.CategoryList.currentState == InventoryLists.TWO_PANELS && !this.ItemList.disableSelection && !this.ItemList.disableInput) 
+		if (CategoryList.currentState == InventoryLists.TWO_PANELS && !ItemList.disableSelection && !ItemList.disableInput) 
 		{
 			var __reg2 = Mouse.getTopMostEntity();
 			for (;;) 
@@ -212,15 +207,15 @@ dynamic class CraftingMenu extends MovieClip
 				{
 					return;
 				}
-				if (__reg2 == this.ItemsListInputCatcher || __reg2 == this.MouseRotationRect) 
+				if (__reg2 == ItemsListInputCatcher || __reg2 == MouseRotationRect) 
 				{
 					if (delta == 1) 
 					{
-						this.ItemList.moveSelectionUp();
+						ItemList.moveSelectionUp();
 					}
 					else if (delta == -1) 
 					{
-						this.ItemList.moveSelectionDown();
+						ItemList.moveSelectionDown();
 					}
 				}
 				__reg2 = __reg2._parent;
@@ -230,23 +225,23 @@ dynamic class CraftingMenu extends MovieClip
 
 	function onMouseRotationStart()
 	{
-		gfx.io.GameDelegate.call("StartMouseRotation", []);
-		this.CategoryList.CategoriesList.disableSelection = true;
-		this.ItemList.disableSelection = true;
+		GameDelegate.call("StartMouseRotation", []);
+		CategoryList.CategoriesList.disableSelection = true;
+		ItemList.disableSelection = true;
 	}
 
 	function onMouseRotationStop()
 	{
-		gfx.io.GameDelegate.call("StopMouseRotation", []);
-		this.CategoryList.CategoriesList.disableSelection = false;
-		this.ItemList.disableSelection = false;
+		GameDelegate.call("StopMouseRotation", []);
+		CategoryList.CategoriesList.disableSelection = false;
+		ItemList.disableSelection = false;
 	}
 
 	function onItemsListInputCatcherClick()
 	{
-		if (this.CategoryList.currentState == InventoryLists.TWO_PANELS && !this.ItemList.disableSelection && !this.ItemList.disableInput) 
+		if (CategoryList.currentState == InventoryLists.TWO_PANELS && !ItemList.disableSelection && !ItemList.disableInput) 
 		{
-			this.OnItemSelect({index: this.ItemList.selectedIndex});
+			OnItemSelect({index: ItemList.selectedIndex});
 		}
 	}
 
@@ -254,56 +249,56 @@ dynamic class CraftingMenu extends MovieClip
 	{
 		if (aiMouseButton == 0) 
 		{
-			this.onItemsListInputCatcherClick();
+			onItemsListInputCatcherClick();
 		}
 	}
 
 	function UpdateButtonText()
 	{
-		var __reg2 = this.ButtonText.concat();
-		if (!this.bCanCraft) 
+		var __reg2 = ButtonText.concat();
+		if (!bCanCraft) 
 		{
 			__reg2[CraftingMenu.CRAFT_BUTTON] = "";
 		}
-		if (!this.GetItemShown()) 
+		if (!GetItemShown()) 
 		{
 			__reg2[CraftingMenu.SELECT_BUTTON] = "";
 		}
-		this.BottomBarInfo.SetButtonsText.apply(this.BottomBarInfo, __reg2);
+		BottomBarInfo.SetButtonsText.apply(BottomBarInfo, __reg2);
 	}
 
 	function UpdateItemList(abFullRebuild)
 	{
 		if (abFullRebuild == true) 
 		{
-			this.CategoryList.InvalidateListData();
+			CategoryList.InvalidateListData();
 		}
 		else 
 		{
-			this.ItemList.UpdateList();
+			ItemList.UpdateList();
 		}
-		if (this.MenuType == CraftingMenu.MT_SINGLE_PANEL) 
+		if (MenuType == CraftingMenu.MT_SINGLE_PANEL) 
 		{
-			this.FadeInfoCard(this.ItemList.entryList.length == 0);
+			FadeInfoCard(ItemList.entryList.length == 0);
 		}
 	}
 
 	function UpdateItemDisplay()
 	{
-		var __reg2 = this.GetItemShown();
-		this.FadeInfoCard(!__reg2);
-		this.SetSelectedItem(this.ItemList.selectedIndex);
-		gfx.io.GameDelegate.call("ShowItem3D", [__reg2]);
+		var __reg2 = GetItemShown();
+		FadeInfoCard(!__reg2);
+		SetSelectedItem(ItemList.selectedIndex);
+		GameDelegate.call("ShowItem3D", [__reg2]);
 	}
 
 	function FadeInfoCard(abFadeOut)
 	{
-		if (abFadeOut && this.bCanFadeItemInfo) 
+		if (abFadeOut && bCanFadeItemInfo) 
 		{
-			this.ItemInfo.FadeOutCard();
-			if (this.bHideAdditionalDescription) 
+			ItemInfo.FadeOutCard();
+			if (bHideAdditionalDescription) 
 			{
-				this.AdditionalDescriptionHolder._visible = false;
+				AdditionalDescriptionHolder._visible = false;
 			}
 			return;
 		}
@@ -311,102 +306,102 @@ dynamic class CraftingMenu extends MovieClip
 		{
 			return;
 		}
-		this.ItemInfo.FadeInCard();
-		if (this.bHideAdditionalDescription) 
+		ItemInfo.FadeInCard();
+		if (bHideAdditionalDescription) 
 		{
-			this.AdditionalDescriptionHolder._visible = true;
+			AdditionalDescriptionHolder._visible = true;
 		}
 	}
 
 	function PositionElements()
 	{
-		Shared.GlobalFunc.SetLockFunction();
-		if (this.MenuType == CraftingMenu.MT_SINGLE_PANEL) 
+		GlobalFunc.SetLockFunction();
+		if (MenuType == CraftingMenu.MT_SINGLE_PANEL) 
 		{
-			this.ItemListTweener.Lock("L");
-			this.ItemListTweener._x = this.ItemListTweener._x - CraftingMenu.LIST_OFFSET;
+			ItemListTweener.Lock("L");
+			ItemListTweener._x = ItemListTweener._x - CraftingMenu.LIST_OFFSET;
 		}
-		else if (this.MenuType == CraftingMenu.MT_DOUBLE_PANEL) 
+		else if (MenuType == CraftingMenu.MT_DOUBLE_PANEL) 
 		{
-			MovieClip(this.CategoryList).Lock("L");
-			this.CategoryList._x = this.CategoryList._x - CraftingMenu.LIST_OFFSET;
+			MovieClip(CategoryList).Lock("L");
+			CategoryList._x = CategoryList._x - CraftingMenu.LIST_OFFSET;
 		}
-		this.MenuNameHolder.Lock("L");
-		this.MenuNameHolder._x = this.MenuNameHolder._x - CraftingMenu.LIST_OFFSET;
-		this.MenuDescriptionHolder.Lock("TR");
+		MenuNameHolder.Lock("L");
+		MenuNameHolder._x = MenuNameHolder._x - CraftingMenu.LIST_OFFSET;
+		MenuDescriptionHolder.Lock("TR");
 		var __reg3 = Stage.visibleRect.x + Stage.safeRect.x;
 		var __reg4 = Stage.visibleRect.x + Stage.visibleRect.width - Stage.safeRect.x;
-		this.BottomBarInfo.PositionElements(__reg3, __reg4);
-		MovieClip(this.ExitMenuRect).Lock("TL");
-		this.ExitMenuRect._x = this.ExitMenuRect._x - (Stage.safeRect.x + 10);
-		this.ExitMenuRect._y = this.ExitMenuRect._y - Stage.safeRect.y;
-		this.RestoreCategoryRect._x = this.ExitMenuRect._x + this.CategoryList.CategoriesList._parent._width + 25;
-		this.ItemsListInputCatcher._x = this.RestoreCategoryRect._x + this.RestoreCategoryRect._width;
-		this.ItemsListInputCatcher._width = _root._width - this.ItemsListInputCatcher._x;
-		MovieClip(this.MouseRotationRect).Lock("T");
-		this.MouseRotationRect._x = this.ItemInfo._parent._x;
-		this.MouseRotationRect._width = this.ItemInfo._parent._width;
-		this.MouseRotationRect._height = 0.55 * Stage.visibleRect.height;
+		BottomBarInfo.PositionElements(__reg3, __reg4);
+		MovieClip(ExitMenuRect).Lock("TL");
+		ExitMenuRect._x = ExitMenuRect._x - (Stage.safeRect.x + 10);
+		ExitMenuRect._y = ExitMenuRect._y - Stage.safeRect.y;
+		RestoreCategoryRect._x = ExitMenuRect._x + CategoryList.CategoriesList._parent._width + 25;
+		ItemsListInputCatcher._x = RestoreCategoryRect._x + RestoreCategoryRect._width;
+		ItemsListInputCatcher._width = _root._width - ItemsListInputCatcher._x;
+		MovieClip(MouseRotationRect).Lock("T");
+		MouseRotationRect._x = ItemInfo._parent._x;
+		MouseRotationRect._width = ItemInfo._parent._width;
+		MouseRotationRect._height = 0.55 * Stage.visibleRect.height;
 	}
 
 	function OnItemListPressed(event)
 	{
-		gfx.io.GameDelegate.call("CraftSelectedItem", [this.ItemList.selectedIndex]);
-		gfx.io.GameDelegate.call("SetSelectedItem", [this.ItemList.selectedIndex]);
+		GameDelegate.call("CraftSelectedItem", [ItemList.selectedIndex]);
+		GameDelegate.call("SetSelectedItem", [ItemList.selectedIndex]);
 	}
 
 	function OnItemSelect(event)
 	{
-		gfx.io.GameDelegate.call("ChooseItem", [event.index]);
-		gfx.io.GameDelegate.call("ShowItem3D", [event.index != -1]);
-		this.UpdateButtonText();
+		GameDelegate.call("ChooseItem", [event.index]);
+		GameDelegate.call("ShowItem3D", [event.index != -1]);
+		UpdateButtonText();
 	}
 
 	function OnItemHighlightChange(event)
 	{
-		this.SetSelectedItem(event.index);
-		this.FadeInfoCard(event.index == -1);
-		this.UpdateButtonText();
-		gfx.io.GameDelegate.call("ShowItem3D", [event.index != -1]);
+		SetSelectedItem(event.index);
+		FadeInfoCard(event.index == -1);
+		UpdateButtonText();
+		GameDelegate.call("ShowItem3D", [event.index != -1]);
 	}
 
 	function OnShowItemsList(event)
 	{
-		if (this.Platform == 0) 
+		if (Platform == 0) 
 		{
-			gfx.io.GameDelegate.call("SetSelectedCategory", [this.CategoryList.CategoriesList.selectedIndex]);
+			GameDelegate.call("SetSelectedCategory", [CategoryList.CategoriesList.selectedIndex]);
 		}
-		this.OnItemHighlightChange(event);
+		OnItemHighlightChange(event);
 	}
 
 	function OnHideItemsList(event)
 	{
-		this.SetSelectedItem(event.index);
-		this.FadeInfoCard(true);
-		this.UpdateButtonText();
-		gfx.io.GameDelegate.call("ShowItem3D", [false]);
+		SetSelectedItem(event.index);
+		FadeInfoCard(true);
+		UpdateButtonText();
+		GameDelegate.call("ShowItem3D", [false]);
 	}
 
 	function OnCategoryListChange(event)
 	{
-		if (this.Platform != 0) 
+		if (Platform != 0) 
 		{
-			gfx.io.GameDelegate.call("SetSelectedCategory", [event.index]);
+			GameDelegate.call("SetSelectedCategory", [event.index]);
 		}
 	}
 
 	function SetSelectedItem(aSelection)
 	{
-		gfx.io.GameDelegate.call("SetSelectedItem", [aSelection]);
+		GameDelegate.call("SetSelectedItem", [aSelection]);
 	}
 
 	function handleInput(aInputEvent, aPathToFocus)
 	{
-		if (this.bCanExpandPanel && aPathToFocus.length > 0) 
+		if (bCanExpandPanel && aPathToFocus.length > 0) 
 		{
 			aPathToFocus[0].handleInput(aInputEvent, aPathToFocus.slice(1));
 		}
-		else if (this.MenuType == CraftingMenu.MT_DOUBLE_PANEL && aPathToFocus.length > 1) 
+		else if (MenuType == CraftingMenu.MT_DOUBLE_PANEL && aPathToFocus.length > 1) 
 		{
 			aPathToFocus[1].handleInput(aInputEvent, aPathToFocus.slice(2));
 		}
@@ -415,15 +410,15 @@ dynamic class CraftingMenu extends MovieClip
 
 	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
 	{
-		this.Platform = aiPlatform;
-		this.BottomBarInfo.SetPlatform(aiPlatform, abPS3Switch);
-		this.ItemInfo.SetPlatform(aiPlatform, abPS3Switch);
-		this.CategoryList.SetPlatform(aiPlatform, abPS3Switch);
+		Platform = aiPlatform;
+		BottomBarInfo.SetPlatform(aiPlatform, abPS3Switch);
+		ItemInfo.SetPlatform(aiPlatform, abPS3Switch);
+		CategoryList.SetPlatform(aiPlatform, abPS3Switch);
 	}
 
 	function UpdateIngredients(aLineTitle, aIngredients, abShowPlayerCount)
 	{
-		var __reg4 = this.bItemCardAdditionalDescription ? this.ItemInfo.GetItemName() : this.AdditionalDescription;
+		var __reg4 = bItemCardAdditionalDescription ? ItemInfo.GetItemName() : AdditionalDescription;
 		__reg4.text = aLineTitle != undefined && aLineTitle.length > 0 ? aLineTitle + ": " : "";
 		var __reg11 = __reg4.getNewTextFormat();
 		var __reg9 = __reg4.getNewTextFormat();
@@ -452,49 +447,49 @@ dynamic class CraftingMenu extends MovieClip
 
 	function EditItemName(aInitialText, aMaxChars)
 	{
-		this.ItemInfo.StartEditName(aInitialText, aMaxChars);
+		ItemInfo.StartEditName(aInitialText, aMaxChars);
 	}
 
 	function OnEndEditItemName(event)
 	{
-		this.ItemInfo.EndEditName();
-		gfx.io.GameDelegate.call("EndItemRename", [event.useNewName, event.newName]);
+		ItemInfo.EndEditName();
+		GameDelegate.call("EndItemRename", [event.useNewName, event.newName]);
 	}
 
 	function ShowSlider(aiMaxValue, aiMinValue, aiCurrentValue, aiSnapInterval)
 	{
-		this.ItemInfo.ShowEnchantingSlider(aiMaxValue, aiMinValue, aiCurrentValue);
-		this.ItemInfo.quantitySlider.snapping = true;
-		this.ItemInfo.quantitySlider.snapInterval = aiSnapInterval;
-		this.ItemInfo.quantitySlider.addEventListener("change", this, "OnSliderChanged");
-		this.OnSliderChanged();
+		ItemInfo.ShowEnchantingSlider(aiMaxValue, aiMinValue, aiCurrentValue);
+		ItemInfo.quantitySlider.snapping = true;
+		ItemInfo.quantitySlider.snapInterval = aiSnapInterval;
+		ItemInfo.quantitySlider.addEventListener("change", this, "OnSliderChanged");
+		OnSliderChanged();
 	}
 
 	function OnSliderChanged(event)
 	{
-		gfx.io.GameDelegate.call("CalculateCharge", [this.ItemInfo.quantitySlider.value], this, "SetChargeValues");
+		GameDelegate.call("CalculateCharge", [ItemInfo.quantitySlider.value], this, "SetChargeValues");
 	}
 
 	function SetSliderValue(aValue)
 	{
-		this.ItemInfo.quantitySlider.value = aValue;
+		ItemInfo.quantitySlider.value = aValue;
 	}
 
 	function OnSubMenuAction(event)
 	{
 		if (event.opening == true) 
 		{
-			this.ItemList.disableSelection = true;
-			this.ItemList.disableInput = true;
-			this.CategoryList.CategoriesList.disableSelection = true;
-			this.CategoryList.CategoriesList.disableInput = true;
+			ItemList.disableSelection = true;
+			ItemList.disableInput = true;
+			CategoryList.CategoriesList.disableSelection = true;
+			CategoryList.CategoriesList.disableInput = true;
 		}
 		else if (event.opening == false) 
 		{
-			this.ItemList.disableSelection = false;
-			this.ItemList.disableInput = false;
-			this.CategoryList.CategoriesList.disableSelection = false;
-			this.CategoryList.CategoriesList.disableInput = false;
+			ItemList.disableSelection = false;
+			ItemList.disableInput = false;
+			CategoryList.CategoriesList.disableSelection = false;
+			CategoryList.CategoriesList.disableInput = false;
 		}
 		if (event.menu == "quantity") 
 		{
@@ -502,32 +497,32 @@ dynamic class CraftingMenu extends MovieClip
 			{
 				return;
 			}
-			gfx.io.GameDelegate.call("SliderClose", [!event.canceled, event.value]);
+			GameDelegate.call("SliderClose", [!event.canceled, event.value]);
 		}
 	}
 
 	function PreRebuildList()
 	{
-		this.SavedCategoryCenterText = this.CategoryList.CategoriesList.centeredEntry.text;
-		this.SavedCategorySelectedText = this.CategoryList.CategoriesList.selectedEntry.text;
-		this.SavedCategoryScrollRatio = this.CategoryList.CategoriesList.maxScrollPosition <= 0 ? 0 : this.CategoryList.CategoriesList.scrollPosition / this.CategoryList.CategoriesList.maxScrollPosition;
+		SavedCategoryCenterText = CategoryList.CategoriesList.centeredEntry.text;
+		SavedCategorySelectedText = CategoryList.CategoriesList.selectedEntry.text;
+		SavedCategoryScrollRatio = CategoryList.CategoriesList.maxScrollPosition <= 0 ? 0 : CategoryList.CategoriesList.scrollPosition / CategoryList.CategoriesList.maxScrollPosition;
 	}
 
 	function PostRebuildList(abRestoreSelection)
 	{
 		if (abRestoreSelection) 
 		{
-			var __reg3 = this.CategoryList.CategoriesList.entryList;
+			var __reg3 = CategoryList.CategoriesList.entryList;
 			var __reg4 = -1;
 			var __reg5 = -1;
 			var __reg2 = 0;
 			while (__reg2 < __reg3.length) 
 			{
-				if (this.SavedCategoryCenterText == __reg3[__reg2].text) 
+				if (SavedCategoryCenterText == __reg3[__reg2].text) 
 				{
 					__reg4 = __reg2;
 				}
-				if (this.SavedCategorySelectedText == __reg3[__reg2].text) 
+				if (SavedCategorySelectedText == __reg3[__reg2].text) 
 				{
 					__reg5 = __reg2;
 				}
@@ -535,17 +530,17 @@ dynamic class CraftingMenu extends MovieClip
 			}
 			if (__reg4 == -1) 
 			{
-				__reg4 = Math.floor(this.SavedCategoryScrollRatio * __reg3.length);
+				__reg4 = Math.floor(SavedCategoryScrollRatio * __reg3.length);
 			}
 			__reg4 = Math.max(0, __reg4);
-			this.CategoryList.CategoriesList.RestoreScrollPosition(__reg4, false);
+			CategoryList.CategoriesList.RestoreScrollPosition(__reg4, false);
 			if (__reg5 != -1) 
 			{
-				this.CategoryList.CategoriesList.selectedIndex = __reg5;
+				CategoryList.CategoriesList.selectedIndex = __reg5;
 			}
-			this.CategoryList.CategoriesList.UpdateList();
-			this.CategoryList.ItemsList.filterer.itemFilter = this.CategoryList.CategoriesList.selectedEntry.flag;
-			this.CategoryList.ItemsList.UpdateList();
+			CategoryList.CategoriesList.UpdateList();
+			CategoryList.ItemsList.filterer.itemFilter = CategoryList.CategoriesList.selectedEntry.flag;
+			CategoryList.ItemsList.UpdateList();
 		}
 	}
 

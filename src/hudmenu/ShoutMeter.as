@@ -14,7 +14,6 @@ class ShoutMeter
 		ProgressClip.gotoAndStop("Full");
 		MeterFull = ProgressClip._currentframe;
 		ProgressClip.gotoAndStop("Normal");
-		FlashClip.gotoAndStop("InitFlash"); //
 	}
 
 	function SetPercent(aPercent: Number): Void
