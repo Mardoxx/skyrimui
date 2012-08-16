@@ -1,7 +1,6 @@
 class OptionsList extends Shared.BSScrollingList
 {
 	var EntriesA: Array;
-	var GetClipByIndex: Function;
 	var bAllowValueOverwrite: Boolean;
 
 	function OptionsList()

@@ -1,70 +1,70 @@
-dynamic class LoadingMenu extends MovieClip
+import Components.Meter;
+import gfx.io.GameDelegate;
+import Shared.GlobalFunc;
+
+class LoadingMenu extends MovieClip
 {
-	var LevelMeterRect;
-	var LevelMeter_mc;
-	var LoadingText;
-	var LoadingTextFader;
-	var _parent;
-	var bFadedIn;
+	var LevelMeterRect: MovieClip;
+	var LevelMeter_mc: Meter;
+	var LoadingText: TextField;
+	var LoadingTextFader: MovieClip;
+	var bFadedIn: Boolean;
 
 	function LoadingMenu()
 	{
 		super();
-		this.LoadingText = this.LoadingTextFader.LoadingText.textField;
-		this.bFadedIn = false;
+		LoadingText = LoadingTextFader.LoadingText.textField;
+		bFadedIn = false;
 	}
 
 	function InitExtensions()
 	{
-		Shared.GlobalFunc.SetLockFunction();
-		this.LevelMeterRect.Lock("TR");
-		this.LoadingTextFader.Lock("BR");
-		this.LoadingText.textAutoSize = "shrink";
-		this.LoadingText.verticalAlign = "bottom";
-		this.LoadingText.SetText(" ");
-		this.LevelMeter_mc = new Components.Meter(this.LevelMeterRect.LevelProgressBar);
+		GlobalFunc.SetLockFunction();
+		LevelMeterRect.Lock("TR");
+		LoadingTextFader.Lock("BR");
+		LoadingText.textAutoSize = "shrink";
+		LoadingText.verticalAlign = "bottom";
+		LoadingText.SetText(" ");
+		LevelMeter_mc = new Meter(LevelMeterRect.LevelProgressBar);
 	}
 
 	function SetLevelProgress(afCurrentLevel, afLevelProgress)
 	{
-		this.LevelMeterRect.LevelNumberLabel.SetText(afCurrentLevel);
-		this.LevelMeter_mc.SetPercent(afLevelProgress);
+		LevelMeterRect.LevelNumberLabel.SetText(afCurrentLevel);
+		LevelMeter_mc.SetPercent(afLevelProgress);
 	}
 
-	function SetLoadingText(astrText)
+	function SetLoadingText(astrText: String): Void
 	{
-		if (astrText != undefined) 
-		{
-			this.LoadingText.SetText(astrText);
+		if (astrText != undefined) {
+			LoadingText.SetText(astrText);
 			return;
 		}
-		this.LoadingText.SetText(" ");
+		LoadingText.SetText(" ");
 	}
 
-	function refreshLoadingText()
+	function refreshLoadingText(): Void
 	{
-		gfx.io.GameDelegate.call("RequestLoadingText", [], this, "SetLoadingText");
-		this.LoadingTextFader.gotoAndPlay("fadeIn");
+		GameDelegate.call("RequestLoadingText", [], this, "SetLoadingText");
+		LoadingTextFader.gotoAndPlay("fadeIn");
 	}
 
-	function FadeInMenu()
+	function FadeInMenu(): Void
 	{
-		if (this.bFadedIn) 
-		{
+		if (bFadedIn) {
 			return;
 		}
-		gfx.io.GameDelegate.call("RequestPlayerInfo", [], this, "SetLevelProgress");
-		this.refreshLoadingText();
-		this._parent.gotoAndPlay("fadeIn");
-		this.bFadedIn = true;
+		GameDelegate.call("RequestPlayerInfo", [], this, "SetLevelProgress");
+		refreshLoadingText();
+		_parent.gotoAndPlay("fadeIn");
+		bFadedIn = true;
 	}
 
-	function FadeOutMenu()
+	function FadeOutMenu(): Void
 	{
-		if (this.bFadedIn) 
-		{
-			this._parent.gotoAndPlay("fadeOut");
-			this.bFadedIn = false;
+		if (bFadedIn) {
+			_parent.gotoAndPlay("fadeOut");
+			bFadedIn = false;
 		}
 	}
 

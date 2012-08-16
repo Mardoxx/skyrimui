@@ -1,68 +1,53 @@
-dynamic class FavoritesCenteredList extends Shared.CenteredScrollingList
+class FavoritesCenteredList extends Shared.CenteredScrollingList
 {
-	var EntriesA;
-	var iNumTopHalfEntries;
-	var iPlatform;
-	var moveSelectionDown;
-	var moveSelectionUp;
+	var EntriesA: Array;
+	var iNumTopHalfEntries: Number;
+	var iPlatform: Number;
 
 	function FavoritesCenteredList()
 	{
 		super();
 	}
 
-	function SetEntryText(aEntryClip, aEntryObject)
+	function SetEntryText(aEntryClip: MovieClip, aEntryObject: Object): Void
 	{
-		var __reg6 = ["None", "Equipped", "LeftEquip", "RightEquip", "LeftAndRightEquip"];
-		if (aEntryObject.text == undefined) 
-		{
+		var equippedStates: Array = ["None", "Equipped", "LeftEquip", "RightEquip", "LeftAndRightEquip"];
+		if (aEntryObject.text == undefined) {
 			aEntryClip.textField.SetText(" ");
-		}
-		else 
-		{
-			if (aEntryObject.hotkey != undefined && aEntryObject.hotkey != -1) 
-			{
+		} else {
+			if (aEntryObject.hotkey != undefined && aEntryObject.hotkey != -1) {
 				AppendHotkeyText(aEntryClip.textField, aEntryObject.hotkey, aEntryObject.text);
-			}
-			else 
-			{
+			} else {
 				aEntryClip.textField.SetText(aEntryObject.text);
 			}
-			var __reg4 = 35;
-			if (aEntryClip.textField.text.length > __reg4) 
-			{
-				aEntryClip.textField.SetText(aEntryClip.textField.text.substr(0, __reg4 - 3) + "...");
+			var maxTextLength: Number = 35;
+			if (aEntryClip.textField.text.length > maxTextLength) {
+				aEntryClip.textField.SetText(aEntryClip.textField.text.substr(0, maxTextLength - 3) + "...");
 			}
 		}
 		aEntryClip.textField.textAutoSize = "shrink";
-		if (aEntryObject == undefined) 
-		{
+		if (aEntryObject == undefined) {
 			aEntryClip.EquipIcon.gotoAndStop("None");
+		} else {
+			aEntryClip.EquipIcon.gotoAndStop(equippedStates[aEntryObject.equipState]);
 		}
-		else 
-		{
-			aEntryClip.EquipIcon.gotoAndStop(__reg6[aEntryObject.equipState]);
-		}
-		if (this.iPlatform == 0) 
-		{
-			aEntryClip._alpha = aEntryObject == this.selectedEntry ? 100 : 60;
+		if (iPlatform == 0) {
+			aEntryClip._alpha = aEntryObject == selectedEntry ? 100 : 60;
 			return;
 		}
-		var __reg5 = 8;
-		if (aEntryClip.clipIndex < this.iNumTopHalfEntries) 
-		{
-			aEntryClip._alpha = 60 - __reg5 * (this.iNumTopHalfEntries - aEntryClip.clipIndex);
+		var alphaMultiplier: Number = 8;
+		if (aEntryClip.clipIndex < iNumTopHalfEntries) {
+			aEntryClip._alpha = 60 - alphaMultiplier * (iNumTopHalfEntries - aEntryClip.clipIndex);
 			return;
 		}
-		if (aEntryClip.clipIndex > this.iNumTopHalfEntries) 
-		{
-			aEntryClip._alpha = 60 - __reg5 * (aEntryClip.clipIndex - this.iNumTopHalfEntries);
+		if (aEntryClip.clipIndex > iNumTopHalfEntries) {
+			aEntryClip._alpha = 60 - alphaMultiplier * (aEntryClip.clipIndex - iNumTopHalfEntries);
 			return;
 		}
 		aEntryClip._alpha = 100;
 	}
 	
-	function AppendHotkeyText(atfText, aiHotkey, astrItemName)
+	function AppendHotkeyText(atfText: TextField, aiHotkey: Number, astrItemName: String): Void
 	{
 		if (aiHotkey >= 0 && aiHotkey <= 7) {
 			atfText.SetText(aiHotkey + 1 + ". " + astrItemName);
@@ -74,33 +59,29 @@ dynamic class FavoritesCenteredList extends Shared.CenteredScrollingList
 
 	function InvalidateData()
 	{
-		this.EntriesA.sort(this.doABCSort);
+		EntriesA.sort(doABCSort);
 		super.InvalidateData();
 	}
 
-	function doABCSort(aObj1, aObj2)
+	function doABCSort(aObj1: Object, aObj2: Object): Number
 	{
-		if (aObj1.text < aObj2.text) 
-		{
+		if (aObj1.text < aObj2.text) {
 			return -1;
 		}
-		if (aObj1.text > aObj2.text) 
-		{
+		if (aObj1.text > aObj2.text) {
 			return 1;
 		}
 		return 0;
 	}
 
-	function onMouseWheel(delta)
+	function onMouseWheel(delta: Number): Void
 	{
-		if (delta == 1) 
-		{
-			this.moveSelectionUp();
+		if (delta == 1) {
+			moveSelectionUp();
 			return;
 		}
-		if (delta == -1) 
-		{
-			this.moveSelectionDown();
+		if (delta == -1) {
+			moveSelectionDown();
 		}
 	}
 

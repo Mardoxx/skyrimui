@@ -1,51 +1,54 @@
+import gfx.controls.Button;
+import gfx.io.GameDelegate;
+
 dynamic class LevelUpMenu extends MovieClip
 {
-	var HealthButton;
-	var MagickaButton;
-	var StaminaButton;
+	var HealthButton: Button;
+	var MagickaButton: Button;
+	var StaminaButton: Button;
 
 	function LevelUpMenu()
 	{
 		super();
-		this.HealthButton = this.HealthButton;
-		this.MagickaButton = this.MagickaButton;
-		this.StaminaButton = this.StaminaButton;
+		HealthButton = HealthButton;
+		MagickaButton = MagickaButton;
+		StaminaButton = StaminaButton;
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
-		this.HealthButton.addEventListener("press", this, "addHealth");
-		this.HealthButton.addEventListener("focusOut", this, "playFocusSound");
-		this.HealthButton.addEventListener("rollOver", this, "playFocusSound");
-		this.MagickaButton.addEventListener("press", this, "addMagicka");
-		this.MagickaButton.addEventListener("focusOut", this, "playFocusSound");
-		this.MagickaButton.addEventListener("rollOver", this, "playFocusSound");
-		this.StaminaButton.addEventListener("press", this, "addStamina");
-		this.StaminaButton.addEventListener("focusOut", this, "playFocusSound");
-		this.StaminaButton.addEventListener("rollOver", this, "playFocusSound");
+		HealthButton.addEventListener("press", this, "addHealth");
+		HealthButton.addEventListener("focusOut", this, "playFocusSound");
+		HealthButton.addEventListener("rollOver", this, "playFocusSound");
+		MagickaButton.addEventListener("press", this, "addMagicka");
+		MagickaButton.addEventListener("focusOut", this, "playFocusSound");
+		MagickaButton.addEventListener("rollOver", this, "playFocusSound");
+		StaminaButton.addEventListener("press", this, "addStamina");
+		StaminaButton.addEventListener("focusOut", this, "playFocusSound");
+		StaminaButton.addEventListener("rollOver", this, "playFocusSound");
 	}
 
-	function addHealth(event)
+	function addHealth(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("addHealth", []);
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
+		GameDelegate.call("addHealth", []);
+		GameDelegate.call("PlaySound", ["UIMenuOK"]);
 	}
 
-	function addMagicka(event)
+	function addMagicka(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("addMagicka", []);
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
+		GameDelegate.call("addMagicka", []);
+		GameDelegate.call("PlaySound", ["UIMenuOK"]);
 	}
 
-	function addStamina(event)
+	function addStamina(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("addStamina", []);
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuOK"]);
+		GameDelegate.call("addStamina", []);
+		GameDelegate.call("PlaySound", ["UIMenuOK"]);
 	}
 
-	function playFocusSound(event)
+	function playFocusSound(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+		GameDelegate.call("PlaySound", ["UIMenuFocus"]);
 	}
 
 }

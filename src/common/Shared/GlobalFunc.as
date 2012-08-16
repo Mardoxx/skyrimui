@@ -61,9 +61,9 @@ class Shared.GlobalFunc
 			this._parent.globalToLocal(minXY);
 			
 			//  (maxXY.x, maxXY.y) _____________ (minXY.x, maxXY.y)
-			//                    |             |
-			//                    |     THE     |
-			//                    |    STAGE    |
+			//					|			 |
+			//					|	 THE	 |
+			//					|	STAGE	|
 			//  (maxXY.x, minXY.y)|_____________|(minXY.x, minXY.y)
 			
 			if (aPosition == "T" || aPosition == "TL" || aPosition == "TR") 

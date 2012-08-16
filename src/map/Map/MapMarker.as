@@ -1,118 +1,104 @@
-dynamic class Map.MapMarker extends gfx.controls.Button
+import gfx.io.GameDelegate;
+
+class Map.MapMarker extends gfx.controls.Button
 {
 	static var TopDepth: Number = 0;
-	static var IconTypes = new Array("EmptyMarker", "CityMarker", "TownMarker", "SettlementMarker", "CaveMarker", "CampMarker", "FortMarker", "NordicRuinMarker", "DwemerMarker", "ShipwreckMarker", "GroveMarker", "LandmarkMarker", "DragonlairMarker", "FarmMarker", "WoodMillMarker", "MineMarker", "ImperialCampMarker", "StormcloakCampMarker", "DoomstoneMarker", "WheatMillMarker", "SmelterMarker", "StableMarker", "ImperialTowerMarker", "ClearingMarker", "PassMarker", "AltarMarker", "RockMarker", "LighthouseMarker", "OrcStrongholdMarker", "GiantCampMarker", "ShackMarker", "NordicTowerMarker", "NordicDwellingMarker", "DocksMarker", "ShrineMarker", "RiftenCastleMarker", "RiftenCapitolMarker", "WindhelmCastleMarker", "WindhelmCapitolMarker", "WhiterunCastleMarker", "WhiterunCapitolMarker", "SolitudeCastleMarker", "SolitudeCapitolMarker", "MarkarthCastleMarker", "MarkarthCapitolMarker", "WinterholdCastleMarker", "WinterholdCapitolMarker", "MorthalCastleMarker", "MorthalCapitolMarker", "FalkreathCastleMarker", "FalkreathCapitolMarker", "DawnstarCastleMarker", "DawnstarCapitolMarker", "", "DoorMarker", "QuestTargetMarker", "QuestTargetDoorMarker", "MultipleQuestTargetMarker", "PlayerSetMarker", "YouAreHereMarker");
+	static var IconTypes: Array = new Array("EmptyMarker", "CityMarker", "TownMarker", "SettlementMarker", "CaveMarker", "CampMarker", "FortMarker", "NordicRuinMarker", "DwemerMarker", "ShipwreckMarker", "GroveMarker", "LandmarkMarker", "DragonlairMarker", "FarmMarker", "WoodMillMarker", "MineMarker", "ImperialCampMarker", "StormcloakCampMarker", "DoomstoneMarker", "WheatMillMarker", "SmelterMarker", "StableMarker", "ImperialTowerMarker", "ClearingMarker", "PassMarker", "AltarMarker", "RockMarker", "LighthouseMarker", "OrcStrongholdMarker", "GiantCampMarker", "ShackMarker", "NordicTowerMarker", "NordicDwellingMarker", "DocksMarker", "ShrineMarker", "RiftenCastleMarker", "RiftenCapitolMarker", "WindhelmCastleMarker", "WindhelmCapitolMarker", "WhiterunCastleMarker", "WhiterunCapitolMarker", "SolitudeCastleMarker", "SolitudeCapitolMarker", "MarkarthCastleMarker", "MarkarthCapitolMarker", "WinterholdCastleMarker", "WinterholdCapitolMarker", "MorthalCastleMarker", "MorthalCapitolMarker", "FalkreathCastleMarker", "FalkreathCapitolMarker", "DawnstarCastleMarker", "DawnstarCapitolMarker", "", "DoorMarker", "QuestTargetMarker", "QuestTargetDoorMarker", "MultipleQuestTargetMarker", "PlayerSetMarker", "YouAreHereMarker");
 	var HitAreaClip;
-	var Index;
-	var TextClip;
-	var _FadingIn;
-	var _FadingOut;
-	var _parent;
-	var _visible;
-	var gotoAndPlay;
-	var hitArea;
-	var onRollOut;
-	var onRollOver;
-	var state;
-	var stateMap;
-	var swapDepths;
-	var textField;
+	var Index: Number;
+	var TextClip: MovieClip;
+	var _FadingIn: Boolean;
+	var _FadingOut: Boolean;
+	var state: String;
+	var stateMap: Array;
+	var textField: TextField;
 
 	function MapMarker()
 	{
 		super();
-		this.hitArea = this.HitAreaClip;
-		this.textField = this.TextClip.MarkerNameField;
-		this.textField.autoSize = "left";
-		this.Index = -1;
-		this.disableFocus = true;
-		this._FadingIn = false;
-		this._FadingOut = false;
-		this.stateMap.release = ["up"];
+		hitArea = HitAreaClip;
+		textField = TextClip.MarkerNameField;
+		textField.autoSize = "left";
+		Index = -1;
+		disableFocus = true;
+		_FadingIn = false;
+		_FadingOut = false;
+		stateMap.release = ["up"];
 	}
 
-	function configUI()
+	function configUI(): Void
 	{
 		super.configUI();
-		this.onRollOver = function ()
+		onRollOver = function ()
 		{
-		}
-		;
-		this.onRollOut = function ()
+		};
+		onRollOut = function ()
 		{
-		}
-		;
+		};
 	}
 
-	function get FadingIn()
+	function get FadingIn(): Boolean
 	{
-		return this._FadingIn;
+		return _FadingIn;
 	}
 
-	function set FadingIn(value)
+	function set FadingIn(value: Boolean): Void
 	{
-		if (value != this._FadingIn) 
-		{
-			this._FadingIn = value;
-			if (this._FadingIn) 
-			{
-				this._visible = true;
-				this.gotoAndPlay("fade_in");
+		if (value != _FadingIn) {
+			_FadingIn = value;
+			if (_FadingIn) {
+				_visible = true;
+				gotoAndPlay("fade_in");
 			}
 		}
 	}
 
-	function get FadingOut()
+	function get FadingOut(): Boolean
 	{
-		return this._FadingOut;
+		return _FadingOut;
 	}
 
-	function set FadingOut(value)
+	function set FadingOut(value: Boolean): Void
 	{
-		if (value != this._FadingOut) 
-		{
-			this._FadingOut = value;
-			if (this._FadingOut) 
-			{
-				this.gotoAndPlay("fade_out");
+		if (value != _FadingOut) {
+			_FadingOut = value;
+			if (_FadingOut) {
+				gotoAndPlay("fade_out");
 			}
 		}
 	}
 
-	function setState(state)
+	function setState(state: String): Void
 	{
-		if (!this._FadingOut && !this._FadingIn) 
-		{
+		if (!_FadingOut && !_FadingIn) {
 			super.setState(state);
 		}
 	}
 
-	function MarkerRollOver()
+	function MarkerRollOver(): Boolean
 	{
-		var __reg2 = false;
-		this.setState("over");
-		__reg2 = this.state == "over";
-		if (__reg2) 
-		{
-			var __reg3 = this._parent.getInstanceAtDepth(Map.MapMarker.TopDepth);
-			if (undefined != __reg3) 
-			{
-				__reg3.swapDepths(Map.MapMarker(__reg3).Index);
+		var overState: Boolean = false;
+		setState("over");
+		overState = state == "over";
+		if (overState) {
+			var topInstance: MovieClip = _parent.getInstanceAtDepth(Map.MapMarker.TopDepth);
+			if (undefined != topInstance) {
+				topInstance.swapDepths(Map.MapMarker(topInstance).Index);
 			}
-			this.swapDepths(Map.MapMarker.TopDepth);
-			gfx.io.GameDelegate.call("PlaySound", ["UIMapRollover"]);
+			swapDepths(Map.MapMarker.TopDepth);
+			GameDelegate.call("PlaySound", ["UIMapRollover"]);
 		}
-		return __reg2;
+		return overState;
 	}
 
-	function MarkerRollOut()
+	function MarkerRollOut(): Void
 	{
-		this.setState("out");
+		setState("out");
 	}
 
-	function MarkerClick()
+	function MarkerClick(): Void
 	{
-		gfx.io.GameDelegate.call("MarkerClick", [this.Index]);
+		GameDelegate.call("MarkerClick", [Index]);
 	}
 
 }

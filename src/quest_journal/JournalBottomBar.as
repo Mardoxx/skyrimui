@@ -35,7 +35,7 @@ class JournalBottomBar extends MovieClip
 	{
 		LevelMeterRect._visible = aiTab == 1 || aiTab == 2;
 		Button1_mc._visible = Button2_mc._visible = aiTab == 0;
-        switch (aiTab) {
+		switch (aiTab) {
 			case 0:
 				Button1_mc.label = "$Toggle Active";
 				Button1_mc.SetArt({PCArt: "Enter", XBoxArt: "360_A", PS3Art: "PS3_A"});

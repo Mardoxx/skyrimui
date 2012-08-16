@@ -1,13 +1,14 @@
-dynamic class InvertedInventoryLists extends InventoryLists
-{
-	var strHideItemsCode;
-	var strShowItemsCode;
+import gfx.ui.NavigationCode;
 
-	function InvertedInventoryLists()
-	{
+class InvertedInventoryLists extends InventoryLists
+{
+	var strHideItemsCode: String;
+	var strShowItemsCode: String;
+
+	function InvertedInventoryLists() {
 		super();
-		this.strHideItemsCode = gfx.ui.NavigationCode.RIGHT;
-		this.strShowItemsCode = gfx.ui.NavigationCode.LEFT;
+		strHideItemsCode = NavigationCode.RIGHT;
+		strShowItemsCode = NavigationCode.LEFT;
 	}
 
 }

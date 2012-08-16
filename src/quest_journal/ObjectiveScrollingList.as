@@ -1,7 +1,5 @@
 class ObjectiveScrollingList extends Shared.BSScrollingList
 {
-	var SetEntryText: Function;
-
 	function ObjectiveScrollingList()
 	{
 		super();

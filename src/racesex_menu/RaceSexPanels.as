@@ -1,96 +1,98 @@
-dynamic class RaceSexPanels extends MovieClip
+import gfx.io.GameDelegate;
+import gfx.events.EventDispatcher;
+import gfx.managers.FocusHandler;
+import gfx.ui.InputDetails;
+import gfx.ui.NavigationCode;
+import Shared.GlobalFunc;
+import Components.CrossPlatformButtons;
+
+class RaceSexPanels extends MovieClip
 {
 	static var RACE_CATEGORY: Number = 0;
 	static var BODY_CATEGORY: Number = 1;
 	static var HEAD_CATEGORY: Number = 2;
 	static var UpdateInterval: Number = -1;
-	var BackButton;
-	var DoneButton;
-	var Mode;
-	var NAME_ENTRY;
-	var NameEntryInstance;
-	var PANEL_ONE;
-	var PANEL_TWO_NARROW;
-	var PANEL_TWO_WIDE;
-	var PanelTwoNarrowInstance;
-	var PanelTwoWideInstance;
-	var PlayerName;
-	var PlayerRace;
-	var RaceDescriptionInstance;
-	var _CategoriesList;
-	var _SubList1;
-	var _SubList2;
-	var _TextEntryField;
-	var _alpha;
-	var _currentframe;
-	var _parent;
-	var _x;
-	var bLimitedMenu;
-	var bShowTextEntry;
-	var gotoAndPlay;
-	var gotoAndStop;
-	var iPlatform;
-	var onEnterFrame;
+	
+	var BackButton: CrossPlatformButtons;
+	var DoneButton: CrossPlatformButtons;
+	var Mode: Number;
+	var NAME_ENTRY: Number;
+	var NameEntryInstance: MovieClip;
+	var PANEL_ONE: Number;
+	var PANEL_TWO_NARROW: Number;
+	var PANEL_TWO_WIDE: Number;
+	var PanelTwoNarrowInstance: MovieClip;
+	var PanelTwoWideInstance: MovieClip;
+	var PlayerName: TextField;
+	var PlayerRace: TextField;
+	var RaceDescriptionInstance: MovieClip;
+	var _CategoriesList: MovieClip;
+	var _SubList1: MovieClip;
+	var _SubList2: MovieClip;
+	var _TextEntryField: MovieClip;
+	var bLimitedMenu: Boolean;
+	var bShowTextEntry: Boolean;
+	var iPlatform: Number;
 
 	function RaceSexPanels()
 	{
 		super();
-		Shared.GlobalFunc.MaintainTextFormat();
-		Shared.GlobalFunc.SetLockFunction();
-		this._CategoriesList = this._parent.CagetoryLockBaseInstance.CategoryInstance.List_mc;
-		this._SubList1 = this.PanelTwoNarrowInstance.List_mc;
-		this._SubList2 = this.PanelTwoWideInstance.List_mc;
-		this._TextEntryField = this.NameEntryInstance;
-		this.BackButton = _root.RaceSexMenuBaseInstance.BottomBarInstance.ButtonsInstance.BackInstance;
-		this.BackButton._alpha = 0;
-		this.DoneButton = _root.RaceSexMenuBaseInstance.BottomBarInstance.ButtonsInstance.XButtonInstance;
-		this.PlayerName = _root.RaceSexMenuBaseInstance.BottomBarInstance.PlayerInfo_mc.PlayerName;
-		this.PlayerName.textAutoSize = "shrink";
-		this.PlayerRace = _root.RaceSexMenuBaseInstance.BottomBarInstance.PlayerInfo_mc.PlayerRace;
-		this._TextEntryField._alpha = 0;
-		this._TextEntryField._x = -2500;
-		gfx.io.GameDelegate.addCallBack("SetCategoriesList", this, "SetCategoriesList");
-		gfx.io.GameDelegate.addCallBack("ShowTextEntry", this, "ShowTextEntry");
-		gfx.io.GameDelegate.addCallBack("SetNameText", this, "SetNameText");
-		gfx.io.GameDelegate.addCallBack("SetRaceText", this, "SetRaceText");
-		gfx.io.GameDelegate.addCallBack("SetRaceList", this, "SetRaceList");
-		gfx.io.GameDelegate.addCallBack("SetOptionSliders", this, "SetSliders");
-		gfx.io.GameDelegate.addCallBack("ShowTextEntryField", this, "ShowTextEntryField");
-		gfx.io.GameDelegate.addCallBack("moveCategoriesUp", this, "moveCategoriesUp");
-		gfx.io.GameDelegate.addCallBack("HideLoadingIcon", this, "HideLoadingIcon");
-		gfx.io.GameDelegate.addCallBack("FadeOut", this, "FadeOut");
-		gfx.events.EventDispatcher.initialize(this);
-		gfx.managers.FocusHandler.instance.setFocus(this._CategoriesList, 0);
-		this.NAME_ENTRY = 0;
-		this.gotoAndStop("1st stop on position");
-		this.PANEL_ONE = this._currentframe;
-		this.gotoAndStop("NarrowPanelIn");
-		this.PANEL_TWO_NARROW = this._currentframe;
-		this.gotoAndStop("WidePanelIn");
-		this.PANEL_TWO_WIDE = this._currentframe;
-		this.Mode = this.PANEL_TWO_NARROW;
+		GlobalFunc.MaintainTextFormat();
+		GlobalFunc.SetLockFunction();
+		_CategoriesList = _parent.CagetoryLockBaseInstance.CategoryInstance.List_mc;
+		_SubList1 = PanelTwoNarrowInstance.List_mc;
+		_SubList2 = PanelTwoWideInstance.List_mc;
+		_TextEntryField = NameEntryInstance;
+		BackButton = _root.RaceSexMenuBaseInstance.BottomBarInstance.ButtonsInstance.BackInstance;
+		BackButton._alpha = 0;
+		DoneButton = _root.RaceSexMenuBaseInstance.BottomBarInstance.ButtonsInstance.XButtonInstance;
+		PlayerName = _root.RaceSexMenuBaseInstance.BottomBarInstance.PlayerInfo_mc.PlayerName;
+		PlayerName.textAutoSize = "shrink";
+		PlayerRace = _root.RaceSexMenuBaseInstance.BottomBarInstance.PlayerInfo_mc.PlayerRace;
+		_TextEntryField._alpha = 0;
+		_TextEntryField._x = -2500;
+		GameDelegate.addCallBack("SetCategoriesList", this, "SetCategoriesList");
+		GameDelegate.addCallBack("ShowTextEntry", this, "ShowTextEntry");
+		GameDelegate.addCallBack("SetNameText", this, "SetNameText");
+		GameDelegate.addCallBack("SetRaceText", this, "SetRaceText");
+		GameDelegate.addCallBack("SetRaceList", this, "SetRaceList");
+		GameDelegate.addCallBack("SetOptionSliders", this, "SetSliders");
+		GameDelegate.addCallBack("ShowTextEntryField", this, "ShowTextEntryField");
+		GameDelegate.addCallBack("moveCategoriesUp", this, "moveCategoriesUp");
+		GameDelegate.addCallBack("HideLoadingIcon", this, "HideLoadingIcon");
+		GameDelegate.addCallBack("FadeOut", this, "FadeOut");
+		EventDispatcher.initialize(this);
+		FocusHandler.instance.setFocus(_CategoriesList, 0);
+		NAME_ENTRY = 0;
+		gotoAndStop("1st stop on position");
+		PANEL_ONE = _currentframe;
+		gotoAndStop("NarrowPanelIn");
+		PANEL_TWO_NARROW = _currentframe;
+		gotoAndStop("WidePanelIn");
+		PANEL_TWO_WIDE = _currentframe;
+		Mode = PANEL_TWO_NARROW;
 		_root.RaceSexMenuBaseInstance.LoadingIconInstance._visible = false;
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
 		_root.RaceSexMenuBaseInstance.RaceSexPanelsInstance.Lock("L");
 		_root.RaceSexMenuBaseInstance.BottomBarInstance.Lock("B");
 		_root.RaceSexMenuBaseInstance.BottomBarInstance.ButtonsInstance.Lock("L");
 		_root.RaceSexMenuBaseInstance.BottomBarInstance.PlayerInfo_mc.Lock("R");
 		_root.RaceSexMenuBaseInstance.CagetoryLockBaseInstance.Lock("T");
-		this._TextEntryField.SetupButtons();
-		this._TextEntryField.TextInputInstance.maxChars = 26;
+		_TextEntryField.SetupButtons();
+		_TextEntryField.TextInputInstance.maxChars = 26;
 	}
 
-	static function CallCode(callBack, sliderValue, sliderID)
+	static function CallCode(callBack: String, sliderValue: Number, sliderID: Number): Void
 	{
 		clearInterval(RaceSexPanels.UpdateInterval);
 		RaceSexPanels.UpdateInterval = -1;
-		gfx.io.GameDelegate.call(callBack, [sliderValue, sliderID]);
+		GameDelegate.call(callBack, [sliderValue, sliderID]);
 	}
 
-	static function PrepForCallCode(callBack, sliderValue, sliderID)
+	static function PrepForCallCode(callBack: String, sliderValue: Number, sliderID: Number): Void
 	{
 		clearInterval(RaceSexPanels.UpdateInterval);
 		RaceSexPanels.UpdateInterval = -1;
@@ -98,15 +100,15 @@ dynamic class RaceSexPanels extends MovieClip
 		RaceSexPanels.UpdateInterval = setInterval(RaceSexPanels.CallCode, 30, callBack, sliderValue, sliderID);
 	}
 
-	function HideLoadingIcon()
+	function HideLoadingIcon(): Void
 	{
 		_root.RaceSexMenuBaseInstance.LoadingIconInstance._visible = false;
 	}
 
-	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
-		this.iPlatform = aiPlatform;
-		this._TextEntryField.SetPlatform(aiPlatform, abPS3Switch);
+		iPlatform = aiPlatform;
+		_TextEntryField.SetPlatform(aiPlatform, abPS3Switch);
 		_root.RaceSexMenuBaseInstance.BottomBarInstance.ButtonsInstance.XButtonInstance.SetPlatform(aiPlatform, abPS3Switch);
 		_root.RaceSexMenuBaseInstance.BottomBarInstance.ButtonsInstance.BackInstance.SetPlatform(aiPlatform, abPS3Switch);
 		_root.RaceSexMenuBaseInstance.CagetoryLockBaseInstance.CategoryInstance.ButtonHintRightInstance.SetPlatform(aiPlatform, abPS3Switch);
@@ -115,386 +117,340 @@ dynamic class RaceSexPanels extends MovieClip
 		_root.RaceSexMenuBaseInstance.CagetoryLockBaseInstance.CategoryInstance.ButtonHintLeftInstance.label = "";
 	}
 
-	function ShowTextEntry(abShowTextEntry)
+	function ShowTextEntry(abShowTextEntry: Boolean): Void
 	{
-		this.bShowTextEntry = abShowTextEntry;
+		bShowTextEntry = abShowTextEntry;
 	}
 
-	function SetNameText(astrPlayerName)
+	function SetNameText(astrPlayerName: String): Void
 	{
-		this.PlayerName.SetText(astrPlayerName);
+		PlayerName.SetText(astrPlayerName);
 	}
 
-	function SetRaceText(astrPlayerRace)
+	function SetRaceText(astrPlayerRace: String): Void
 	{
-		this.PlayerRace.SetText(astrPlayerRace);
+		PlayerRace.SetText(astrPlayerRace);
 	}
 
-	function onLoad()
+	function onLoad(): Void
 	{
-		this._CategoriesList.addEventListener("listMovedUp", this, "onFiltersListMoveUp");
-		this._CategoriesList.addEventListener("listMovedDown", this, "onFiltersListMoveDown");
-		this._CategoriesList.addEventListener("itemPress", this, "onItemSelect");
-		this._parent.LeftClickInstance.addEventListener("click", this, "moveCategoriesDown");
-		this._parent.RightClickInstance.addEventListener("click", this, "moveCategoriesUp");
-		this._SubList1.addEventListener("listMovedUp", this, "onNarrowListMoveUp");
-		this._SubList1.addEventListener("listMovedDown", this, "onNarrowListMoveDown");
-		this._SubList1.addEventListener("itemPress", this, "onRaceSelect");
-		this._SubList2.addEventListener("listMovedUp", this, "onWideListMoveUp");
-		this._SubList2.addEventListener("listMovedDown", this, "onWideListMoveDown");
-		this._TextEntryField.addEventListener("nameChange", this, "onNameChange");
-		this.DoneButton.addEventListener("click", this, "onDoneClicked");
+		_CategoriesList.addEventListener("listMovedUp", this, "onFiltersListMoveUp");
+		_CategoriesList.addEventListener("listMovedDown", this, "onFiltersListMoveDown");
+		_CategoriesList.addEventListener("itemPress", this, "onItemSelect");
+		_parent.LeftClickInstance.addEventListener("click", this, "moveCategoriesDown");
+		_parent.RightClickInstance.addEventListener("click", this, "moveCategoriesUp");
+		_SubList1.addEventListener("listMovedUp", this, "onNarrowListMoveUp");
+		_SubList1.addEventListener("listMovedDown", this, "onNarrowListMoveDown");
+		_SubList1.addEventListener("itemPress", this, "onRaceSelect");
+		_SubList2.addEventListener("listMovedUp", this, "onWideListMoveUp");
+		_SubList2.addEventListener("listMovedDown", this, "onWideListMoveDown");
+		_TextEntryField.addEventListener("nameChange", this, "onNameChange");
+		DoneButton.addEventListener("click", this, "onDoneClicked");
 	}
 
-	function onDoneClicked()
+	function onDoneClicked(): Void
 	{
-		gfx.io.GameDelegate.call("ConfirmDone", []);
+		GameDelegate.call("ConfirmDone", []);
 	}
 
-	function SetCategoriesList()
+	function SetCategoriesList(): Void
 	{
-		var __reg9 = 0;
-		var __reg10 = 1;
-		var __reg8 = 2;
-		this._CategoriesList.entryList.splice(0, this._CategoriesList.entryList.length);
-		var __reg3 = 0;
-		while (__reg3 < arguments.length) 
-		{
-			var __reg4 = {text: arguments[__reg3 + __reg9], flag: arguments[__reg3 + __reg10], savedItemIndex: -1};
-			this._CategoriesList.entryList.push(__reg4);
-			__reg3 = __reg3 + __reg8;
+		var CAT_TEXT: Number = 0;
+		var CAT_FLAG: Number = 1;
+		var CAT_STRIDE: Number = 2;
+		_CategoriesList.entryList.splice(0, _CategoriesList.entryList.length);
+		
+		for (var i: Number = 0; i < arguments.length; i++) {
+			var entryObject: Object = {text: arguments[i + CAT_TEXT], flag: arguments[i + CAT_FLAG], savedItemIndex: -1};
+			_CategoriesList.entryList.push(entryObject);
+			i = i + CAT_STRIDE;
 		}
-		if (this.bLimitedMenu) 
-		{
-			this._CategoriesList.selectedIndex = RaceSexPanels.BODY_CATEGORY;
+		
+		if (bLimitedMenu) {
+			_CategoriesList.selectedIndex = RaceSexPanels.BODY_CATEGORY;
 		}
-		this._CategoriesList.UpdateList();
+		_CategoriesList.UpdateList();
 	}
 
-	function SetRaceList()
+	function SetRaceList(): Void
 	{
-		var __reg5 = 0;
-		var __reg6 = 1;
-		var __reg12 = 2;
-		var __reg7 = 3;
-		this._SubList1.entryList.splice(0, this._SubList1.entryList.length);
-		var __reg3 = 0;
-		while (__reg3 < arguments.length) 
-		{
-			var __reg4 = {text: arguments[__reg3 + __reg5], flag: this.bLimitedMenu ? RaceSexPanels.BODY_CATEGORY : RaceSexPanels.RACE_CATEGORY, raceDescription: arguments[__reg3 + __reg6].length <= 0 ? "No race description for " + arguments[__reg3 + __reg5] : arguments[__reg3 + __reg6], equipState: arguments[__reg3 + __reg12]};
-			if (__reg4.equipState > 0) 
-			{
-				this._CategoriesList.entryList[__reg4.flag].savedItemIndex = __reg3 / __reg7;
-				this.SetRaceText(__reg4.text);
+		var RACE_NAME: Number = 0;
+		var RACE_DESCRIPTION: Number = 1;
+		var RACE_EQUIPSTATE: Number = 2;
+		var RACE_STRIDE: Number = 3;
+		_SubList1.entryList.splice(0, _SubList1.entryList.length);
+		
+		for (var i: Number = 0; i < arguments.length; i++) {
+			var entryObject: Object = {text: arguments[i + RACE_NAME], flag: bLimitedMenu ? RaceSexPanels.BODY_CATEGORY : RaceSexPanels.RACE_CATEGORY, raceDescription: arguments[i + RACE_DESCRIPTION].length <= 0 ? "No race description for " + arguments[i + RACE_NAME] : arguments[i + RACE_DESCRIPTION], equipState: arguments[i + RACE_EQUIPSTATE]};
+			if (entryObject.equipState > 0) {
+				_CategoriesList.entryList[entryObject.flag].savedItemIndex = i / RACE_STRIDE;
+				SetRaceText(entryObject.text);
 			}
-			this._SubList1.entryList.push(__reg4);
-			__reg3 = __reg3 + __reg7;
+			_SubList1.entryList.push(entryObject);
+			i = i + RACE_STRIDE;
 		}
-		this._SubList1.UpdateList();
-		if (this.bLimitedMenu) 
-		{
-			this._CategoriesList.selectedIndex = RaceSexPanels.BODY_CATEGORY;
+		
+		_SubList1.UpdateList();
+		if (bLimitedMenu) {
+			_CategoriesList.selectedIndex = RaceSexPanels.BODY_CATEGORY;
+		} else {
+			_CategoriesList.selectedIndex = RaceSexPanels.RACE_CATEGORY;
 		}
-		else 
-		{
-			this._CategoriesList.selectedIndex = RaceSexPanels.RACE_CATEGORY;
-		}
-		this.ShowItemsList();
+		ShowItemsList();
 	}
 
-	function SetSliders()
+	function SetSliders(): Void
 	{
-		var __reg13 = 0;
-		var __reg21 = 1;
-		var __reg14 = 2;
-		var __reg16 = 3;
-		var __reg17 = 4;
-		var __reg18 = 5;
-		var __reg19 = 6;
-		var __reg20 = 7;
-		var __reg15 = 8;
-		this._SubList2.entryList.splice(0, this._SubList2.entryList.length);
-		var __reg3 = 0;
-		while (__reg3 < arguments.length) 
-		{
-			var __reg4 = {text: arguments[__reg3 + __reg13], filterFlag: arguments[__reg3 + __reg21], callbackName: arguments[__reg3 + __reg14], sliderMin: arguments[__reg3 + __reg16], sliderMax: arguments[__reg3 + __reg17], sliderID: arguments[__reg3 + __reg20], position: arguments[__reg3 + __reg18], interval: arguments[__reg3 + __reg19]};
-			this._SubList2.entryList.push(__reg4);
-			__reg3 = __reg3 + __reg15;
+		var SLIDER_NAME = 0;
+		var SLIDER_FILTERFLAG = 1;
+		var SLIDER_CALLBACKNAME = 2;
+		var SLIDER_MIN = 3;
+		var SLIDER_MAX = 4;
+		var SLIDER_POSITION = 5;
+		var SLIDER_INTERVAL = 6;
+		var SLIDER_ID = 7;
+		var SLIDER_STRIDE = 8;
+		
+		_SubList2.entryList.splice(0, _SubList2.entryList.length);
+		
+		for (var i: Number = 0; i < arguments.length; i++) {
+			var entryObject: Object = {text: arguments[i + SLIDER_NAME], filterFlag: arguments[i + SLIDER_FILTERFLAG], callbackName: arguments[i + SLIDER_CALLBACKNAME], sliderMin: arguments[i + SLIDER_MIN], sliderMax: arguments[i + SLIDER_MAX], sliderID: arguments[i + SLIDER_ID], position: arguments[i + SLIDER_POSITION], interval: arguments[i + SLIDER_INTERVAL]};
+			_SubList2.entryList.push(entryObject);
+			i = i + SLIDER_STRIDE;
 		}
-		this._SubList2.UpdateList();
+		_SubList2.UpdateList();
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
-		var __reg3 = false;
-		if (Shared.GlobalFunc.IsKeyPressed(details)) 
-		{
-			if (details.navEquivalent == gfx.ui.NavigationCode.ENTER && this.Mode == this.NAME_ENTRY) 
-			{
-				this._TextEntryField.onAccept();
-			}
-			else if (details.navEquivalent == gfx.ui.NavigationCode.TAB && this.Mode == this.NAME_ENTRY) 
-			{
-				this._TextEntryField.onCancel();
-				gfx.io.GameDelegate.call("ChangeName", []);
-				__reg3 = true;
-				if (this._CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY) 
-				{
-					gfx.managers.FocusHandler.instance.setFocus(this._SubList1, 0);
+		var handledInput: Boolean = false;
+		if (GlobalFunc.IsKeyPressed(details)) {
+			if (details.navEquivalent == NavigationCode.ENTER && Mode == NAME_ENTRY) {
+				_TextEntryField.onAccept();
+			} else if (details.navEquivalent == NavigationCode.TAB && Mode == NAME_ENTRY) {
+				_TextEntryField.onCancel();
+				GameDelegate.call("ChangeName", []);
+				handledInput = true;
+				if (_CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY) {
+					FocusHandler.instance.setFocus(_SubList1, 0);
+				} else {
+					FocusHandler.instance.setFocus(_SubList2, 0);
 				}
-				else 
-				{
-					gfx.managers.FocusHandler.instance.setFocus(this._SubList2, 0);
-				}
-			}
-			else if (this.iPlatform != 0) 
-			{
-				if (details.navEquivalent == gfx.ui.NavigationCode.GAMEPAD_R2 && RaceSexPanels.UpdateInterval == -1) 
-				{
-					this.moveCategoriesUp();
-				}
-				else if (details.navEquivalent == gfx.ui.NavigationCode.GAMEPAD_L2 && RaceSexPanels.UpdateInterval == -1) 
-				{
-					this.moveCategoriesDown();
+			} else if (iPlatform != 0) {
+				if (details.navEquivalent == NavigationCode.GAMEPAD_R2 && RaceSexPanels.UpdateInterval == -1) {
+					moveCategoriesUp();
+				} else if (details.navEquivalent == NavigationCode.GAMEPAD_L2 && RaceSexPanels.UpdateInterval == -1) {
+					moveCategoriesDown();
 				}
 			}
 		}
-		if (!__reg3 && (RaceSexPanels.UpdateInterval == -1 || this._CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY)) 
-		{
+		if (!handledInput && (RaceSexPanels.UpdateInterval == -1 || _CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY)) {
 			pathToFocus[0].handleInput(details, pathToFocus.slice(1));
 		}
 		return true;
 	}
 
-	function moveCategoriesUp()
+	function moveCategoriesUp(): Void
 	{
-		var __reg0 = this._CategoriesList.selectedIndex;
-		if (__reg0 === RaceSexPanels.RACE_CATEGORY) 
-		{
-			this._CategoriesList.selectedEntry.savedItemIndex = this._SubList1.selectedIndex;
+		switch (_CategoriesList.selectedIndex) {
+			case RaceSexPanels.RACE_CATEGORY:
+				_CategoriesList.selectedEntry.savedItemIndex = _SubList1.selectedIndex;
+				break;
+			default:
+				_CategoriesList.selectedEntry.savedItemIndex = _SubList2.selectedIndex;
 		}
-		else 
-		{
-			this._CategoriesList.selectedEntry.savedItemIndex = this._SubList2.selectedIndex;
-		}
-		this._CategoriesList.moveListUp();
+		
+		_CategoriesList.moveListUp();
 	}
 
-	function moveCategoriesDown()
+	function moveCategoriesDown(): Void
 	{
-		var __reg0 = this._CategoriesList.selectedIndex;
-		if (__reg0 === RaceSexPanels.RACE_CATEGORY) 
-		{
-			this._CategoriesList.selectedEntry.savedItemIndex = this._SubList1.selectedIndex;
+		switch (_CategoriesList.selectedIndex) {
+			case RaceSexPanels.RACE_CATEGORY:
+				_CategoriesList.selectedEntry.savedItemIndex = _SubList1.selectedIndex;
+				break;
+			default:
+				_CategoriesList.selectedEntry.savedItemIndex = _SubList2.selectedIndex;
 		}
-		else 
-		{
-			this._CategoriesList.selectedEntry.savedItemIndex = this._SubList2.selectedIndex;
-		}
-		 if (this.bLimitedMenu != true || this._CategoriesList.selectedIndex > RaceSexPanels.BODY_CATEGORY) 
-		{
-			this._CategoriesList.moveListDown();
+		
+		if (bLimitedMenu != true || _CategoriesList.selectedIndex > RaceSexPanels.BODY_CATEGORY) {
+			_CategoriesList.moveListDown();
 		}
 	}
 
-	function onFiltersListMoveUp()
+	function onFiltersListMoveUp(): Void
 	{
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
-		this._CategoriesList._parent.gotoAndPlay("moveLeft");
-		if (this._CategoriesList.selectedIndex == RaceSexPanels.HEAD_CATEGORY) 
+		GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+		_CategoriesList._parent.gotoAndPlay("moveLeft");
+		if (_CategoriesList.selectedIndex == RaceSexPanels.HEAD_CATEGORY) 
 		{
-			gfx.io.GameDelegate.call("ZoomPC", [true]);
+			GameDelegate.call("ZoomPC", [true]);
 		}
-		else if (this._CategoriesList.selectedIndex == RaceSexPanels.BODY_CATEGORY) 
+		else if (_CategoriesList.selectedIndex == RaceSexPanels.BODY_CATEGORY) 
 		{
-			gfx.io.GameDelegate.call("ZoomPC", [false]);
+			GameDelegate.call("ZoomPC", [false]);
 		}
-		this.ShowItemsList();
+		ShowItemsList();
 	}
 
-	function onFiltersListMoveDown(event)
+	function onFiltersListMoveDown(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
-		this._CategoriesList._parent.gotoAndPlay("moveRight");
-		if (this._CategoriesList.selectedIndex == RaceSexPanels.BODY_CATEGORY) 
-		{
-			gfx.io.GameDelegate.call("ZoomPC", [false]);
+		GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+		_CategoriesList._parent.gotoAndPlay("moveRight");
+		if (_CategoriesList.selectedIndex == RaceSexPanels.BODY_CATEGORY) {
+			GameDelegate.call("ZoomPC", [false]);
+		} else if (_CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY) {
+			GameDelegate.call("ZoomPC", [true]);
 		}
-		else if (this._CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY) 
-		{
-			gfx.io.GameDelegate.call("ZoomPC", [true]);
-		}
-		this.ShowItemsList();
+		ShowItemsList();
 	}
 
-	function ShowTextEntryField()
+	function ShowTextEntryField(): Void
 	{
-		if (this.bShowTextEntry) 
-		{
-			this._TextEntryField.TextInputInstance.text = "";
-			this._TextEntryField.TextInputInstance.focused = true;
-			this.FadeTextEntry(true);
-			gfx.io.GameDelegate.call("SetAllowTextInput", []);
+		if (bShowTextEntry) {
+			_TextEntryField.TextInputInstance.text = "";
+			_TextEntryField.TextInputInstance.focused = true;
+			FadeTextEntry(true);
+			GameDelegate.call("SetAllowTextInput", []);
 			return;
 		}
-		gfx.io.GameDelegate.call("ShowVirtualKeyboard", []);
+		GameDelegate.call("ShowVirtualKeyboard", []);
 	}
 
-	function onItemSelect(event)
+	function onItemSelect(event: Object): Void
 	{
-		if (this._currentframe == this.PANEL_ONE) 
-		{
-			this.ShowItemsList();
+		if (_currentframe == PANEL_ONE) {
+			ShowItemsList();
 		}
 	}
 
-	function onNarrowListMoveUp()
+	function onNarrowListMoveUp(): Void
 	{
-		if (this._CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY) 
-		{
-			gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
-			this._SubList1._parent.gotoAndPlay("moveUp");
-			this.RaceDescriptionInstance.RaceTextInstance.SetText(this._SubList1.entryList[this._SubList1.selectedIndex].raceDescription);
-			if (RaceSexPanels.UpdateInterval >= 0) 
-			{
+		if (_CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY) {
+			GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+			_SubList1._parent.gotoAndPlay("moveUp");
+			RaceDescriptionInstance.RaceTextInstance.SetText(_SubList1.entryList[_SubList1.selectedIndex].raceDescription);
+			if (RaceSexPanels.UpdateInterval >= 0) {
 				clearInterval(RaceSexPanels.UpdateInterval);
 				RaceSexPanels.UpdateInterval = -1;
 				_root.RaceSexMenuBaseInstance.LoadingIconInstance._visible = false;
 			}
-			RaceSexPanels.UpdateInterval = setInterval(RaceSexPanels.PrepForCallCode, 600, "ChangeRace", this._SubList1.selectedIndex, this._SubList1.entryList[this._SubList1.selectedIndex].sliderID);
+			RaceSexPanels.UpdateInterval = setInterval(RaceSexPanels.PrepForCallCode, 600, "ChangeRace", _SubList1.selectedIndex, _SubList1.entryList[_SubList1.selectedIndex].sliderID);
 		}
 	}
 
-	function onNarrowListMoveDown(event)
+	function onNarrowListMoveDown(event: Object): Void
 	{
-		if (this._CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY) 
-		{
-			gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
-			this._SubList1._parent.gotoAndPlay("moveDown");
-			this.RaceDescriptionInstance.RaceTextInstance.SetText(this._SubList1.entryList[this._SubList1.selectedIndex].raceDescription);
-			if (RaceSexPanels.UpdateInterval >= 0) 
-			{
+		if (_CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY) {
+			GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+			_SubList1._parent.gotoAndPlay("moveDown");
+			RaceDescriptionInstance.RaceTextInstance.SetText(_SubList1.entryList[_SubList1.selectedIndex].raceDescription);
+			if (RaceSexPanels.UpdateInterval >= 0) {
 				clearInterval(RaceSexPanels.UpdateInterval);
 				RaceSexPanels.UpdateInterval = -1;
 				_root.RaceSexMenuBaseInstance.LoadingIconInstance._visible = false;
 			}
-			RaceSexPanels.UpdateInterval = setInterval(RaceSexPanels.PrepForCallCode, 600, "ChangeRace", this._SubList1.selectedIndex, this._SubList1.entryList[this._SubList1.selectedIndex].sliderID);
+			RaceSexPanels.UpdateInterval = setInterval(RaceSexPanels.PrepForCallCode, 600, "ChangeRace", _SubList1.selectedIndex, _SubList1.entryList[_SubList1.selectedIndex].sliderID);
 		}
 	}
 
-	function onWideListMoveUp()
+	function onWideListMoveUp(): Void
 	{
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
-		if (RaceSexPanels.UpdateInterval >= 0) 
-		{
-			this._SubList2._parent.gotoAndPlay("moveUp");
+		GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+		if (RaceSexPanels.UpdateInterval >= 0) {
+			_SubList2._parent.gotoAndPlay("moveUp");
 		}
 	}
 
-	function onWideListMoveDown(event)
+	function onWideListMoveDown(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
-		if (RaceSexPanels.UpdateInterval >= 0) 
-		{
-			this._SubList2._parent.gotoAndPlay("moveDown");
+		GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+		if (RaceSexPanels.UpdateInterval >= 0) {
+			_SubList2._parent.gotoAndPlay("moveDown");
 		}
 	}
 
-	function onNameChange(event)
+	function onNameChange(event: Object): Void
 	{
-		if (event.nameChanged == true) 
-		{
-			gfx.io.GameDelegate.call("ChangeName", [this._TextEntryField.TextInputInstance.text]);
+		if (event.nameChanged == true) {
+			GameDelegate.call("ChangeName", [_TextEntryField.TextInputInstance.text]);
 		}
-		if (this._CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY) 
-		{
-			gfx.managers.FocusHandler.instance.setFocus(this._SubList1, 0);
+		if (_CategoriesList.selectedIndex == RaceSexPanels.RACE_CATEGORY) {
+			FocusHandler.instance.setFocus(_SubList1, 0);
+		} else {
+			FocusHandler.instance.setFocus(_SubList2, 0);
 		}
-		else 
-		{
-			gfx.managers.FocusHandler.instance.setFocus(this._SubList2, 0);
-		}
-		this.FadeTextEntry(false);
+		FadeTextEntry(false);
 	}
 
-	function FadeTextEntry(bIn)
+	function FadeTextEntry(bIn: Boolean): Void
 	{
-		this.Mode = bIn ? this.NAME_ENTRY : this.PANEL_ONE;
-		if (bIn) 
-		{
-			this._TextEntryField._x = 500;
+		Mode = bIn ? NAME_ENTRY : PANEL_ONE;
+		if (bIn) {
+			_TextEntryField._x = 500;
 		}
-		this._TextEntryField.onEnterFrame = function ()
+		_TextEntryField.onEnterFrame = function ()
 		{
-			this._alpha = this._alpha + (bIn ? 10 : -10);
-			if (bIn ? this._alpha >= 100 : this._alpha <= 0) 
-			{
-				if (!bIn) 
-				{
-					if (this._TextEntryField.TextInputInstance.text == undefined) 
-					{
-						gfx.io.GameDelegate.call("ChangeName", []);
-					}
-					else 
-					{
-						gfx.io.GameDelegate.call("ChangeName", [this._TextEntryField.TextInputInstance.text]);
+			_alpha = _alpha + (bIn ? 10 : -10);
+			if (bIn ? _alpha >= 100 : _alpha <= 0) {
+				if (!bIn) {
+					if (_TextEntryField.TextInputInstance.text == undefined) {
+						GameDelegate.call("ChangeName", []);
+					} else {
+						GameDelegate.call("ChangeName", [_TextEntryField.TextInputInstance.text]);
 					}
 				}
-				delete this.onEnterFrame;
-				if (bIn) 
-				{
+				delete onEnterFrame;
+				if (bIn) {
 					return;
 				}
-				this._x = -2500;
+				_TextEntryField.TextInputInstance._x = -2500;
 			}
-		}
-		;
+		};
 	}
 
-	function ShowItemsList()
+	function ShowItemsList(): Void
 	{
-		var __reg0 = this._CategoriesList.selectedIndex;
-		if (__reg0 === RaceSexPanels.RACE_CATEGORY) 
-		{
-			this.gotoAndPlay("narrowPanel2Show");
-			this.FadeTextEntry(false);
-			gfx.managers.FocusHandler.instance.setFocus(this._SubList1, 0);
-			this._SubList1.selectedIndex = this._CategoriesList.selectedEntry.savedItemIndex;
-			this._SubList1.UpdateList();
-			this.RaceDescriptionInstance.RaceTextInstance.SetText(this._SubList1.entryList[this._SubList1.selectedIndex].raceDescription);
+		switch (_CategoriesList.selectedIndex) {
+			case RaceSexPanels.RACE_CATEGORY:
+				gotoAndPlay("narrowPanel2Show");
+				FadeTextEntry(false);
+				FocusHandler.instance.setFocus(_SubList1, 0);
+				_SubList1.selectedIndex = _CategoriesList.selectedEntry.savedItemIndex;
+				_SubList1.UpdateList();
+				RaceDescriptionInstance.RaceTextInstance.SetText(_SubList1.entryList[_SubList1.selectedIndex].raceDescription);
+				break;
+			default:
+				gotoAndPlay("widePanel2Show");
+				FadeTextEntry(false);
+				FocusHandler.instance.setFocus(_SubList2, 0);
+				_SubList2.itemFilter = _CategoriesList.selectedEntry.flag;
+				_SubList2.selectedIndex = _CategoriesList.selectedEntry.savedItemIndex;
+				_SubList2.UpdateList();
 		}
-		else 
-		{
-			this.gotoAndPlay("widePanel2Show");
-			this.FadeTextEntry(false);
-			gfx.managers.FocusHandler.instance.setFocus(this._SubList2, 0);
-			this._SubList2.itemFilter = this._CategoriesList.selectedEntry.flag;
-			this._SubList2.selectedIndex = this._CategoriesList.selectedEntry.savedItemIndex;
-			this._SubList2.UpdateList();
-		}
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuBladeOpenSD"]);
+		
+		GameDelegate.call("PlaySound", ["UIMenuBladeOpenSD"]);
 	}
 
-	function HideItemsList()
+	function HideItemsList(): Void
 	{
-		var __reg0 = this._CategoriesList.selectedIndex;
-		if (__reg0 === RaceSexPanels.RACE_CATEGORY) 
-		{
-			this.gotoAndPlay("narrowPanel2Hide");
-			gfx.managers.FocusHandler.instance.setFocus(this._CategoriesList, 0);
-			this._CategoriesList.selectedEntry.savedItemIndex = this._SubList1.selectedIndex;
+		switch (_CategoriesList.selectedIndex) {
+			case RaceSexPanels.RACE_CATEGORY:
+				gotoAndPlay("narrowPanel2Hide");
+				FocusHandler.instance.setFocus(_CategoriesList, 0);
+				_CategoriesList.selectedEntry.savedItemIndex = _SubList1.selectedIndex;
+				break;
+			default:
+				gotoAndPlay("widePanel2Hide");
+				FocusHandler.instance.setFocus(_CategoriesList, 0);
+				_CategoriesList.selectedEntry.savedItemIndex = _SubList2.selectedIndex;
+				BackButton._alpha = 0;
 		}
-		else 
-		{
-			this.gotoAndPlay("widePanel2Hide");
-			gfx.managers.FocusHandler.instance.setFocus(this._CategoriesList, 0);
-			this._CategoriesList.selectedEntry.savedItemIndex = this._SubList2.selectedIndex;
-			this.BackButton._alpha = 0;
-		}
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuBladeCloseSD"]);
+		
+		GameDelegate.call("PlaySound", ["UIMenuBladeCloseSD"]);
 	}
 
-	function FadeOut()
+	function FadeOut(): Void
 	{
 		_root.gotoAndPlay(2);
 	}

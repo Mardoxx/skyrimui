@@ -1,168 +1,149 @@
-dynamic class SleepWaitMenu extends MovieClip
+import gfx.managers.FocusHandler;
+import gfx.io.GameDelegate;
+
+class SleepWaitMenu extends MovieClip
 {
-	var ButtonRect;
-	var CurrentTime;
-	var HoursSlider;
-	var HoursText;
-	var QuestionInstance;
-	var bDisableControls;
+	var ButtonRect: MovieClip;
+	var CurrentTime: TextField;
+	var HoursSlider: MovieClip;
+	var HoursText: TextField;
+	var QuestionInstance: TextField;
+	var bDisableControls: Boolean;
 
 	function SleepWaitMenu()
 	{
 		super();
-		this.HoursSlider = this.HoursSlider;
-		this.HoursText = this.HoursText;
-		this.CurrentTime = this.CurrentTime;
-		this.bDisableControls = false;
+		HoursSlider = HoursSlider;
+		HoursText = HoursText;
+		CurrentTime = CurrentTime;
+		bDisableControls = false;
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
 		Mouse.addListener(this);
-		gfx.managers.FocusHandler.instance.setFocus(this.HoursSlider, 0);
-		this.HoursSlider.addEventListener("change", this, "sliderChange");
-		this.HoursSlider.scrollWheel = function ()
+		FocusHandler.instance.setFocus(HoursSlider, 0);
+		HoursSlider.addEventListener("change", this, "sliderChange");
+		HoursSlider.scrollWheel = function ()
 		{
-		}
-		;
-		this.ButtonRect.AcceptMouseButton.addEventListener("click", this, "onOKPress");
-		this.ButtonRect.CancelMouseButton.addEventListener("click", this, "onCancelPress");
-		this.ButtonRect.AcceptMouseButton.SetPlatform(0, false);
-		this.ButtonRect.CancelMouseButton.SetPlatform(0, false);
+		};
+		ButtonRect.AcceptMouseButton.addEventListener("click", this, "onOKPress");
+		ButtonRect.CancelMouseButton.addEventListener("click", this, "onCancelPress");
+		ButtonRect.AcceptMouseButton.SetPlatform(0, false);
+		ButtonRect.CancelMouseButton.SetPlatform(0, false);
 	}
 
 	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
 	{
-		var __reg3 = false;
-		if (!this.disableControls && pathToFocus != undefined && pathToFocus.length > 0) 
-		{
-			__reg3 = pathToFocus[0].handleInput(details, pathToFocus.slice(1));
+		var handledInput: Boolean = false;
+		if (!disableControls && pathToFocus != undefined && pathToFocus.length > 0) {
+			handledInput = pathToFocus[0].handleInput(details, pathToFocus.slice(1));
 		}
-		if (!__reg3 && Shared.GlobalFunc.IsKeyPressed(details)) 
+		if (!handledInput && Shared.GlobalFunc.IsKeyPressed(details)) 
 		{
-			if ((__reg0 = details.navEquivalent) === gfx.ui.NavigationCode.TAB) 
-			{
-				this.onCancelPress();
-			}
-			else if (__reg0 === gfx.ui.NavigationCode.ENTER) 
-			{
-				this.onOKPress();
-			}
-			else if (__reg0 === gfx.ui.NavigationCode.PAGE_UP) 
-			{
-				if (!this.disableControls) 
-				{
-					this.modifySliderValue(4);
-				}
-			}
-			else if (__reg0 === gfx.ui.NavigationCode.GAMEPAD_R1) 
-			{
-				if (!this.disableControls) 
-				{
-					this.modifySliderValue(4);
-				}
-			}
-			else if (__reg0 === gfx.ui.NavigationCode.PAGE_DOWN) 
-			{
-				if (!this.disableControls) 
-				{
-					this.modifySliderValue(-4);
-				}
-			}
-			else if (__reg0 === gfx.ui.NavigationCode.GAMEPAD_L1) 
-			{
-				if (!this.disableControls) 
-				{
-					this.modifySliderValue(-4);
-				}
+			switch(details.navEquivalent) {
+				case NavigationCode.TAB:
+					onCancelPress();
+					break;
+				case NavigationCode.ENTER:
+					onOKPress();
+					break;
+				case NavigationCode.PAGE_UP:
+				case NavigationCode.GAMEPAD_R1;
+					if (!disableControls) {
+						modifySliderValue(4);
+					}
+					break;
+				case NavigationCode.PAGE_DOWN:
+				case NavigationCode.GAMEPAD_L1:
+					if (!disableControls) {
+						modifySliderValue(-4);
+					}
+					break;
 			}
 		}
 		return true;
 	}
 
-	function get disableControls()
+	function get disableControls(): Boolean
 	{
-		return this.bDisableControls;
+		return bDisableControls;
 	}
 
-	function set disableControls(abFlag)
+	function set disableControls(abFlag: Boolean): Void
 	{
-		this.bDisableControls = abFlag;
-		if (abFlag) 
-		{
-			this.HoursSlider.thumb.disabled = true;
-			this.HoursSlider.track.disabled = true;
-			this.ButtonRect.AcceptMouseButton.disabled = true;
+		bDisableControls = abFlag;
+		if (abFlag) {
+			HoursSlider.thumb.disabled = true;
+			HoursSlider.track.disabled = true;
+			ButtonRect.AcceptMouseButton.disabled = true;
 		}
 	}
 
-	function modifySliderValue(aiDelta)
+	function modifySliderValue(aiDelta: Number): Void
 	{
-		this.HoursSlider.value = this.HoursSlider.value + aiDelta;
-		this.sliderChange();
+		HoursSlider.value = HoursSlider.value + aiDelta;
+		sliderChange();
 	}
 
-	function onMouseWheel(aiWheelVal)
+	function onMouseWheel(aiWheelVal: Number): Void
 	{
-		if (this.disableControls) 
-		{
+		if (disableControls) {
 			return;
 		}
-		this.HoursSlider.value = this.HoursSlider.value + aiWheelVal;
-		this.sliderChange();
+		HoursSlider.value = HoursSlider.value + aiWheelVal;
+		sliderChange();
 	}
 
-	function getSliderValue()
+	function getSliderValue(): Number
 	{
-		return Math.floor(this.HoursSlider.value);
+		return Math.floor(HoursSlider.value);
 	}
 
-	function sliderChange(event)
+	function sliderChange(event: Object): Void
 	{
-		var __reg2 = Number(this.HoursText.text);
-		this.HoursText.text = Math.floor(this.HoursSlider.value).toString();
-		if (__reg2 != Math.floor(this.HoursSlider.value)) 
+		var hours = Number(HoursText.text);
+		HoursText.text = Math.floor(HoursSlider.value).toString();
+		if (hours != Math.floor(HoursSlider.value)) 
 		{
-			gfx.io.GameDelegate.call("PlaySound", ["UIMenuPrevNext"]);
+			GameDelegate.call("PlaySound", ["UIMenuPrevNext"]);
 		}
 	}
 
-	function onOKPress(event)
+	function onOKPress(event: Object): Void
 	{
-		if (this.disableControls) 
-		{
+		if (disableControls) {
 			return;
 		}
-		this.disableControls = true;
-		gfx.io.GameDelegate.call("OK", [this.getSliderValue()]);
+		disableControls = true;
+		GameDelegate.call("OK", [getSliderValue()]);
 	}
 
-	function onCancelPress(event)
+	function onCancelPress(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("Cancel", []);
+		GameDelegate.call("Cancel", []);
 	}
 
-	function SetCurrentTime(aTime)
+	function SetCurrentTime(aTime: Number): Void
 	{
-		this.CurrentTime.SetText(aTime);
+		CurrentTime.SetText(aTime);
 	}
 
-	function SetSleeping(aSleeping)
+	function SetSleeping(aSleeping: Boolean): Void
 	{
-		var __reg2 = aSleeping ? "$Rest how long?" : "$Wait how long?";
-		this.QuestionInstance.SetText(__reg2);
+		var waitText: String = aSleeping ? "$Rest how long?" : "$Wait how long?";
+		QuestionInstance.SetText(waitText);
 	}
 
-	function SetPlatform(aiPlatformIndex: Number, abPS3Switch: Boolean)
+	function SetPlatform(aiPlatformIndex: Number, abPS3Switch: Boolean): Void
 	{
-		this.ButtonRect.AcceptGamepadButton._visible = aiPlatformIndex != 0;
-		this.ButtonRect.CancelGamepadButton._visible = aiPlatformIndex != 0;
-		this.ButtonRect.AcceptMouseButton._visible = aiPlatformIndex == 0;
-		this.ButtonRect.CancelMouseButton._visible = aiPlatformIndex == 0;
-		if (aiPlatformIndex != 0) 
-		{
-			this.ButtonRect.AcceptGamepadButton.SetPlatform(aiPlatformIndex, abPS3Switch);
-			this.ButtonRect.CancelGamepadButton.SetPlatform(aiPlatformIndex, abPS3Switch);
+		ButtonRect.AcceptGamepadButton._visible = aiPlatformIndex != 0;
+		ButtonRect.CancelGamepadButton._visible = aiPlatformIndex != 0;
+		ButtonRect.AcceptMouseButton._visible = aiPlatformIndex == 0;
+		ButtonRect.CancelMouseButton._visible = aiPlatformIndex == 0;
+		if (aiPlatformIndex != 0) {
+			ButtonRect.AcceptGamepadButton.SetPlatform(aiPlatformIndex, abPS3Switch);
+			ButtonRect.CancelGamepadButton.SetPlatform(aiPlatformIndex, abPS3Switch);
 		}
 	}
 

@@ -1,6 +1,12 @@
-dynamic class StatsMenu extends MovieClip
+import Shared.ButtonChange;
+import Components.Meter;
+import gfx.io.GameDelegate;
+import Shared.GlobalFunc;
+
+class StatsMenu extends MovieClip
 {
 	static var StatsMenuInstance = null;
+	
 	static var MAGICKA_METER: Number = 0;
 	static var HEALTH_METER: Number = 1;
 	static var STAMINA_METER: Number = 2;
@@ -24,6 +30,7 @@ dynamic class StatsMenu extends MovieClip
 	static var BLOCK: Number = 15;
 	static var SMITHING: Number = 16;
 	static var HEAVY_ARMOR: Number = 17;
+	
 	static var SkillStatsA = new Array();
 	static var PerkNamesA = new Array();
 	static var BeginAnimation: Number = 0;
@@ -33,253 +40,234 @@ dynamic class StatsMenu extends MovieClip
 	static var MaxPerkNameHeight: Number = 115;
 	static var MaxPerkNameHeightLevelMode: Number = 175;
 	static var MaxPerkNamesDisplayed: Number = 64;
+	
 	var CameraUpdateInterval: Number = 0;
-	var AddPerkButtonInstance;
-	var AddPerkTextInstance;
-	var BottomBarInstance;
-	var CameraMovementInstance;
-	var CurrentPerkFrame;
-	var DescriptionCardMeter;
-	var LevelMeter;
-	var PerkEndFrame;
-	var PerkName0;
-	var PerksLeft;
-	var Platform;
-	var SkillsListInstance;
-	var State;
-	var TopPlayerInfo;
+	
+	var AddPerkButtonInstance: MovieClip;
+	var AddPerkTextInstance: MovieClip;
+	var BottomBarInstance: MovieClip;
+	var CameraMovementInstance: MovieClip;
+	var CurrentPerkFrame: Number;
+	var DescriptionCardMeter: Meter;
+	var LevelMeter: Meter;
+	var PerkEndFrame: Number;
+	var PerkName0: MovieClip;
+	var PerksLeft: Number;
+	var Platform: Number;
+	var SkillsListInstance: MovieClip;
+	var State: Number;
+	var TopPlayerInfo: MovieClip;
+	
+	static var SkillsA: Array;
+	static var SkillRing_mc: MovieClip;
+	static var MagickaMeterBase: MovieClip;
+	static var HealthMeterBase: MovieClip;
+	static var StaminaMeterBase: MovieClip;
 
+	static var MagickaMeter: Meter;
+	static var HealthMeter: Meter;
+	static var StaminaMeter: Meter;
+	static var MeterText: Array;
 
 	function StatsMenu()
 	{
 		super();
 		StatsMenu.StatsMenuInstance = this;
-		this.DescriptionCardMeter = new Components.Meter(StatsMenu.StatsMenuInstance.DescriptionCardInstance.animate);
+		DescriptionCardMeter = new Meter(StatsMenu.StatsMenuInstance.DescriptionCardInstance.animate);
 		StatsMenu.SkillsA = new Array();
-		StatsMenu.SkillRing_mc = this.SkillsListInstance;
-		this.SetDirection(0);
-		var __reg5 = this.BottomBarInstance.BottomBarPlayerInfoInstance.PlayerInfoCardInstance;
-		StatsMenu.MagickaMeterBase = __reg5.MagickaMeterInstance;
-		StatsMenu.HealthMeterBase = __reg5.HealthMeterInstance;
-		StatsMenu.StaminaMeterBase = __reg5.StaminaMeterInstance;
-		StatsMenu.MagickaMeter = new Components.Meter(StatsMenu.MagickaMeterBase.MagickaMeter_mc);
-		StatsMenu.HealthMeter = new Components.Meter(StatsMenu.HealthMeterBase.HealthMeter_mc);
-		StatsMenu.StaminaMeter = new Components.Meter(StatsMenu.StaminaMeterBase.StaminaMeter_mc);
+		StatsMenu.SkillRing_mc = SkillsListInstance;
+		SetDirection(0);
+		var infoCard: MovieClip = BottomBarInstance.BottomBarPlayerInfoInstance.PlayerInfoCardInstance;
+		StatsMenu.MagickaMeterBase = infoCard.MagickaMeterInstance;
+		StatsMenu.HealthMeterBase = infoCard.HealthMeterInstance;
+		StatsMenu.StaminaMeterBase = infoCard.StaminaMeterInstance;
+		StatsMenu.MagickaMeter = new Meter(StatsMenu.MagickaMeterBase.MagickaMeter_mc);
+		StatsMenu.HealthMeter = new Meter(StatsMenu.HealthMeterBase.HealthMeter_mc);
+		StatsMenu.StaminaMeter = new Meter(StatsMenu.StaminaMeterBase.StaminaMeter_mc);
 		StatsMenu.MagickaMeterBase.Magicka.gotoAndStop("Pause");
 		StatsMenu.HealthMeterBase.Health.gotoAndStop("Pause");
 		StatsMenu.StaminaMeterBase.Stamina.gotoAndStop("Pause");
-		StatsMenu.MeterText = [__reg5.magicValue, __reg5.healthValue, __reg5.enduranceValue];
-		this.SetMeter(StatsMenu.MAGICKA_METER, 50, 100);
-		this.SetMeter(StatsMenu.HEALTH_METER, 75, 100);
-		this.SetMeter(StatsMenu.STAMINA_METER, 25, 100);
-		this.Platform = Shared.ButtonChange.PLATFORM_PC;
-		this.AddPerkButtonInstance._alpha = 0;
-		var __reg3 = 0;
-		while (__reg3 < StatsMenu.MaxPerkNamesDisplayed) 
-		{
-			var __reg4 = this.attachMovie("PerkName", "PerkName" + __reg3, this.getNextHighestDepth());
-			__reg4._x = -100 - this._x;
-			++__reg3;
+		StatsMenu.MeterText = [infoCard.magicValue, infoCard.healthValue, infoCard.enduranceValue];
+		SetMeter(StatsMenu.MAGICKA_METER, 50, 100);
+		SetMeter(StatsMenu.HEALTH_METER, 75, 100);
+		SetMeter(StatsMenu.STAMINA_METER, 25, 100);
+		Platform = ButtonChange.PLATFORM_PC;
+		AddPerkButtonInstance._alpha = 0;
+		for (var i: Number = 0; i < StatsMenu.MaxPerkNamesDisplayed; i++) {
+			var perkName: MovieClip = attachMovie("PerkName", "PerkName" + i, getNextHighestDepth());
+			perkName._x = -100 - _x;
 		}
-		this.TopPlayerInfo.swapDepths(this.getNextHighestDepth());
-		this.SetStatsMode(true, 0);
-		this.CurrentPerkFrame = 0;
-		this.PerkName0.gotoAndStop("Visible");
-		this.PerkEndFrame = this.PerkName0._currentFrame;
-		this.PerkName0.gotoAndStop("Invisible");
+		TopPlayerInfo.swapDepths(getNextHighestDepth());
+		SetStatsMode(true, 0);
+		CurrentPerkFrame = 0;
+		PerkName0.gotoAndStop("Visible");
+		PerkEndFrame = PerkName0._currentFrame;
+		PerkName0.gotoAndStop("Invisible");
 	}
 
-	function GetSkillClip(aSkillName)
+	function GetSkillClip(aSkillName: String): TextField
 	{
-		return this.SkillsListInstance.BaseRingInstance[aSkillName].Val.ValText;
+		return SkillsListInstance.BaseRingInstance[aSkillName].Val.ValText;
 	}
 
-	function UpdatePerkText(abShow)
+	function UpdatePerkText(abShow: Boolean): Void
 	{
-		var __reg2 = 0;
-		if (abShow == true || abShow == undefined) 
-		{
-			var __reg3 = 0;
-			while (__reg3 < StatsMenu.PerkNamesA.length) 
-			{
-				var __reg4 = false;
-				if (StatsMenu.PerkNamesA[__reg3] == undefined) 
-				{
-					if (!__reg4 && this["PerkName" + __reg2] != undefined) 
-					{
-						this["PerkName" + __reg2].gotoAndStop("Invisible");
+		if (abShow == true || abShow == undefined) {
+			var i = 0;
+			for (var j: Number = 0; j < StatsMenu.PerkNamesA.length; j += 3) {
+				var perkCreated: Boolean = false;
+				if (StatsMenu.PerkNamesA[j] == undefined) {
+					if (!perkCreated && this["PerkName" + i] != undefined) {
+						this["PerkName" + i].gotoAndStop("Invisible");
 					}
-				}
-				else if (Shared.GlobalFunc.Lerp(0, 720, 0, 1, StatsMenu.PerkNamesA[__reg3 + 2]) > (this.State == StatsMenu.LEVEL_UP ? StatsMenu.MaxPerkNameHeightLevelMode : StatsMenu.MaxPerkNameHeight)) 
-				{
-					this["PerkName" + __reg2].PerkNameClipInstance.NameText.html = true;
-					this["PerkName" + __reg2].PerkNameClipInstance.NameText.SetText(StatsMenu.PerkNamesA[__reg3], true);
-					this["PerkName" + __reg2]._xscale = StatsMenu.PerkNamesA[__reg3 + 2] * 165 + 10;
-					this["PerkName" + __reg2]._yscale = StatsMenu.PerkNamesA[__reg3 + 2] * 165 + 10;
-					this["PerkName" + __reg2]._x = Shared.GlobalFunc.Lerp(0, 1280, 0, 1, StatsMenu.PerkNamesA[__reg3 + 1]) - this._x;
-					this["PerkName" + __reg2]._y = Shared.GlobalFunc.Lerp(0, 720, 0, 1, StatsMenu.PerkNamesA[__reg3 + 2]) - this._y;
-					this["PerkName" + __reg2].bPlaying = true;
-					if (this["PerkName" + __reg2] != undefined) 
-					{
-						this["PerkName" + __reg2].gotoAndStop(this.CurrentPerkFrame);
+				} else if (GlobalFunc.Lerp(0, 720, 0, 1, StatsMenu.PerkNamesA[j + 2]) > (State == StatsMenu.LEVEL_UP ? StatsMenu.MaxPerkNameHeightLevelMode : StatsMenu.MaxPerkNameHeight)) {
+					this["PerkName" + i].PerkNameClipInstance.NameText.html = true;
+					this["PerkName" + i].PerkNameClipInstance.NameText.SetText(StatsMenu.PerkNamesA[j], true);
+					this["PerkName" + i]._xscale = StatsMenu.PerkNamesA[j + 2] * 165 + 10;
+					this["PerkName" + i]._yscale = StatsMenu.PerkNamesA[j + 2] * 165 + 10;
+					this["PerkName" + i]._x = Shared.GlobalFunc.Lerp(0, 1280, 0, 1, StatsMenu.PerkNamesA[j + 1]) - _x;
+					this["PerkName" + i]._y = Shared.GlobalFunc.Lerp(0, 720, 0, 1, StatsMenu.PerkNamesA[j + 2]) - _y;
+					this["PerkName" + i].bPlaying = true;
+					if (this["PerkName" + i] != undefined) {
+						this["PerkName" + i].gotoAndStop(CurrentPerkFrame);
 					}
-					++__reg2;
-					__reg4 = true;
+					++i;
+					perkCreated = true;
 				}
-				__reg3 = __reg3 + 3;
 			}
-			__reg3 = __reg2;
-			while (__reg3 <= StatsMenu.MaxPerkNamesDisplayed) 
-			{
-				if (this["PerkName" + __reg3] != undefined) 
-				{
-					this["PerkName" + __reg3].gotoAndStop("Invisible");
+			
+			for (var k: Number = i; k <= StatsMenu.MaxPerkNamesDisplayed; k++) {
+				if (this["PerkName" + k] != undefined) {
+					this["PerkName" + k].gotoAndStop("Invisible");
 				}
-				++__reg3;
 			}
-			if (this.CurrentPerkFrame <= this.PerkEndFrame) 
-			{
-				++this.CurrentPerkFrame;
+			
+			if (CurrentPerkFrame <= PerkEndFrame) {
+				++CurrentPerkFrame;
 			}
 			return;
 		}
-		if (abShow == false) 
-		{
-			this.CurrentPerkFrame = 0;
-			__reg3 = 0;
-			for (;;) 
-			{
-				if (__reg3 >= StatsMenu.MaxPerkNamesDisplayed) 
-				{
-					return;
+		
+		if (abShow == false) {
+			CurrentPerkFrame = 0;
+			for (var i: Number = 0; i < StatsMenu.MaxPerkNamesDisplayed; i++) {
+				if (this["PerkName" + j] != undefined) {
+					this["PerkName" + j].gotoAndStop("Invisible");
 				}
-				if (this["PerkName" + __reg3] != undefined) 
-				{
-					this["PerkName" + __reg3].gotoAndStop("Invisible");
-				}
-				++__reg3;
 			}
 		}
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
-		Shared.GlobalFunc.SetLockFunction();
-		Shared.GlobalFunc.MaintainTextFormat();
-		gfx.io.GameDelegate.addCallBack("SetDescriptionCard", this, "SetDescriptionCard");
-		gfx.io.GameDelegate.addCallBack("SetPlayerInfo", this, "SetPlayerInfo");
-		gfx.io.GameDelegate.addCallBack("UpdateSkillList", this, "UpdateSkillList");
-		gfx.io.GameDelegate.addCallBack("SetDirection", this, "SetDirection");
-		gfx.io.GameDelegate.addCallBack("HideRing", this, "HideRing");
-		gfx.io.GameDelegate.addCallBack("SetStatsMode", this, "SetStatsMode");
-		gfx.io.GameDelegate.addCallBack("SetPerkCount", this, "SetPerkCount");
+		GlobalFunc.SetLockFunction();
+		GlobalFunc.MaintainTextFormat();
+		GameDelegate.addCallBack("SetDescriptionCard", this, "SetDescriptionCard");
+		GameDelegate.addCallBack("SetPlayerInfo", this, "SetPlayerInfo");
+		GameDelegate.addCallBack("UpdateSkillList", this, "UpdateSkillList");
+		GameDelegate.addCallBack("SetDirection", this, "SetDirection");
+		GameDelegate.addCallBack("HideRing", this, "HideRing");
+		GameDelegate.addCallBack("SetStatsMode", this, "SetStatsMode");
+		GameDelegate.addCallBack("SetPerkCount", this, "SetPerkCount");
 	}
 
-	function SetStatsMode(abStats, aPerkCount)
+	function SetStatsMode(abStats: Boolean, aPerkCount: Number): Void
 	{
-		this.State = abStats ? StatsMenu.STATS : StatsMenu.LEVEL_UP;
-		this.PerksLeft = aPerkCount;
-		if (aPerkCount != undefined) 
-		{
-			this.SetPerkCount(aPerkCount);
+		State = abStats ? StatsMenu.STATS : StatsMenu.LEVEL_UP;
+		PerksLeft = aPerkCount;
+		if (aPerkCount != undefined) {
+			SetPerkCount(aPerkCount);
 		}
 	}
 
-	function SetPerkCount(aPerkCount)
+	function SetPerkCount(aPerkCount: Number): Void
 	{
-		if (aPerkCount > 0) 
-		{
-			this.AddPerkTextInstance._alpha = 100;
-			this.AddPerkTextInstance.AddPerkTextField.text = _root.PerksInstance.text + " " + aPerkCount;
+		if (aPerkCount > 0) {
+			AddPerkTextInstance._alpha = 100;
+			AddPerkTextInstance.AddPerkTextField.text = _root.PerksInstance.text + " " + aPerkCount;
 			return;
 		}
-		this.AddPerkTextInstance._alpha = 0;
+		AddPerkTextInstance._alpha = 0;
 	}
 
-	static function SetPlatform(aiPlatformIndex: Number, abPS3Switch: Boolean)
+	static function SetPlatform(aiPlatformIndex: Number, abPS3Switch: Boolean): Void
 	{
 		StatsMenu.StatsMenuInstance.AddPerkButtonInstance.SetPlatform(aiPlatformIndex, abPS3Switch);
 		StatsMenu.StatsMenuInstance.Platform = aiPlatformIndex;
 	}
 
-	function UpdateCamera()
+	function UpdateCamera(): Void
 	{
-		if (StatsMenu.StatsMenuInstance.CameraMovementInstance._currentFrame < 100) 
-		{
-			var __reg2 = StatsMenu.StatsMenuInstance.CameraMovementInstance._currentFrame + 8;
-			if (__reg2 > 100) 
-			{
-				__reg2 = 100;
+		if (StatsMenu.StatsMenuInstance.CameraMovementInstance._currentFrame < 100) {
+			var NextFrame: Number = StatsMenu.StatsMenuInstance.CameraMovementInstance._currentFrame + 8;
+			if (NextFrame > 100) {
+				NextFrame = 100;
 			}
-			gfx.io.GameDelegate.call("MoveCamera", [this.CameraMovementInstance.CameraPositionAlpha._alpha / 100]);
+			GameDelegate.call("MoveCamera", [CameraMovementInstance.CameraPositionAlpha._alpha / 100]);
 			return;
 		}
-		clearInterval(this.CameraUpdateInterval);
-		this.CameraUpdateInterval = 0;
+		clearInterval(CameraUpdateInterval);
+		CameraUpdateInterval = 0;
 	}
 
-	static function StartCameraAnimation()
+	static function StartCameraAnimation(): Void
 	{
 		clearInterval(StatsMenu.StatsMenuInstance.CameraUpdateInterval);
-		gfx.io.GameDelegate.call("MoveCamera", [0]);
+		GameDelegate.call("MoveCamera", [0]);
 		StatsMenu.StatsMenuInstance.CameraUpdateInterval = setInterval(mx.utils.Delegate.create(StatsMenu.StatsMenuInstance, StatsMenu.StatsMenuInstance.UpdateCamera), 41);
 	}
 
-	function UpdateSkillList()
+	function UpdateSkillList(): Void
 	{
 		StatsMenu.StatsMenuInstance.AnimatingSkillTextInstance.InitAnimatedSkillText(StatsMenu.SkillStatsA);
 	}
 
-	function HideRing()
+	function HideRing(): Void
 	{
 		StatsMenu.StatsMenuInstance.AnimatingSkillTextInstance.HideRing();
 	}
 
-	function SetDirection(aAngle)
+	function SetDirection(aAngle: Number): Void
 	{
 		StatsMenu.StatsMenuInstance.AnimatingSkillTextInstance.SetAngle(aAngle);
 	}
 
-	function SetPlayerInfo()
+	function SetPlayerInfo(): Void
 	{
 		StatsMenu.StatsMenuInstance.TopPlayerInfo.FirstLastLabel.textAutoSize = "shrink";
 		StatsMenu.StatsMenuInstance.TopPlayerInfo.FirstLastLabel.SetText(arguments[0]);
 		StatsMenu.StatsMenuInstance.TopPlayerInfo.LevelNumberLabel.SetText(arguments[1]);
-		if (this.LevelMeter == undefined) 
-		{
-			this.LevelMeter = new Components.Meter(StatsMenu.StatsMenuInstance.TopPlayerInfo.animate);
+		if (LevelMeter == undefined) {
+			LevelMeter = new Meter(StatsMenu.StatsMenuInstance.TopPlayerInfo.animate);
 		}
-		this.LevelMeter.SetPercent(arguments[2]);
+		LevelMeter.SetPercent(arguments[2]);
 		StatsMenu.StatsMenuInstance.TopPlayerInfo.RacevalueLabel.SetText(arguments[3]);
-		this.SetMeter(0, arguments[4], arguments[5], arguments[6]);
-		this.SetMeter(1, arguments[7], arguments[8], arguments[9]);
-		this.SetMeter(2, arguments[10], arguments[11], arguments[12]);
+		SetMeter(0, arguments[4], arguments[5], arguments[6]);
+		SetMeter(1, arguments[7], arguments[8], arguments[9]);
+		SetMeter(2, arguments[10], arguments[11], arguments[12]);
 	}
 
-	function SetMeter(aMeter, aCurrentValue, aMaxValue, aColor)
+	function SetMeter(aMeter: Number, aCurrentValue: Number, aMaxValue: Number, aColor: Number): Void
 	{
-		if (aMeter >= StatsMenu.MAGICKA_METER && aMeter <= StatsMenu.STAMINA_METER) 
-		{
-			var __reg2 = 100 * (Math.max(0, Math.min(aCurrentValue, aMaxValue)) / aMaxValue);
-			if ((__reg0 = aMeter) === StatsMenu.MAGICKA_METER) 
-			{
-				StatsMenu.MagickaMeter.SetPercent(__reg2);
+		if (aMeter >= StatsMenu.MAGICKA_METER && aMeter <= StatsMenu.STAMINA_METER) {
+			var meterPercent: Number = 100 * (Math.max(0, Math.min(aCurrentValue, aMaxValue)) / aMaxValue);
+			
+			switch (aMeter) {
+				case StatsMenu.MAGICKA_METER:
+					StatsMenu.MagickaMeter.SetPercent(meterPercent);
+					break;
+				case StatsMenu.HEALTH_METER:
+					StatsMenu.HealthMeter.SetPercent(meterPercent);
+					break;
+				case StatsMenu.STAMINA_METER:
+					StatsMenu.StaminaMeter.SetPercent(meterPercent);
+					break;
 			}
-			else if (__reg0 === StatsMenu.HEALTH_METER) 
-			{
-				StatsMenu.HealthMeter.SetPercent(__reg2);
-			}
-			else if (__reg0 === StatsMenu.STAMINA_METER) 
-			{
-				StatsMenu.StaminaMeter.SetPercent(__reg2);
-			}
+			
 			StatsMenu.MeterText[aMeter].html = true;
-			if (aColor == undefined) 
-			{
+			if (aColor == undefined) {
 				StatsMenu.MeterText[aMeter].SetText(aCurrentValue + "/" + aMaxValue, true);
-			}
-			else 
-			{
+			} else {
 				StatsMenu.MeterText[aMeter].SetText("<font color=\'" + aColor + "\'>" + aCurrentValue + "/" + aMaxValue + "</font>", true);
 			}
 			StatsMenu.MagickaMeter.Update();
@@ -288,30 +276,27 @@ dynamic class StatsMenu extends MovieClip
 		}
 	}
 
-	function SetDescriptionCard(abPerkMode, aName, aMeterPercent, aDescription, aRequirements, aSkillLevel, aSkill)
+	function SetDescriptionCard(abPerkMode: Boolean, aName: String, aMeterPercent: Number, aDescription: String, aRequirements: String, aSkillLevel: String, aSkill: String): Void
 	{
-		if (StatsMenu.StatsMenuInstance != undefined) 
-		{
+		if (StatsMenu.StatsMenuInstance != undefined) {
 			StatsMenu.StatsMenuInstance.gotoAndStop(abPerkMode ? "Perks" : "Skills");
 		}
-		var __reg2 = StatsMenu.StatsMenuInstance.DescriptionCardInstance;
-		__reg2.CardDescriptionTextInstance.SetText(aDescription);
-		this.AddPerkButtonInstance._alpha = this.State == StatsMenu.LEVEL_UP && abPerkMode && this.Platform != Shared.ButtonChange.PLATFORM_PC ? 100 : 0;
-		if (!abPerkMode) 
-		{
-			__reg2.CardNameTextInstance.html = true;
-			__reg2.CardNameTextInstance.htmlText = aName.toUpperCase() + " <font face=\'$EverywhereBoldFont\' size=\'32\' color=\'#FFFFFF\'>" + aSkillLevel + "</font>";
+		var descriptionCard: MovieClip = StatsMenu.StatsMenuInstance.DescriptionCardInstance;
+		descriptionCard.CardDescriptionTextInstance.SetText(aDescription);
+		AddPerkButtonInstance._alpha = State == StatsMenu.LEVEL_UP && abPerkMode && Platform != ButtonChange.PLATFORM_PC ? 100 : 0;
+		if (!abPerkMode) {
+			descriptionCard.CardNameTextInstance.html = true;
+			descriptionCard.CardNameTextInstance.htmlText = aName.toUpperCase() + " <font face=\'$EverywhereBoldFont\' size=\'32\' color=\'#FFFFFF\'>" + aSkillLevel + "</font>";
 			StatsMenu.StatsMenuInstance.DescriptionCardMeter.SetPercent(aMeterPercent);
 			return;
 		}
-		__reg2.CardNameTextInstance.SetText("");
-		__reg2.SkillRequirementText.html = true;
-		__reg2.SkillRequirementText.htmlText = aSkill.toUpperCase() + "		  " + aRequirements.toUpperCase();
-		if (this.PerksLeft != undefined) 
-		{
-			this.SetPerkCount(this.PerksLeft);
+		descriptionCard.CardNameTextInstance.SetText("");
+		descriptionCard.SkillRequirementText.html = true;
+		descriptionCard.SkillRequirementText.htmlText = aSkill.toUpperCase() + "          " + aRequirements.toUpperCase();
+		if (PerksLeft != undefined) {
+			SetPerkCount(PerksLeft);
 		}
-		__reg2.Perktype.SetText(aSkill);
+		descriptionCard.Perktype.SetText(aSkill);
 	}
 
 }

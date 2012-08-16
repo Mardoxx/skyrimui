@@ -1,52 +1,54 @@
 import Shared.ButtonTextArtHolder;
+import gfx.managers.FocusHandler;
+import gfx.io.GameDelegate;
 
 class TutorialMenu extends MovieClip
 {
 	var ButtonArtHolder: ButtonTextArtHolder;
 	var ButtonHolder: ButtonTextArtHolder;
-	var ButtonRect;
-	var HelpScrollingText;
-	var HelpText;
-	var TitleText;
+	var ButtonRect: MovieClip;
+	var HelpScrollingText: TextField;
+	var HelpText: TextField;
+	var TitleText: TextField;
 
 	function TutorialMenu()
 	{
 		super();
-		this.HelpScrollingText = this.HelpText;
-		this.ButtonHolder = this.ButtonArtHolder;
+		HelpScrollingText = HelpText;
+		ButtonHolder = ButtonArtHolder;
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
-		this.TitleText.textAutoSize = "shrink";
-		this.ButtonRect.ExitMouseButton.addEventListener("press", this, "onExitPress");
-		this.ButtonRect.ExitMouseButton.SetPlatform(0, false);
-		gfx.managers.FocusHandler.instance.setFocus(this.HelpScrollingText, 0);
+		TitleText.textAutoSize = "shrink";
+		ButtonRect.ExitMouseButton.addEventListener("press", this, "onExitPress");
+		ButtonRect.ExitMouseButton.SetPlatform(0, false);
+		FocusHandler.instance.setFocus(HelpScrollingText, 0);
 	}
 
-	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
-		this.ButtonRect.ExitGamepadButton._visible = aiPlatform != 0;
-		this.ButtonRect.ExitMouseButton._visible = aiPlatform == 0;
+		ButtonRect.ExitGamepadButton._visible = aiPlatform != 0;
+		ButtonRect.ExitMouseButton._visible = aiPlatform == 0;
 		if (aiPlatform != 0) 
 		{
-			this.ButtonRect.ExitGamepadButton.SetPlatform(aiPlatform, abPS3Switch);
+			ButtonRect.ExitGamepadButton.SetPlatform(aiPlatform, abPS3Switch);
 		}
 	}
 
 	function ApplyButtonArt(): Void
 	{
-		var __reg2 = this.ButtonHolder.CreateButtonArt(this.HelpScrollingText.textField);
-		if (__reg2 != undefined) 
+		var buttonStr: String = ButtonHolder.CreateButtonArt(HelpScrollingText.textField);
+		if (buttonStr != undefined) 
 		{
-			this.HelpScrollingText.textField.html = true;
-			this.HelpScrollingText.textField.htmlText = __reg2;
+			HelpScrollingText.textField.html = true;
+			HelpScrollingText.textField.htmlText = buttonStr;
 		}
 	}
 
-	function onExitPress()
+	function onExitPress(): Void
 	{
-		gfx.io.GameDelegate.call("CloseMenu", []);
+		GameDelegate.call("CloseMenu", []);
 	}
 
 }

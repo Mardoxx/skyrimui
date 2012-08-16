@@ -35,22 +35,20 @@ class MessageBox extends MovieClip
 		GameDelegate.addCallBack("setButtons", this, "setupButtons");
 	}
 	
-	function setupButtons()
+	function setupButtons(): Void
 	{
-		if (undefined != ButtonContainer) 
-		{
+		if (undefined != ButtonContainer) {
 			ButtonContainer.removeMovieClip();
 			ButtonContainer = undefined;
 		}
 		MessageButtons.length = 0; // This truncates the array to 0
 		var controllerOrConsole: Boolean = arguments[0];
 		
-		if (arguments.length > 1) 
-		{
+		if (arguments.length > 1) {
 			ButtonContainer = createEmptyMovieClip("Buttons", getNextHighestDepth());
 			var buttonXOffset: Number = 0;
 			
-			for (var i: Number = 1; i < arguments.length; i++){
+			for (var i: Number = 1; i < arguments.length; i++) {
 				if (arguments[i] == " ")
 					continue;
 				var buttonIdx: Number = i - 1;
@@ -70,12 +68,13 @@ class MessageBox extends MovieClip
 			InitButtons();
 			ResetDimensions();
 			
-			if (controllerOrConsole) 
+			if (controllerOrConsole) {
 				Selection.setFocus(MessageButtons[0]);
+			}
 		}
 	}
 
-	function InitButtons()
+	function InitButtons(): Void
 	{
 		for (var i: Number = 0; i < MessageButtons.length; i++) {
 			MessageButtons[i].handlePress = function () {};
@@ -85,37 +84,34 @@ class MessageBox extends MovieClip
 		}
 	}
 
-	function SetMessage(aText, abHTML)
+	function SetMessage(aText: String, abHTML: String): Void
 	{
 		Message.autoSize = "center";
 		Message.setTextFormat(DefaultTextFormat);
 		Message.setNewTextFormat(DefaultTextFormat);
 		Message.html = abHTML;
-		if (abHTML) 
-		{
+		if (abHTML) {
 			Message.htmlText = aText;
-		}
-		else 
-		{
+		} else {
 			Message.SetText(aText);
 		}
 		ResetDimensions();
 	}
 
-	function ResetDimensions()
+	function ResetDimensions(): Void
 	{
 		PositionElements();
 		var parentBounds: Object = getBounds(_parent);
-		var __reg2: Number = Stage.height * 0.85 - parentBounds.yMax;
-		if (__reg2 < 0) {
+		var i: Number = Stage.height * 0.85 - parentBounds.yMax;
+		if (i < 0) {
 			Message.autoSize = false;
-			var extraHeight: Number = __reg2 * 100 / _yscale;
+			var extraHeight: Number = i * 100 / _yscale;
 			Message._height = Message._height + extraHeight;
 			PositionElements();
 		}
 	}
 
-	function PositionElements()
+	function PositionElements(): Void
 	{
 		var background: MovieClip = Background_mc;
 		var maxLineWidth: Number = 0;
@@ -138,17 +134,17 @@ class MessageBox extends MovieClip
 		Divider._y = ButtonContainer._y - ButtonContainer._height / 2 - MessageBox.MESSAGE_TO_BUTTON_SPACER / 2;
 	}
 
-	function ClickCallback(aEvent)
+	function ClickCallback(aEvent: Object): Void
 	{
 		GameDelegate.call("buttonPress", [Number(aEvent.target._name.substr(-1))]);
 	}
 
-	function FocusCallback(aEvent)
+	function FocusCallback(aEvent: Object): Void
 	{
 		GameDelegate.call("PlaySound", ["UIMenuFocus"]);
 	}
 
-	function onKeyDown()
+	function onKeyDown(): Void
 	{
 		if (Key.getCode() == 89 && MessageButtons[0].ButtonText.text == "Yes") {
 			GameDelegate.call("buttonPress", [0]);
@@ -163,10 +159,11 @@ class MessageBox extends MovieClip
 		}
 	}
 
-	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
-		if (aiPlatform != 0 && MessageButtons.length > 0) 
+		if (aiPlatform != 0 && MessageButtons.length > 0) {
 			Selection.setFocus(MessageButtons[0]);
+		}
 	}
 
 }

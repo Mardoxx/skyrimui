@@ -12,9 +12,6 @@ class Shared.CenteredScrollingList extends Shared.BSScrollingList
 	var border: MovieClip;
 	
 	var dispatchEvent: Function;
-	var doSetSelectedIndex: Function;
-	var GetClipByIndex: Function;
-	var SetEntryText: Function;
 	
 	var fListHeight: Number;
 	var iDividerIndex: Number;
@@ -172,9 +169,9 @@ class Shared.CenteredScrollingList extends Shared.BSScrollingList
 		}
 		
 		if (bMouseDrivenNav && !bRecenterSelection)
-			for (var item: Object = Mouse.getTopMostEntity(); item != undefined; item = item._parent)
-					if (item._parent == this && item._visible && item.itemIndex != undefined)
-						doSetSelectedIndex(item.itemIndex, 0);
+			for (var target: Object = Mouse.getTopMostEntity(); target != undefined; target = target._parent)
+					if (target._parent == this && target._visible && target.itemIndex != undefined)
+						doSetSelectedIndex(target.itemIndex, 0);
 						
 		bRecenterSelection = false;
 	}

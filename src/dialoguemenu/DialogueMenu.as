@@ -15,7 +15,7 @@ class DialogueMenu extends MovieClip
 	static var TOPIC_CLICKED: Number = 2;
 	static var TRANSITIONING: Number = 3;
 	
-    
+	
 	var ExitButton: CrossPlatformButtons;
 	var SpeakerName: TextField;
 	var SubtitleText: TextField;
@@ -75,18 +75,18 @@ class DialogueMenu extends MovieClip
 		SpeakerName.SetText(" ");
 	}
 
-	function AdjustForPALSD()
+	function AdjustForPALSD(): Void
 	{
 		_root.DialogueMenu_mc._x = _root.DialogueMenu_mc._x - 35;
 	}
 
-	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
 		ExitButton.SetPlatform(aiPlatform, abPS3Switch);
 		TopicList.SetPlatform(aiPlatform, abPS3Switch);
 	}
 
-	function SetSpeakerName(strName)
+	function SetSpeakerName(strName: String): Void
 	{
 		SpeakerName.SetText(strName);
 	}
@@ -103,45 +103,45 @@ class DialogueMenu extends MovieClip
 		return true;
 	}
 
-	function get menuState()
+	function get menuState(): Number
 	{
 		return eMenuState;
 	}
 
-	function set menuState(aNewState)
+	function set menuState(aNewState: Number): Void
 	{
 		eMenuState = aNewState;
 	}
 
-	function ShowDialogueText(astrText)
+	function ShowDialogueText(astrText: String): Void
 	{
 		SubtitleText.SetText(astrText);
 	}
 
-	function OnVoiceReady()
+	function OnVoiceReady(): Void
 	{
 		StartProgressTimer();
 	}
 
-	function StartProgressTimer()
+	function StartProgressTimer(): Void
 	{
 		bAllowProgress = false;
 		clearInterval(iAllowProgressTimerID);
 		iAllowProgressTimerID = setInterval(this, "SetAllowProgress", DialogueMenu.ALLOW_PROGRESS_DELAY);
 	}
 
-	function HideDialogueText()
+	function HideDialogueText(): Void
 	{
 		SubtitleText.SetText(" ");
 	}
 
-	function SetAllowProgress()
+	function SetAllowProgress(): Void
 	{
 		clearInterval(iAllowProgressTimerID);
 		bAllowProgress = true;
 	}
 
-	function PopulateDialogueLists()
+	function PopulateDialogueLists(): Void
 	{
 		var TOPIC_TEXT: Number = 0;
 		var TOPIC_ISNEW: Number = 1;
@@ -162,7 +162,7 @@ class DialogueMenu extends MovieClip
 		TopicList.InvalidateData();
 	}
 
-	function DoShowDialogueList(abNewList, abHideExitButton)
+	function DoShowDialogueList(abNewList: Boolean, abHideExitButton: Boolean): Void
 	{
 		if (eMenuState == DialogueMenu.TOPIC_CLICKED || (eMenuState == DialogueMenu.SHOW_GREETING && TopicList.entryList.length > 0)) {
 			ShowDialogueList(abNewList, abNewList && eMenuState == DialogueMenu.TOPIC_CLICKED);
@@ -170,7 +170,7 @@ class DialogueMenu extends MovieClip
 		ExitButton._visible = !abHideExitButton;
 	}
 
-	function ShowDialogueList(abSlideAnim, abCopyVisible)
+	function ShowDialogueList(abSlideAnim: Boolean, abCopyVisible: Boolean): Void
 	{
 		TopicListHolder._visible = true;
 		TopicListHolder.gotoAndPlay(abSlideAnim ? "slideListIn" : "fadeListIn");
@@ -179,21 +179,19 @@ class DialogueMenu extends MovieClip
 		TopicListHolder.PanelCopy_mc._visible = abCopyVisible;
 	}
 
-	function onItemSelect(event)
+	function onItemSelect(event: Object): Void
 	{
-		if (bAllowProgress && event.keyboardOrMouse != 0) 
-		{
+		if (bAllowProgress && event.keyboardOrMouse != 0) {
 			if (eMenuState == DialogueMenu.TOPIC_LIST_SHOWN) {
 				onSelectionClick();
-			}
-			else if (eMenuState == DialogueMenu.TOPIC_CLICKED || eMenuState == DialogueMenu.SHOW_GREETING) {
+			} else if (eMenuState == DialogueMenu.TOPIC_CLICKED || eMenuState == DialogueMenu.SHOW_GREETING) {
 				SkipText();
 			}
 			bAllowProgress = false;
 		}
 	}
 
-	function SkipText()
+	function SkipText(): Void
 	{
 		if (bAllowProgress) {
 			GameDelegate.call("SkipText", []);
@@ -201,7 +199,7 @@ class DialogueMenu extends MovieClip
 		}
 	}
 
-	function onMouseDown()
+	function onMouseDown(): Void
 	{
 		++DialogueMenu.iMouseDownExecutionCount;
 		if (DialogueMenu.iMouseDownExecutionCount % 2 != 0) {
@@ -209,7 +207,7 @@ class DialogueMenu extends MovieClip
 		}
 	}
 
-	function onCancelPress()
+	function onCancelPress(): Void
 	{
 		if (eMenuState == DialogueMenu.SHOW_GREETING) {
 			SkipText();
@@ -218,31 +216,31 @@ class DialogueMenu extends MovieClip
 		StartHideMenu();
 	}
 
-	function StartHideMenu()
+	function StartHideMenu(): Void
 	{
 		SubtitleText._visible = false;
 		bFadedIn = false;
 		SpeakerName.SetText(" ");
 		ExitButton._visible = false;
 		_parent.gotoAndPlay("startFadeOut");
-		gfx.io.GameDelegate.call("CloseMenu", []);
+		GameDelegate.call("CloseMenu", []);
 	}
 
-	function playListUpAnim(aEvent)
+	function playListUpAnim(aEvent: Object): Void
 	{
 		if (aEvent.scrollChanged == true) {
 			aEvent.target._parent.gotoAndPlay("moveUp");
 		}
 	}
 
-	function playListDownAnim(aEvent)
+	function playListDownAnim(aEvent: Object): Void
 	{
 		if (aEvent.scrollChanged == true) {
 			aEvent.target._parent.gotoAndPlay("moveDown");
 		}
 	}
 
-	function onSelectionClick()
+	function onSelectionClick(): Void
 	{
 		if (eMenuState == DialogueMenu.TOPIC_LIST_SHOWN) {
 			eMenuState = DialogueMenu.TOPIC_CLICKED;
@@ -259,7 +257,7 @@ class DialogueMenu extends MovieClip
 		GameDelegate.call("TopicClicked", [TopicList.selectedEntry.topicIndex]);
 	}
 
-	function onFadeOutCompletion()
+	function onFadeOutCompletion(): Void
 	{
 		GameDelegate.call("FadeDone", []);
 	}

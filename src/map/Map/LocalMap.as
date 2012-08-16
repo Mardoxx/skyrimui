@@ -1,83 +1,82 @@
-dynamic class Map.LocalMap extends MovieClip
+import gfx.io.GameDelegate;
+import Map.MapMenu;
+
+class Map.LocalMap extends MovieClip
 {
-	var BottomBar;
-	var ClearedDescription;
-	var ClearedText;
-	var IconDisplay;
-	var LocalMapHolder_mc;
-	var LocationDescription;
-	var LocationTextClip;
-	var MapImageLoader;
-	var TextureHolder;
-	var _TextureHeight;
-	var _TextureWidth;
-	var _parent;
-	var _x;
-	var _y;
+	var BottomBar: MovieClip;
+	var ClearedDescription: TextField;
+	var ClearedText: TextField;
+	var IconDisplay: MapMenu;
+	var LocalMapHolder_mc: MovieClip;
+	var LocationDescription: TextField;
+	var LocationTextClip: MovieClip;
+	var MapImageLoader: MovieClipLoader;
+	var TextureHolder: MovieClip;
+	var _TextureHeight: Number;
+	var _TextureWidth: Number;
 	var bUpdated;
 
 	function LocalMap()
 	{
 		super();
-		this.IconDisplay = new Map.MapMenu(this);
-		this.MapImageLoader = new MovieClipLoader();
-		this.MapImageLoader.addListener(this);
-		this._TextureWidth = 800;
-		this._TextureHeight = 450;
-		this.LocationDescription = this.LocationTextClip.LocationText;
-		this.LocationDescription.noTranslate = true;
-		this.LocationTextClip.swapDepths(3);
-		this.ClearedDescription = this.ClearedText;
-		this.ClearedDescription.noTranslate = true;
-		this.TextureHolder = this.LocalMapHolder_mc;
+		IconDisplay = new MapMenu(this);
+		MapImageLoader = new MovieClipLoader();
+		MapImageLoader.addListener(this);
+		_TextureWidth = 800;
+		_TextureHeight = 450;
+		LocationDescription = LocationTextClip.LocationText;
+		LocationDescription.noTranslate = true;
+		LocationTextClip.swapDepths(3);
+		ClearedDescription = ClearedText;
+		ClearedDescription.noTranslate = true;
+		TextureHolder = LocalMapHolder_mc;
 	}
 
-	function get TextureWidth()
+	function get TextureWidth(): Number
 	{
-		return this._TextureWidth;
+		return _TextureWidth;
 	}
 
-	function get TextureHeight()
+	function get TextureHeight(): Number
 	{
-		return this._TextureHeight;
+		return _TextureHeight;
 	}
 
-	function onLoadInit(TargetClip)
+	function onLoadInit(TargetClip: MovieClip): Void
 	{
-		TargetClip._width = this._TextureWidth;
-		TargetClip._height = this._TextureHeight;
+		TargetClip._width = _TextureWidth;
+		TargetClip._height = _TextureHeight;
 	}
 
-	function InitMap()
+	function InitMap(): Void
 	{
-		if (!this.bUpdated) 
-		{
-			this.MapImageLoader.loadClip("img://Local_Map", this.TextureHolder);
-			this.bUpdated = true;
+		if (!bUpdated) {
+			MapImageLoader.loadClip("img://Local_Map", TextureHolder);
+			bUpdated = true;
 		}
-		var __reg3 = {x: this._x, y: this._y};
-		var __reg2 = {x: this._x + this._TextureWidth, y: this._y + this._TextureHeight};
-		this._parent.localToGlobal(__reg3);
-		this._parent.localToGlobal(__reg2);
-		gfx.io.GameDelegate.call("SetLocalMapExtents", [__reg3.x, __reg3.y, __reg2.x, __reg2.y]);
+		var textureTopLeft: Object = {x: _x, y: _y};
+		var textureBottomRight: Object = {x: _x + _TextureWidth, y: _y + _TextureHeight};
+		_parent.localToGlobal(textureTopLeft);
+		_parent.localToGlobal(textureBottomRight);
+		GameDelegate.call("SetLocalMapExtents", [textureTopLeft.x, textureTopLeft.y, textureBottomRight.x, textureBottomRight.y]);
 	}
 
-	function Show(abShow)
+	function Show(abShow: Boolean): Void
 	{
-		this._parent.gotoAndPlay(abShow ? "fadeIn" : "fadeOut");
-		this.BottomBar.RightButton.visible = !abShow;
-		this.BottomBar.LocalMapButton.label = abShow ? "$World Map" : "$Local Map";
+		_parent.gotoAndPlay(abShow ? "fadeIn" : "fadeOut");
+		BottomBar.RightButton.visible = !abShow;
+		BottomBar.LocalMapButton.label = abShow ? "$World Map" : "$Local Map";
 	}
 
-	function SetBottomBar(aBottomBar)
+	function SetBottomBar(aBottomBar: MovieClip): Void
 	{
-		this.BottomBar = aBottomBar;
+		BottomBar = aBottomBar;
 	}
 
-	function SetTitle(aName, aCleared)
+	function SetTitle(aName: String, aCleared: String): Void
 	{
-		this.LocationDescription.text = aName == undefined ? "" : aName;
-		this.ClearedDescription.text = aCleared == undefined ? "" : "(" + aCleared + ")";
+		LocationDescription.text = aName == undefined ? "" : aName;
+		ClearedDescription.text = aCleared == undefined ? "" : "(" + aCleared + ")";
 	}
 
 }

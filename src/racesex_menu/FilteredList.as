@@ -1,247 +1,202 @@
-dynamic class FilteredList extends Shared.CenteredList
+class FilteredList extends Shared.CenteredList
 {
-	var BottomHalf;
-	var EntriesA;
-	var EntryMatchesFunc;
-	var RepositionEntries;
-	var SelectedEntry;
-	var TopHalf;
-	var bMultilineList;
-	var bToFitList;
-	var dispatchEvent;
-	var iDividerIndex;
-	var iItemFilter;
-	var iMaxEntriesBottomHalf;
-	var iMaxEntriesTopHalf;
-	var iSelectedIndex;
+	var BottomHalf: Array;
+	var EntriesA: Array;
+	var EntryMatchesFunc: Function;
+	var SelectedEntry: MovieClip;
+	var TopHalf: Array;
+	var bMultilineList: Boolean;
+	var bToFitList: Boolean;
+	var dispatchEvent: Function;
+	var iDividerIndex: Number;
+	var iItemFilter: Number;
+	var iMaxEntriesBottomHalf: Number;
+	var iMaxEntriesTopHalf: Number;
+	var iSelectedIndex: Number;
 
 	function FilteredList()
 	{
 		super();
-		this.iItemFilter = 4294967295;
-		this.EntryMatchesFunc = this.EntryMatchesFilter;
-		this.iDividerIndex = -1;
+		iItemFilter = 0xFFFFFFFF;
+		EntryMatchesFunc = EntryMatchesFilter;
+		iDividerIndex = -1;
 	}
 
-	function get itemFilter()
+	function get itemFilter(): Number
 	{
-		return this.iItemFilter;
+		return iItemFilter;
 	}
 
-	function set itemFilter(aiNewFilter)
+	function set itemFilter(aiNewFilter: Number): Void
 	{
-		this.iItemFilter = aiNewFilter;
+		iItemFilter = aiNewFilter;
 	}
 
-	function SetPartitionedFilterMode(abPartition)
+	function SetPartitionedFilterMode(abPartition: Boolean): Void
 	{
-		this.EntryMatchesFunc = abPartition ? this.EntryMatchesPartitionedFilter : this.EntryMatchesFilter;
+		EntryMatchesFunc = abPartition ? EntryMatchesPartitionedFilter : EntryMatchesFilter;
 	}
 
-	function IsDivider(aEntry)
+	function IsDivider(aEntry: Object): Boolean
 	{
 		return aEntry.divider == true || aEntry.flag == 0;
 	}
 
-	function moveListUp()
+	function moveListUp(): Void
 	{
-		var __reg2 = this.GetNextFilterMatch(this.iSelectedIndex);
-		if (__reg2 != undefined && this.IsDivider(this.EntriesA[__reg2])) 
-		{
-			__reg2 = this.GetNextFilterMatch(__reg2);
+		var nextMatchIdx: Number = GetNextFilterMatch(iSelectedIndex);
+		if (nextMatchIdx != undefined && IsDivider(EntriesA[nextMatchIdx])) {
+			nextMatchIdx = GetNextFilterMatch(nextMatchIdx);
 		}
-		if (__reg2 != undefined) 
-		{
-			this.iSelectedIndex = __reg2;
-			this.UpdateList();
-			this.dispatchEvent({type: "listMovedUp"});
+		if (nextMatchIdx != undefined) {
+			iSelectedIndex = nextMatchIdx;
+			UpdateList();
+			dispatchEvent({type: "listMovedUp"});
 		}
 	}
 
-	function moveListDown()
+	function moveListDown(): Void
 	{
-		var __reg2 = this.GetPrevFilterMatch(this.iSelectedIndex);
-		if (__reg2 != undefined && this.IsDivider(this.EntriesA[__reg2])) 
-		{
-			__reg2 = this.GetPrevFilterMatch(__reg2);
+		var prevMatchIdx: Number = GetPrevFilterMatch(iSelectedIndex);
+		if (prevMatchIdx != undefined && IsDivider(EntriesA[prevMatchIdx])) {
+			prevMatchIdx = GetPrevFilterMatch(prevMatchIdx);
 		}
-		if (__reg2 != undefined) 
-		{
-			this.iSelectedIndex = __reg2;
-			this.UpdateList();
-			this.dispatchEvent({type: "listMovedDown"});
+		if (prevMatchIdx != undefined) {
+			iSelectedIndex = prevMatchIdx;
+			UpdateList();
+			dispatchEvent({type: "listMovedDown"});
 		}
 	}
 
-	function EntryMatchesFilter(aiIndex)
+	function EntryMatchesFilter(aiIndex: Number): Boolean
 	{
-		return this.EntriesA[aiIndex] != undefined && (this.EntriesA[aiIndex].filterFlag & this.iItemFilter) != 0;
+		return EntriesA[aiIndex] != undefined && (EntriesA[aiIndex].filterFlag & iItemFilter) != 0;
 	}
 
-	function EntryMatchesPartitionedFilter(aiIndex)
+	function EntryMatchesPartitionedFilter(aiIndex: Number): Boolean
 	{
-		var __reg3 = false;
-		if (this.EntriesA[aiIndex] != undefined) 
-		{
-			if (this.iItemFilter == 4294967295) 
-			{
-				__reg3 = true;
-			}
-			else 
-			{
-				var __reg2 = this.EntriesA[aiIndex].filterFlag;
-				var __reg4 = __reg2 & 255;
-				var __reg7 = (__reg2 & 65280) >>> 8;
-				var __reg6 = (__reg2 & 16711680) >>> 16;
-				var __reg5 = (__reg2 & 4278190080) >>> 24;
-				__reg3 = __reg4 == this.iItemFilter || __reg7 == this.iItemFilter || __reg6 == this.iItemFilter || __reg5 == this.iItemFilter;
+		var match: Boolean = false;
+		if (EntriesA[aiIndex] != undefined) {
+			if (iItemFilter == 0xFFFFFFFF) {
+				match = true;
+			} else {
+				var filterFlag: Number = EntriesA[aiIndex].filterFlag;
+				var byte0: Number = (filterFlag & 0x000000FF);
+				var byte1: Number = (filterFlag & 0x0000FF00) >>> 8;
+				var byte2: Number = (filterFlag & 0x00FF0000) >>> 16;
+				var byte3: Number = (filterFlag & 0xFF000000) >>> 24;
+				match = byte0 == iItemFilter || byte1 == iItemFilter || byte2 == iItemFilter || byte3 == iItemFilter;
 			}
 		}
-		return __reg3;
+		return match;
 	}
 
-	function GetPrevFilterMatch(aiStartIndex)
+	function GetPrevFilterMatch(aiStartIndex: Number): Number
 	{
-		var __reg3 = undefined;
-		var __reg2 = aiStartIndex - 1;
-		while (__reg2 >= 0 && __reg3 == undefined) 
-		{
-			if (this.EntryMatchesFunc(__reg2)) 
-			{
-				__reg3 = __reg2;
+		var prevIdx = undefined;
+		
+		for (var i: Number = aiStartIndex - 1; i > 0 && prevIdx == undefined; i--) {
+			if (EntryMatchesFunc(i)) {
+				prevIdx = i;
 			}
-			--__reg2;
 		}
-		return __reg3;
+		
+		return prevIdx;
 	}
 
-	function GetNextFilterMatch(aiStartIndex)
+	function GetNextFilterMatch(aiStartIndex: Number): Number
 	{
-		var __reg3 = undefined;
-		var __reg2 = aiStartIndex + 1;
-		while (__reg2 < this.EntriesA.length && __reg3 == undefined) 
-		{
-			if (this.EntryMatchesFunc(__reg2)) 
-			{
-				__reg3 = __reg2;
+		var nextIdx = undefined;
+		
+		for (var i: Number = aiStartIndex + 1; i > 0 && nextIdx == undefined; i++) {
+			if (EntryMatchesFunc(i)) {
+				nextIdx = i;
 			}
-			++__reg2;
 		}
-		return __reg3;
+		
+		return nextIdx;
 	}
 
-	function UpdateList()
+	function UpdateList(): Void
 	{
-		if (this.iSelectedIndex == undefined) 
-		{
-			this.iSelectedIndex = 0;
+		if (iSelectedIndex == undefined) {
+			iSelectedIndex = 0;
 		}
-		this.iDividerIndex = -1;
-		var __reg2 = 0;
-		while (__reg2 < this.EntriesA.length) 
-		{
-			if (this.IsDivider(this.EntriesA[__reg2])) 
-			{
-				this.iDividerIndex = __reg2;
+		iDividerIndex = -1;
+		
+		for (var i: Number = 0; i < EntriesA.length; i++ ) {
+			if (IsDivider(EntriesA[i])) {
+				iDividerIndex = i;
 			}
-			++__reg2;
 		}
-		if (!this.EntryMatchesFunc(this.iSelectedIndex)) 
-		{
-			var __reg3 = this.GetNextFilterMatch(this.iSelectedIndex);
-			if (__reg3 == undefined) 
-			{
-				__reg3 = this.GetPrevFilterMatch(this.iSelectedIndex);
+		
+		if (!EntryMatchesFunc(iSelectedIndex)) {
+			var nextIdx: Number = GetNextFilterMatch(iSelectedIndex);
+			if (nextIdx == undefined) {
+				nextIdx = GetPrevFilterMatch(iSelectedIndex);
 			}
-			if (__reg3 == undefined) 
-			{
-				__reg3 = -1;
+			if (nextIdx == undefined) {
+				nextIdx = -1;
 			}
-			this.iSelectedIndex = __reg3;
+			iSelectedIndex = nextIdx;
 		}
-		this.UpdateTopHalf();
-		this.SetEntry(this.SelectedEntry, this.EntriesA[this.iSelectedIndex]);
-		this.UpdateBottomHalf();
-		this.RepositionEntries();
+		
+		UpdateTopHalf();
+		SetEntry(SelectedEntry, EntriesA[iSelectedIndex]);
+		UpdateBottomHalf();
+		RepositionEntries();
 	}
 
-	function IsSelectionAboveDivider()
+	function IsSelectionAboveDivider(): Boolean
 	{
-		return this.iDividerIndex == -1 || this.selectedIndex < this.iDividerIndex;
+		return iDividerIndex == -1 || selectedIndex < iDividerIndex;
 	}
 
-	function UpdateTopHalf()
+	function UpdateTopHalf(): Void
 	{
-		var __reg3 = this.GetPrevFilterMatch(this.iSelectedIndex);
-		var __reg2 = this.iMaxEntriesTopHalf - 1;
-		for (;;) 
-		{
-			if (__reg2 < 0) 
-			{
-				return;
+		var prevIdx: Number = GetPrevFilterMatch(iSelectedIndex);
+		
+		for (var i: Number = iMaxEntriesTopHalf - 1; i >= 0; i--) {
+			if (prevIdx == undefined) {
+				SetEntry(TopHalf["Entry" + i]);
+			} else {
+				SetEntry(TopHalf["Entry" + i], EntriesA[prevIdx]);
+				prevIdx = GetPrevFilterMatch(prevIdx);
 			}
-			if (__reg3 == undefined) 
-			{
-				this.SetEntry(this.TopHalf["Entry" + __reg2]);
-			}
-			else 
-			{
-				this.SetEntry(this.TopHalf["Entry" + __reg2], this.EntriesA[__reg3]);
-				__reg3 = this.GetPrevFilterMatch(__reg3);
-			}
-			--__reg2;
 		}
 	}
 
-	function UpdateBottomHalf()
+	function UpdateBottomHalf(): Void
 	{
-		var __reg3 = this.GetNextFilterMatch(this.iSelectedIndex);
-		var __reg2 = 0;
-		for (;;) 
-		{
-			if (__reg2 >= this.iMaxEntriesBottomHalf) 
-			{
-				return;
+		var nextIdx: Number = GetNextFilterMatch(iSelectedIndex);
+		
+		for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++) {
+			if (nextIdx == undefined) {
+				SetEntry(BottomHalf["Entry" + i]);
+			} else {
+				SetEntry(BottomHalf["Entry" + i], EntriesA[nextIdx]);
+				nextIdx = GetNextFilterMatch(nextIdx);
 			}
-			if (__reg3 == undefined) 
-			{
-				this.SetEntry(this.BottomHalf["Entry" + __reg2]);
-			}
-			else 
-			{
-				this.SetEntry(this.BottomHalf["Entry" + __reg2], this.EntriesA[__reg3]);
-				__reg3 = this.GetNextFilterMatch(__reg3);
-			}
-			++__reg2;
 		}
 	}
 
-	function SetEntry(aEntryClip, aEntryObject)
+	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object): Void
 	{
-		if (this.IsDivider(aEntryObject)) 
-		{
+		if (IsDivider(aEntryObject)) {
 			aEntryClip.gotoAndStop("Divider");
-		}
-		else 
-		{
+		} else {
 			aEntryClip.gotoAndStop(aEntryObject.enabled == false ? "Disabled" : "Normal");
 		}
-		if (aEntryClip.textField != undefined) 
-		{
-			if (aEntryObject.text == undefined) 
-			{
+		if (aEntryClip.textField != undefined) {
+			if (aEntryObject.text == undefined) {
 				aEntryClip.textField.SetText(" ");
-			}
-			else 
-			{
+			} else {
 				aEntryClip.textField.SetText(aEntryObject.text);
 			}
-			if (this.bMultilineList == true) 
-			{
+			if (bMultilineList == true) {
 				aEntryClip.textField.verticalAutoSize = "top";
 			}
-			if (this.bToFitList == true) 
-			{
+			if (bToFitList == true) {
 				aEntryClip.textField.textAutoSize = "shrink";
 			}
 		}

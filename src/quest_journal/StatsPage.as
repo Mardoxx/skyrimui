@@ -51,7 +51,7 @@ class StatsPage extends MovieClip
 		var STAT_TEXT = 0;
 		var STAT_VALUE = 1;
 		var STAT_ENTRYLISTINDEX = 2;
-		var STAT_UNKNOWN = 3;
+		var STAT_UNKNOWN = 3; // Unknown
 		var STAT_STRIDE = 4;
 		
 		for (var i: Number = 0; i < arguments.length; i += STAT_STRIDE) {

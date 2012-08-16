@@ -1,115 +1,106 @@
-dynamic class FavoritesMenu extends MovieClip
+import Shared.GlobalFunc;
+import gfx.io.GameDelegate;
+import gfx.managers.FocusHandler;
+import gfx.ui.InputDetails;
+import gfx.ui.NavigationCode;
+
+class FavoritesMenu extends MovieClip
 {
 	var bPCControlsReady: Boolean = true;
-	var ItemList;
-	var LeftPanel;
-	var List_mc;
-	var _parent;
-	var gotoAndPlay;
+	var ItemList: MovieClip;
+	var LeftPanel: MovieClip;
+	var List_mc: MovieClip;
 
 	function FavoritesMenu()
 	{
 		super();
-		this.ItemList = this.List_mc;
+		ItemList = List_mc;
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
-		Shared.GlobalFunc.SetLockFunction();
-		this._parent.Lock("BL");
-		gfx.io.GameDelegate.addCallBack("PopulateItems", this, "populateItemList");
-		gfx.io.GameDelegate.addCallBack("SetSelectedItem", this, "setSelectedItem");
-		gfx.io.GameDelegate.addCallBack("StartFadeOut", this, "startFadeOut");
-		this.ItemList.addEventListener("listMovedUp", this, "onListMoveUp");
-		this.ItemList.addEventListener("listMovedDown", this, "onListMoveDown");
-		this.ItemList.addEventListener("itemPress", this, "onItemSelect");
-		gfx.managers.FocusHandler.instance.setFocus(this.ItemList, 0);
-		this._parent.gotoAndPlay("startFadeIn");
+		GlobalFunc.SetLockFunction();
+		_parent.Lock("BL");
+		GameDelegate.addCallBack("PopulateItems", this, "populateItemList");
+		GameDelegate.addCallBack("SetSelectedItem", this, "setSelectedItem");
+		GameDelegate.addCallBack("StartFadeOut", this, "startFadeOut");
+		ItemList.addEventListener("listMovedUp", this, "onListMoveUp");
+		ItemList.addEventListener("listMovedDown", this, "onListMoveDown");
+		ItemList.addEventListener("itemPress", this, "onItemSelect");
+		FocusHandler.instance.setFocus(ItemList, 0);
+		_parent.gotoAndPlay("startFadeIn");
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
-		if (!pathToFocus[0].handleInput(details, pathToFocus.slice(1))) 
-		{
-			if (Shared.GlobalFunc.IsKeyPressed(details) && details.navEquivalent == gfx.ui.NavigationCode.TAB) 
-			{
-				this.startFadeOut();
+		if (!pathToFocus[0].handleInput(details, pathToFocus.slice(1))) {
+			if (Shared.GlobalFunc.IsKeyPressed(details) && details.navEquivalent == NavigationCode.TAB) {
+				startFadeOut();
 			}
 		}
 		return true;
 	}
 
-	function get selectedIndex()
+	function get selectedIndex(): Number
 	{
-		return this.ItemList.selectedEntry.index;
+		return ItemList.selectedEntry.index;
 	}
 
-	function get itemList()
+	function get itemList(): MovieClip
 	{
-		return this.ItemList;
+		return ItemList;
 	}
 
-	function setSelectedItem(aiIndex)
+	function setSelectedItem(aiIndex: Number): Void
 	{
-		var __reg2 = 0;
-		for (;;) 
-		{
-			if (__reg2 >= this.ItemList.entryList.length) 
-			{
+		for (var i: Number = 0; i < ItemList.entryList.length; i++) {
+			if (ItemList.entryList[i].index == aiIndex) {
+				ItemList.selectedIndex = i;
+				ItemList.RestoreScrollPosition(i);
+				ItemList.UpdateList();
 				return;
 			}
-			if (this.ItemList.entryList[__reg2].index == aiIndex) 
-			{
-				this.ItemList.selectedIndex = __reg2;
-				this.ItemList.RestoreScrollPosition(__reg2);
-				this.ItemList.UpdateList();
-				return;
-			}
-			++__reg2;
 		}
 	}
 
-	function onListMoveUp(event)
+	function onListMoveUp(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
-		if (event.scrollChanged == true) 
-		{
-			this.gotoAndPlay("moveUp");
+		GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+		if (event.scrollChanged == true) {
+			gotoAndPlay("moveUp");
 		}
 	}
 
-	function onListMoveDown(event)
+	function onListMoveDown(event: Object): Void
 	{
-		gfx.io.GameDelegate.call("PlaySound", ["UIMenuFocus"]);
-		if (event.scrollChanged == true) 
-		{
-			this.gotoAndPlay("moveDown");
+		GameDelegate.call("PlaySound", ["UIMenuFocus"]);
+		if (event.scrollChanged == true) {
+			gotoAndPlay("moveDown");
 		}
 	}
 
-	function onItemSelect(event)
+	function onItemSelect(event: Object): Void
 	{
-		if (event.keyboardOrMouse != 0) 
-		{
-			gfx.io.GameDelegate.call("ItemSelect", []);
+		if (event.keyboardOrMouse != 0) {
+			GameDelegate.call("ItemSelect", []);
 		}
 	}
 
-	function startFadeOut()
+	function startFadeOut(): Void
 	{
-		this._parent.gotoAndPlay("startFadeOut");
+		_parent.gotoAndPlay("startFadeOut");
 	}
 
-	function onFadeOutCompletion()
+	function onFadeOutCompletion(): Void
 	{
-		gfx.io.GameDelegate.call("FadeDone", [this.selectedIndex]);
+		GameDelegate.call("FadeDone", [selectedIndex]);
 	}
 
-	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
-		this.ItemList.SetPlatform(aiPlatform, abPS3Switch);
-		this.LeftPanel._x = aiPlatform == 0 ? -90 : -78.2;
-		this.LeftPanel.gotoAndStop(aiPlatform == 0 ? "Mouse" : "Gamepad");
+		ItemList.SetPlatform(aiPlatform, abPS3Switch);
+		LeftPanel._x = aiPlatform == 0 ? -90 : -78.2;
+		LeftPanel.gotoAndStop(aiPlatform == 0 ? "Mouse" : "Gamepad");
 	}
 
 }

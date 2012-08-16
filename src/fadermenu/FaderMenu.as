@@ -26,7 +26,7 @@ class FaderMenu extends MovieClip
 		fMinNumSeconds = 0;
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
 		GameDelegate.addCallBack("InitFade", this, "initFade");
 		GameDelegate.addCallBack("UpdateFade", this, "updateFade");

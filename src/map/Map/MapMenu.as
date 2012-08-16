@@ -1,4 +1,9 @@
-dynamic class Map.MapMenu
+import gfx.io.GameDelegate;
+import Map.LocalMap;
+import Shared.ButtonChange;
+import Shared.GlobalFunc;
+
+class Map.MapMenu
 {
 	static var REFRESH_SHOW: Number = 0;
 	static var REFRESH_X: Number = 1;
@@ -10,259 +15,239 @@ dynamic class Map.MapMenu
 	static var CREATE_UNDISCOVERED: Number = 2;
 	static var CREATE_STRIDE: Number = 3;
 	static var MARKER_CREATE_PER_FRAME: Number = 10;
-	var BottomBar;
-	var LocalMapMenu;
-	var MapHeight;
-	var MapMovie;
-	var MapWidth;
-	var MarkerContainer;
-	var MarkerData;
-	var MarkerDescriptionHolder;
-	var MarkerDescriptionObj;
-	var Markers;
-	var NextCreateIndex;
-	var PlayerLocationMarkerType;
-	var SelectedMarker;
-	var YouAreHereMarker;
-	var iPlatform;
+	
+	var BottomBar: MovieClip;
+	var LocalMapMenu: MovieClip;
+	var MapHeight: Number;
+	var MapMovie: MovieClip;
+	var MapWidth: Number;
+	var MarkerContainer: MovieClip;
+	var MarkerData: Array;
+	var MarkerDescriptionHolder: MovieClip;
+	var MarkerDescriptionObj: MovieClip;
+	var Markers: Array;
+	var NextCreateIndex: Number;
+	var PlayerLocationMarkerType: String;
+	var SelectedMarker: MovieClip;
+	var YouAreHereMarker: MovieClip;
+	var iPlatform: Number;
 
-	function MapMenu(aMapMovie)
+	function MapMenu(aMapMovie: MovieClip)
 	{
-		this.MapMovie = aMapMovie == undefined ? _root : aMapMovie;
-		this.MarkerContainer = this.MapMovie.createEmptyMovieClip("MarkerClips", 1);
-		this.BottomBar = _root.Bottom;
-		this.Markers = new Array();
-		this.NextCreateIndex = -1;
-		this.MapWidth = 0;
-		this.MapHeight = 0;
-		this.LocalMapMenu = this.MapMovie.LocalMapFader.MapClip;
-		if (this.LocalMapMenu != undefined) 
-		{
-			this.LocalMapMenu.SetBottomBar(this.BottomBar);
+		MapMovie = aMapMovie == undefined ? _root : aMapMovie;
+		MarkerContainer = MapMovie.createEmptyMovieClip("MarkerClips", 1);
+		BottomBar = _root.Bottom;
+		Markers = new Array();
+		NextCreateIndex = -1;
+		MapWidth = 0;
+		MapHeight = 0;
+		LocalMapMenu = MapMovie.LocalMapFader.MapClip;
+		if (LocalMapMenu != undefined) {
+			LocalMapMenu.SetBottomBar(BottomBar);
 			Mouse.addListener(this);
 		}
-		this.MarkerDescriptionHolder = this.MapMovie.attachMovie("DescriptionHolder", "MarkerDescriptionHolder", this.MapMovie.getNextHighestDepth());
-		this.MarkerDescriptionHolder._visible = false;
-		this.MarkerDescriptionHolder.hitTestDisable = true;
-		this.MarkerDescriptionObj = this.MarkerDescriptionHolder.Description;
+		MarkerDescriptionHolder = MapMovie.attachMovie("DescriptionHolder", "MarkerDescriptionHolder", MapMovie.getNextHighestDepth());
+		MarkerDescriptionHolder._visible = false;
+		MarkerDescriptionHolder.hitTestDisable = true;
+		MarkerDescriptionObj = MarkerDescriptionHolder.Description;
 		Stage.addListener(this);
-		this.Init();
+		Init();
 	}
 
-	function onResize()
+	function onResize(): Void
 	{
-		this.MapWidth = Stage.visibleRect.right - Stage.visibleRect.left;
-		this.MapHeight = Stage.visibleRect.bottom - Stage.visibleRect.top;
-		if (this.MapMovie == _root) 
-		{
-			this.MarkerContainer._x = Stage.visibleRect.left;
-			this.MarkerContainer._y = Stage.visibleRect.top;
-		}
-		else 
-		{
-			var __reg3 = Map.LocalMap(this.MapMovie);
-			if (__reg3 != undefined) 
-			{
-				this.MapWidth = __reg3.TextureWidth;
-				this.MapHeight = __reg3.TextureHeight;
+		MapWidth = Stage.visibleRect.right - Stage.visibleRect.left;
+		MapHeight = Stage.visibleRect.bottom - Stage.visibleRect.top;
+		if (MapMovie == _root) {
+			MarkerContainer._x = Stage.visibleRect.left;
+			MarkerContainer._y = Stage.visibleRect.top;
+		} else {
+			var localMap: LocalMap = LocalMap(MapMovie);
+			if (localMap != undefined) {
+				MapWidth = localMap.TextureWidth;
+				MapHeight = localMap.TextureHeight;
 			}
 		}
-		Shared.GlobalFunc.SetLockFunction();
+		GlobalFunc.SetLockFunction();
 		MovieClip(_root.Bottom).Lock("B");
 	}
 
-	function onMouseDown()
+	function onMouseDown(): Void
 	{
-		if (this.BottomBar.hitTest(_root._xmouse, _root._ymouse)) 
-		{
+		if (BottomBar.hitTest(_root._xmouse, _root._ymouse)) {
 			return;
 		}
-		gfx.io.GameDelegate.call("ClickCallback", []);
+		GameDelegate.call("ClickCallback", []);
 	}
 
-	function SetNumMarkers(aNumMarkers)
+	function SetNumMarkers(aNumMarkers: Number): Void
 	{
-		if (undefined != this.MarkerContainer) 
+		if (undefined != MarkerContainer) 
 		{
-			this.MarkerContainer.removeMovieClip();
-			this.MarkerContainer = this.MapMovie.createEmptyMovieClip("MarkerClips", 1);
-			this.onResize();
+			MarkerContainer.removeMovieClip();
+			MarkerContainer = MapMovie.createEmptyMovieClip("MarkerClips", 1);
+			onResize();
 		}
-		delete this.Markers;
-		this.Markers = new Array(aNumMarkers);
+		delete Markers;
+		Markers = new Array(aNumMarkers);
 		Map.MapMarker.TopDepth = aNumMarkers;
-		this.NextCreateIndex = 0;
-		this.SetSelectedMarker(-1);
+		NextCreateIndex = 0;
+		SetSelectedMarker(-1);
 	}
 
-	function GetCreatingMarkers()
+	function GetCreatingMarkers(): Boolean
 	{
-		return this.NextCreateIndex != -1;
+		return NextCreateIndex != -1;
 	}
 
-	function CreateMarkers()
+	function CreateMarkers(): Void
 	{
-		if (-1 != this.NextCreateIndex && this.MarkerContainer != undefined) 
-		{
-			var __reg5 = 0;
-			var __reg3 = this.NextCreateIndex * Map.MapMenu.CREATE_STRIDE;
-			var __reg6 = this.Markers.length;
-			var __reg7 = this.MarkerData.length;
-			while (this.NextCreateIndex < __reg6 && __reg3 < __reg7 && __reg5 < Map.MapMenu.MARKER_CREATE_PER_FRAME) 
-			{
-				var __reg2 = this.MarkerContainer.attachMovie(Map.MapMarker.IconTypes[this.MarkerData[__reg3 + Map.MapMenu.CREATE_ICONTYPE]], "Marker" + this.NextCreateIndex, this.NextCreateIndex);
-				this.Markers[this.NextCreateIndex] = __reg2;
-				if (this.MarkerData[__reg3 + Map.MapMenu.CREATE_ICONTYPE] == this.PlayerLocationMarkerType) 
-				{
-					this.YouAreHereMarker = __reg2.Icon;
+		if (-1 != NextCreateIndex && MarkerContainer != undefined) {
+			var i: Number = 0;
+			var j: Number = NextCreateIndex * Map.MapMenu.CREATE_STRIDE;
+			var markersLen: Number = Markers.length;
+			var dataLen: Number = MarkerData.length;
+			
+			while (NextCreateIndex < markersLen && j < dataLen && i < Map.MapMenu.MARKER_CREATE_PER_FRAME) {
+				var mapMarker: MovieClip = MarkerContainer.attachMovie(Map.MapMarker.IconTypes[MarkerData[j + Map.MapMenu.CREATE_ICONTYPE]], "Marker" + NextCreateIndex, NextCreateIndex);
+				Markers[NextCreateIndex] = mapMarker;
+				if (MarkerData[j + Map.MapMenu.CREATE_ICONTYPE] == PlayerLocationMarkerType) {
+					YouAreHereMarker = mapMarker.Icon;
 				}
-				__reg2.Index = this.NextCreateIndex;
-				__reg2.label = this.MarkerData[__reg3 + Map.MapMenu.CREATE_NAME];
-				__reg2.textField._visible = false;
-				__reg2.visible = false;
-				if (this.MarkerData[__reg3 + Map.MapMenu.CREATE_UNDISCOVERED] && __reg2.IconClip != undefined) 
-				{
-					var __reg4 = __reg2.IconClip.getNextHighestDepth();
-					__reg2.IconClip.attachMovie(Map.MapMarker.IconTypes[this.MarkerData[__reg3 + Map.MapMenu.CREATE_ICONTYPE]] + "Undiscovered", "UndiscoveredIcon", __reg4);
+				mapMarker.Index = NextCreateIndex;
+				mapMarker.label = MarkerData[j + Map.MapMenu.CREATE_NAME];
+				mapMarker.textField._visible = false;
+				mapMarker.visible = false;
+				if (MarkerData[j + Map.MapMenu.CREATE_UNDISCOVERED] && mapMarker.IconClip != undefined) {
+					var depth: Number = mapMarker.IconClip.getNextHighestDepth();
+					mapMarker.IconClip.attachMovie(Map.MapMarker.IconTypes[MarkerData[j + Map.MapMenu.CREATE_ICONTYPE]] + "Undiscovered", "UndiscoveredIcon", depth);
 				}
-				++__reg5;
-				++this.NextCreateIndex;
-				__reg3 = __reg3 + Map.MapMenu.CREATE_STRIDE;
+				++i;
+				++NextCreateIndex;
+				j = j + Map.MapMenu.CREATE_STRIDE;
 			}
-			if (this.NextCreateIndex >= __reg6) 
-			{
-				this.NextCreateIndex = -1;
+			
+			if (NextCreateIndex >= markersLen) {
+				NextCreateIndex = -1;
 			}
 		}
 	}
 
-	function RefreshMarkers()
+	function RefreshMarkers(): Void
 	{
-		var __reg4 = 0;
-		var __reg3 = 0;
-		var __reg6 = this.Markers.length;
-		var __reg5 = this.MarkerData.length;
-		while (__reg4 < __reg6 && __reg3 < __reg5) 
-		{
-			var __reg2 = this.Markers[__reg4];
-			__reg2._visible = this.MarkerData[__reg3 + Map.MapMenu.REFRESH_SHOW];
-			if (__reg2._visible) 
-			{
-				__reg2._x = this.MarkerData[__reg3 + Map.MapMenu.REFRESH_X] * this.MapWidth;
-				__reg2._y = this.MarkerData[__reg3 + Map.MapMenu.REFRESH_Y] * this.MapHeight;
-				__reg2._rotation = this.MarkerData[__reg3 + Map.MapMenu.REFRESH_ROTATION];
+		var i: Number = 0;
+		var j: Number = 0;
+		var markersLen: Number = Markers.length;
+		var dataLen: Number = MarkerData.length;
+		while (i < markersLen && j < dataLen) {
+			var marker: MovieClip = Markers[i];
+			marker._visible = MarkerData[j + Map.MapMenu.REFRESH_SHOW];
+			if (marker._visible) {
+				marker._x = MarkerData[j + Map.MapMenu.REFRESH_X] * MapWidth;
+				marker._y = MarkerData[j + Map.MapMenu.REFRESH_Y] * MapHeight;
+				marker._rotation = MarkerData[j + Map.MapMenu.REFRESH_ROTATION];
 			}
-			++__reg4;
-			__reg3 = __reg3 + Map.MapMenu.REFRESH_STRIDE;
+			++i;
+			j = j + Map.MapMenu.REFRESH_STRIDE;
 		}
-		if (this.SelectedMarker != undefined) 
-		{
-			this.MarkerDescriptionHolder._x = this.SelectedMarker._x + this.MarkerContainer._x;
-			this.MarkerDescriptionHolder._y = this.SelectedMarker._y + this.MarkerContainer._y;
+		if (SelectedMarker != undefined) {
+			MarkerDescriptionHolder._x = SelectedMarker._x + MarkerContainer._x;
+			MarkerDescriptionHolder._y = SelectedMarker._y + MarkerContainer._y;
 		}
 	}
 
-	function SetSelectedMarker(aiSelectedMarkerIndex)
+	function SetSelectedMarker(aiSelectedMarkerIndex: Number): Void
 	{
-		var __reg3 = aiSelectedMarkerIndex < 0 ? undefined : this.Markers[aiSelectedMarkerIndex];
-		if (__reg3 != this.SelectedMarker) 
-		{
-			if (this.SelectedMarker != undefined) 
-			{
-				this.SelectedMarker.MarkerRollOut();
-				this.SelectedMarker = undefined;
-				this.MarkerDescriptionHolder.gotoAndPlay("Hide");
+		var marker: MovieClip = aiSelectedMarkerIndex < 0 ? undefined : Markers[aiSelectedMarkerIndex];
+		if (marker != SelectedMarker) {
+			if (SelectedMarker != undefined) {
+				SelectedMarker.MarkerRollOut();
+				SelectedMarker = undefined;
+				MarkerDescriptionHolder.gotoAndPlay("Hide");
 			}
-			if (__reg3 != undefined && !this.BottomBar.hitTest(_root._xmouse, _root._ymouse) && __reg3.visible && __reg3.MarkerRollOver()) 
-			{
-				this.SelectedMarker = __reg3;
-				this.MarkerDescriptionHolder._visible = true;
-				this.MarkerDescriptionHolder.gotoAndPlay("Show");
+			if (marker != undefined && !BottomBar.hitTest(_root._xmouse, _root._ymouse) && marker.visible && marker.MarkerRollOver()) {
+				SelectedMarker = marker;
+				MarkerDescriptionHolder._visible = true;
+				MarkerDescriptionHolder.gotoAndPlay("Show");
 				return;
 			}
-			this.SelectedMarker = undefined;
+			SelectedMarker = undefined;
 		}
 	}
 
-	function ClickSelectedMarker()
+	function ClickSelectedMarker(): Void
 	{
-		if (this.SelectedMarker != undefined) 
-		{
-			this.SelectedMarker.MarkerClick();
+		if (SelectedMarker != undefined) {
+			SelectedMarker.MarkerClick();
 		}
 	}
 
-	function Init()
+	function Init(): Void
 	{
-		this.onResize();
-		if (this.BottomBar != undefined) 
-		{
-			this.BottomBar.swapDepths(4);
+		onResize();
+		if (BottomBar != undefined) {
+			BottomBar.swapDepths(4);
 		}
-		if (this.MapMovie.LocalMapFader != undefined) 
-		{
-			this.MapMovie.LocalMapFader.swapDepths(3);
-			this.MapMovie.LocalMapFader.gotoAndStop("hide");
-			this.BottomBar.LocalMapButton.addEventListener("click", this, "OnLocalButtonClick");
-			this.BottomBar.JournalButton.addEventListener("click", this, "OnJournalButtonClick");
-			this.BottomBar.PlayerLocButton.addEventListener("click", this, "OnPlayerLocButtonClick");
+		if (MapMovie.LocalMapFader != undefined) {
+			MapMovie.LocalMapFader.swapDepths(3);
+			MapMovie.LocalMapFader.gotoAndStop("hide");
+			BottomBar.LocalMapButton.addEventListener("click", this, "OnLocalButtonClick");
+			BottomBar.JournalButton.addEventListener("click", this, "OnJournalButtonClick");
+			BottomBar.PlayerLocButton.addEventListener("click", this, "OnPlayerLocButtonClick");
 		}
-		gfx.io.GameDelegate.addCallBack("RefreshMarkers", this, "RefreshMarkers");
-		gfx.io.GameDelegate.addCallBack("SetSelectedMarker", this, "SetSelectedMarker");
-		gfx.io.GameDelegate.addCallBack("ClickSelectedMarker", this, "ClickSelectedMarker");
-		gfx.io.GameDelegate.addCallBack("SetDateString", this, "SetDateString");
-		gfx.io.GameDelegate.addCallBack("ShowJournal", this, "ShowJournal");
+		GameDelegate.addCallBack("RefreshMarkers", this, "RefreshMarkers");
+		GameDelegate.addCallBack("SetSelectedMarker", this, "SetSelectedMarker");
+		GameDelegate.addCallBack("ClickSelectedMarker", this, "ClickSelectedMarker");
+		GameDelegate.addCallBack("SetDateString", this, "SetDateString");
+		GameDelegate.addCallBack("ShowJournal", this, "ShowJournal");
 	}
 
-	function OnLocalButtonClick()
+	function OnLocalButtonClick(): Void
 	{
-		gfx.io.GameDelegate.call("ToggleMapCallback", []);
+		GameDelegate.call("ToggleMapCallback", []);
 	}
 
-	function OnJournalButtonClick()
+	function OnJournalButtonClick(): Void
 	{
-		gfx.io.GameDelegate.call("OpenJournalCallback", []);
+		GameDelegate.call("OpenJournalCallback", []);
 	}
 
-	function OnPlayerLocButtonClick()
+	function OnPlayerLocButtonClick(): Void
 	{
-		gfx.io.GameDelegate.call("CurrentLocationCallback", []);
+		GameDelegate.call("CurrentLocationCallback", []);
 	}
 
-	function SetPlatform(aPlatformNum: Number, abPS3Switch: Boolean)
+	function SetPlatform(aPlatformNum: Number, abPS3Switch: Boolean): Void
 	{
-		if (this.BottomBar != undefined) 
-		{
-			this.BottomBar.LeftButton.SetPlatform(aPlatformNum, abPS3Switch);
-			this.BottomBar.RightButton.SetPlatform(aPlatformNum, abPS3Switch);
-			this.BottomBar.JournalButton.SetPlatform(aPlatformNum, abPS3Switch);
-			this.BottomBar.PlayerLocButton.SetPlatform(aPlatformNum, abPS3Switch);
-			this.BottomBar.LocalMapButton.SetPlatform(aPlatformNum, abPS3Switch);
-			this.BottomBar.JournalButton.disabled = aPlatformNum != Shared.ButtonChange.PLATFORM_PC;
-			this.BottomBar.PlayerLocButton.disabled = aPlatformNum != Shared.ButtonChange.PLATFORM_PC;
-			this.BottomBar.LocalMapButton.disabled = aPlatformNum != Shared.ButtonChange.PLATFORM_PC;
+		if (BottomBar != undefined) {
+			BottomBar.LeftButton.SetPlatform(aPlatformNum, abPS3Switch);
+			BottomBar.RightButton.SetPlatform(aPlatformNum, abPS3Switch);
+			BottomBar.JournalButton.SetPlatform(aPlatformNum, abPS3Switch);
+			BottomBar.PlayerLocButton.SetPlatform(aPlatformNum, abPS3Switch);
+			BottomBar.LocalMapButton.SetPlatform(aPlatformNum, abPS3Switch);
+			BottomBar.JournalButton.disabled = aPlatformNum != ButtonChange.PLATFORM_PC;
+			BottomBar.PlayerLocButton.disabled = aPlatformNum != ButtonChange.PLATFORM_PC;
+			BottomBar.LocalMapButton.disabled = aPlatformNum != ButtonChange.PLATFORM_PC;
 		}
-		this.iPlatform = aPlatformNum;
+		iPlatform = aPlatformNum;
 	}
 
-	function SetDateString(astrDate)
+	function SetDateString(astrDate: String): Void
 	{
-		this.BottomBar.DateText.SetText(astrDate);
+		BottomBar.DateText.SetText(astrDate);
 	}
 
-	function ShowJournal(abShow)
+	function ShowJournal(abShow: Boolean): Void
 	{
-		if (this.BottomBar != undefined) 
-		{
-			this.BottomBar._visible = !abShow;
+		if (BottomBar != undefined) {
+			BottomBar._visible = !abShow;
 		}
 	}
 
-	function SetCurrentLocationEnabled(abEnabled)
+	function SetCurrentLocationEnabled(abEnabled: Boolean): Void
 	{
-		if (this.BottomBar != undefined && this.iPlatform == Shared.ButtonChange.PLATFORM_PC) 
-		{
-			this.BottomBar.PlayerLocButton.disabled = !abEnabled;
+		if (BottomBar != undefined && iPlatform == ButtonChange.PLATFORM_PC) {
+			BottomBar.PlayerLocButton.disabled = !abEnabled;
 		}
 	}
 

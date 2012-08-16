@@ -1,102 +1,96 @@
-dynamic class CreditsMenu extends MovieClip
+import gfx.managers.FocusHandler;
+import gfx.ui.InputDetails;
+import gfx.ui.NavigationCode;
+
+class CreditsMenu extends MovieClip
 {
 	static var EndY: Number = -100;
 	static var TextYRate: Number = 1;
-	var CreditsText_tf;
-	var iUpTimerID;
-	var textField;
+	
+	var CreditsText_tf: TextField;
+	var iUpTimerID: Number;
+	var textField: TextField;
 
 	function CreditsMenu()
 	{
 		super();
-		this.CreditsText_tf = this.textField;
-		this.CreditsText_tf.verticalAutoSize = "top";
+		CreditsText_tf = textField;
+		CreditsText_tf.verticalAutoSize = "top";
 		Mouse.addListener(this);
-		gfx.managers.FocusHandler.instance.setFocus(this, 0);
+		FocusHandler.instance.setFocus(this, 0);
 	}
 
-	function onCodeObjectInit()
+	function onCodeObjectInit(): Void
 	{
-		this.CreditsText_tf.SetText(" ", true);
-		_root.CodeObj.requestCredits(this.CreditsText_tf);
+		CreditsText_tf.SetText(" ", true);
+		_root.CodeObj.requestCredits(CreditsText_tf);
 		CreditsMenu.TextYRate = _root.CodeObj.getScrollSpeed();
 	}
 
-	function onEnterFrame()
+	function onEnterFrame(): Void
 	{
-		if (this.iUpTimerID == undefined) 
-		{
-			this.CreditsText_tf._y = this.CreditsText_tf._y - CreditsMenu.TextYRate;
+		if (iUpTimerID == undefined) {
+			CreditsText_tf._y = CreditsText_tf._y - CreditsMenu.TextYRate;
 		}
-		if (this.CreditsText_tf._y + this.CreditsText_tf._height <= CreditsMenu.EndY) 
-		{
+		if (CreditsText_tf._y + CreditsText_tf._height <= CreditsMenu.EndY) {
 			_root.CodeObj.closeMenu();
 		}
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
 		if (Shared.GlobalFunc.IsKeyPressed(details)) {
-			if ((__reg0 = details.navEquivalent) === gfx.ui.NavigationCode.TAB) 
-			{
-				_root.CodeObj.closeMenu();
-			}
-			else if (__reg0 === gfx.ui.NavigationCode.ESCAPE) 
-			{
-				_root.CodeObj.closeMenu();
-			}
-			else if (__reg0 === gfx.ui.NavigationCode.UP) 
-			{
-				this.moveCredits(40);
-			}
-			else if (__reg0 === gfx.ui.NavigationCode.DOWN) 
-			{
-				this.moveCredits(-40);
-			}
-			else if (__reg0 === gfx.ui.NavigationCode.PAGE_UP) 
-			{
-				this.moveCredits(80);
-			}
-			else if (__reg0 === gfx.ui.NavigationCode.PAGE_DOWN) 
-			{
-				this.moveCredits(-80);
+			switch (details.navEquivalent) {
+				case NavigationCode.TAB:
+				case NavigationCode.ESCAPE:
+					_root.CodeObj.closeMenu();
+					break;
+				case NavigationCode.UP:
+					moveCredits(40);
+					break;
+				case NavigationCode.DOWN:
+					moveCredits(-40);
+					break;
+				case NavigationCode.PAGE_UP:
+					moveCredits(80);
+					break;
+				case NavigationCode.PAGE_DOWN:
+					moveCredits(-80);
+					break;
 			}
 		}
 		return true;
 	}
 
-	function onMouseDown()
+	function onMouseDown(): Void
 	{
 		_root.CodeObj.closeMenu();
 	}
 
-	function onMouseWheel(delta)
+	function onMouseWheel(delta: Number): Void
 	{
-		this.moveCredits(20 * delta);
+		moveCredits(20 * delta);
 	}
 
-	function moveCredits(aiDelta)
+	function moveCredits(aiDelta: Number): Void
 	{
-		if (aiDelta < 0) 
-		{
-			this.CreditsText_tf._y = this.CreditsText_tf._y + aiDelta;
+		if (aiDelta < 0) {
+			CreditsText_tf._y = CreditsText_tf._y + aiDelta;
 			return;
 		}
-		if (aiDelta > 0 && this.CreditsText_tf._y < 140) 
-		{
-			this.CreditsText_tf._y = this.CreditsText_tf._y + aiDelta;
-			if (this.iUpTimerID != undefined) 
-			{
-				clearInterval(this.iUpTimerID);
+		if (aiDelta > 0 && CreditsText_tf._y < 140) {
+			CreditsText_tf._y = CreditsText_tf._y + aiDelta;
+			if (iUpTimerID != undefined) {
+				clearInterval(iUpTimerID);
 			}
-			this.iUpTimerID = setInterval(this, "ClearUpTimer", 1000);
+			iUpTimerID = setInterval(this, "ClearUpTimer", 1000);
 		}
 	}
 
-	function ClearUpTimer()
+	function ClearUpTimer(): Void
 	{
-		clearInterval(this.iUpTimerID);
-		this.iUpTimerID = undefined;
+		clearInterval(iUpTimerID);
+		iUpTimerID = undefined;
 	}
 
 }

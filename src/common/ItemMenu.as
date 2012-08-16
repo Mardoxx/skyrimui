@@ -109,10 +109,10 @@ class ItemMenu extends MovieClip
 
 	function onMouseWheel(delta: Object): Void
 	{
-		for (var topMostEntity: Object = Mouse.getTopMostEntity(); !(topMostEntity && topMostEntity != undefined); topMostEntity = topMostEntity._parent) {
-			if ((topMostEntity == MouseRotationRect && ShouldProcessItemsListInput(false)) || (!bFadedIn && delta == -1)) {
+		for (var target: Object = Mouse.getTopMostEntity(); !(target && target != undefined); target = target._parent) {
+			if ((target == MouseRotationRect && ShouldProcessItemsListInput(false)) || (!bFadedIn && delta == -1)) {
 				GameDelegate.call("ZoomItemModel", [delta]);
-			} else if (topMostEntity == ItemsListInputCatcher && ShouldProcessItemsListInput(false)) {
+			} else if (target == ItemsListInputCatcher && ShouldProcessItemsListInput(false)) {
 				if (delta == 1)
 					InventoryLists_mc.ItemsList.moveSelectionUp();
 				else if (delta == -1)

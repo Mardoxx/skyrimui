@@ -1,50 +1,52 @@
-dynamic class TextEntryField extends MovieClip
+import gfx.events.EventDispatcher;
+import Components.CrossPlatformButtons;
+
+class TextEntryField extends MovieClip
 {
-	var AcceptButton;
-	var AcceptInstance;
-	var CancelButton;
-	var CancelInstance;
-	var TextField_txt;
-	var TextInputInstance;
-	var dispatchEvent;
+	var AcceptButton: CrossPlatformButtons;
+	var AcceptInstance: CrossPlatformButtons;
+	var CancelButton: CrossPlatformButtons;
+	var CancelInstance: CrossPlatformButtons;
+	var TextField_txt: TextField;
+	var TextInputInstance: TextField;
+	var dispatchEvent: Function;
 
 	function TextEntryField()
 	{
 		super();
-		this.TextField_txt = this.TextInputInstance;
-		this.AcceptButton = this.AcceptInstance;
-		this.CancelButton = this.CancelInstance;
-		gfx.events.EventDispatcher.initialize(this);
+		TextField_txt = TextInputInstance;
+		AcceptButton = AcceptInstance;
+		CancelButton = CancelInstance;
+		EventDispatcher.initialize(this);
 	}
 
-	function SetupButtons()
+	function SetupButtons(): Void
 	{
-		this.AcceptButton.addEventListener("click", this, "onAccept");
-		this.CancelButton.addEventListener("click", this, "onCancel");
+		AcceptButton.addEventListener("click", this, "onAccept");
+		CancelButton.addEventListener("click", this, "onCancel");
 	}
 
-	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
-		this.AcceptButton.SetPlatform(aiPlatform, abPS3Switch);
-		this.CancelButton.SetPlatform(aiPlatform, abPS3Switch);
+		AcceptButton.SetPlatform(aiPlatform, abPS3Switch);
+		CancelButton.SetPlatform(aiPlatform, abPS3Switch);
 	}
 
-	function GetValidName()
+	function GetValidName(): Boolean
 	{
-		return this.TextField_txt.text.length > 0;
+		return TextField_txt.text.length > 0;
 	}
 
-	function onAccept()
+	function onAccept(): Void
 	{
-		if (this.GetValidName()) 
-		{
-			this.dispatchEvent({type: "nameChange", nameChanged: true});
+		if (GetValidName()) {
+			dispatchEvent({type: "nameChange", nameChanged: true});
 		}
 	}
 
-	function onCancel()
+	function onCancel(): Void
 	{
-		this.dispatchEvent({type: "nameChange", nameChanged: false});
+		dispatchEvent({type: "nameChange", nameChanged: false});
 	}
 
 }

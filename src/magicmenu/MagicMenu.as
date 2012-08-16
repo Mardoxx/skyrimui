@@ -1,169 +1,158 @@
-dynamic class MagicMenu extends ItemMenu
+import gfx.io.GameDelegate;
+import gfx.ui.InputDetails;
+import gfx.ui.NavigationCode;
+import Shared.GlobalFunc;
+
+class MagicMenu extends ItemMenu
 {
 	var bPCControlsReady: Boolean = true;
-	var BottomBar_mc;
-	var ExitMenuRect;
-	var InventoryLists_mc;
-	var ItemCard_mc;
-	var ItemsListInputCatcher;
-	var MagicButtonArt;
-	var RestoreCategoryRect;
-	var SaveIndices;
-	var ShouldProcessItemsListInput;
-	var ToggleMenuFade;
-	var bFadedIn;
-	var bMenuClosing;
-	var iHideButtonFlag;
+	var BottomBar_mc: MovieClip;
+	var ExitMenuRect: MovieClip;
+	var InventoryLists_mc: MovieClip;
+	var ItemCard_mc: MovieClip;
+	var ItemsListInputCatcher: MovieClip;
+	var MagicButtonArt: Array;
+	var RestoreCategoryRect: MovieClip;
+	var bFadedIn: Boolean;
+	var bMenuClosing: Boolean;
+	var iHideButtonFlag: Number;
 
 	function MagicMenu()
 	{
 		super();
-		this.bMenuClosing = false;
-		this.iHideButtonFlag = 0;
+		bMenuClosing = false;
+		iHideButtonFlag = 0;
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
 		super.InitExtensions();
-		gfx.io.GameDelegate.addCallBack("DragonSoulSpent", this, "DragonSoulSpent");
-		gfx.io.GameDelegate.addCallBack("AttemptEquip", this, "AttemptEquip");
-		this.BottomBar_mc.UpdatePerItemInfo({type: InventoryDefines.ICT_SPELL_DEFAULT});
-		this.MagicButtonArt = [{PCArt: "M1M2", XBoxArt: "360_LTRT", PS3Art: "PS3_LBRB"}, {PCArt: "F", XBoxArt: "360_Y", PS3Art: "PS3_Y"}, {PCArt: "R", XBoxArt: "360_X", PS3Art: "PS3_X"}, {PCArt: "Tab", XBoxArt: "360_B", PS3Art: "PS3_B"}];
-		this.BottomBar_mc.SetButtonsArt(this.MagicButtonArt);
+		GameDelegate.addCallBack("DragonSoulSpent", this, "DragonSoulSpent");
+		GameDelegate.addCallBack("AttemptEquip", this, "AttemptEquip");
+		BottomBar_mc.UpdatePerItemInfo({type: InventoryDefines.ICT_SPELL_DEFAULT});
+		MagicButtonArt = [{PCArt: "M1M2", XBoxArt: "360_LTRT", PS3Art: "PS3_LBRB"}, {PCArt: "F", XBoxArt: "360_Y", PS3Art: "PS3_Y"}, {PCArt: "R", XBoxArt: "360_X", PS3Art: "PS3_X"}, {PCArt: "Tab", XBoxArt: "360_B", PS3Art: "PS3_B"}];
+		BottomBar_mc.SetButtonsArt(MagicButtonArt);
 	}
 
-	function PositionElements()
+	function PositionElements(): Void
 	{
 		super.PositionElements();
-		MovieClip(this.InventoryLists_mc).Lock("R");
-		this.InventoryLists_mc._x = this.InventoryLists_mc._x + 20;
-		var __reg3 = Stage.visibleRect.x + Stage.safeRect.x;
-		this.ItemCard_mc._parent._x = (__reg3 + this.InventoryLists_mc._x - this.InventoryLists_mc._width) / 2 - this.ItemCard_mc._parent._width / 2 + 25;
-		MovieClip(this.ExitMenuRect).Lock("TR");
-		this.ExitMenuRect._y = this.ExitMenuRect._y - Stage.safeRect.y;
-		this.RestoreCategoryRect._x = this.ExitMenuRect._x - this.InventoryLists_mc.CategoriesList._parent._width;
-		MovieClip(this.ItemsListInputCatcher).Lock("L");
-		this.ItemsListInputCatcher._x = this.ItemsListInputCatcher._x - Stage.safeRect.x;
-		this.ItemsListInputCatcher._width = this.RestoreCategoryRect._x - Stage.visibleRect.x + 10;
+		MovieClip(InventoryLists_mc).Lock("R");
+		InventoryLists_mc._x = InventoryLists_mc._x + 20;
+		var xOffset: Number = Stage.visibleRect.x + Stage.safeRect.x;
+		ItemCard_mc._parent._x = (xOffset + InventoryLists_mc._x - InventoryLists_mc._width) / 2 - ItemCard_mc._parent._width / 2 + 25;
+		MovieClip(ExitMenuRect).Lock("TR");
+		ExitMenuRect._y = ExitMenuRect._y - Stage.safeRect.y;
+		RestoreCategoryRect._x = ExitMenuRect._x - InventoryLists_mc.CategoriesList._parent._width;
+		MovieClip(ItemsListInputCatcher).Lock("L");
+		ItemsListInputCatcher._x = ItemsListInputCatcher._x - Stage.safeRect.x;
+		ItemsListInputCatcher._width = RestoreCategoryRect._x - Stage.visibleRect.x + 10;
 	}
 
-	function handleInput(details: gfx.ui.InputDetails, pathToFocus: Array): Boolean
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
-		if (this.bFadedIn && !pathToFocus[0].handleInput(details, pathToFocus.slice(1))) 
-		{
-			if (Shared.GlobalFunc.IsKeyPressed(details)) 
-			{
-				if (this.InventoryLists_mc.currentState == InventoryLists.ONE_PANEL && details.navEquivalent == gfx.ui.NavigationCode.RIGHT) 
-				{
-					this.StartMenuFade();
-					gfx.io.GameDelegate.call("ShowTweenMenu", []);
-				}
-				else if (details.navEquivalent == gfx.ui.NavigationCode.TAB) 
-				{
-					this.StartMenuFade();
-					gfx.io.GameDelegate.call("CloseTweenMenu", []);
+		if (bFadedIn && !pathToFocus[0].handleInput(details, pathToFocus.slice(1))) {
+			if (GlobalFunc.IsKeyPressed(details)) {
+				if (InventoryLists_mc.currentState == InventoryLists.ONE_PANEL && details.navEquivalent == NavigationCode.RIGHT) {
+					StartMenuFade();
+					GameDelegate.call("ShowTweenMenu", []);
+				} else if (details.navEquivalent == NavigationCode.TAB) {
+					StartMenuFade();
+					GameDelegate.call("CloseTweenMenu", []);
 				}
 			}
 		}
 		return true;
 	}
 
-	function onExitMenuRectClick()
+	function onExitMenuRectClick(): Void
 	{
-		this.StartMenuFade();
-		gfx.io.GameDelegate.call("ShowTweenMenu", []);
+		StartMenuFade();
+		GameDelegate.call("ShowTweenMenu", []);
 	}
 
-	function StartMenuFade()
+	function StartMenuFade(): Void
 	{
-		this.InventoryLists_mc.HideCategoriesList();
-		this.ToggleMenuFade();
-		this.SaveIndices();
-		this.bMenuClosing = true;
+		InventoryLists_mc.HideCategoriesList();
+		ToggleMenuFade();
+		SaveIndices();
+		bMenuClosing = true;
 	}
 
-	function onFadeCompletion()
+	function onFadeCompletion(): Void
 	{
-		if (this.bMenuClosing) 
-		{
-			gfx.io.GameDelegate.call("CloseMenu", []);
+		if (bMenuClosing) {
+			GameDelegate.call("CloseMenu", []);
 		}
 	}
 
-	function onShowItemsList(event)
+	function onShowItemsList(event: Object): Void
 	{
 		super.onShowItemsList(event);
-		if (event.index != -1) 
-		{
-			this.UpdateButtonText();
+		if (event.index != -1) {
+			UpdateButtonText();
 		}
 	}
 
-	function onItemHighlightChange(event)
+	function onItemHighlightChange(event: Object): Void
 	{
 		super.onItemHighlightChange(event);
-		if (event.index != -1) 
-		{
-			this.UpdateButtonText();
+		if (event.index != -1) {
+			UpdateButtonText();
 		}
 	}
 
-	function DragonSoulSpent()
+	function DragonSoulSpent(): Void
 	{
-		this.ItemCard_mc.itemInfo.soulSpent = true;
-		this.UpdateButtonText();
+		ItemCard_mc.itemInfo.soulSpent = true;
+		UpdateButtonText();
 	}
 
-	function get hideButtonFlag()
+	function get hideButtonFlag(): Number
 	{
-		return this.iHideButtonFlag;
+		return iHideButtonFlag;
 	}
 
-	function set hideButtonFlag(aiHideFlag)
+	function set hideButtonFlag(aiHideFlag: Number): Void
 	{
-		this.iHideButtonFlag = aiHideFlag;
+		iHideButtonFlag = aiHideFlag;
 	}
 
-	function UpdateButtonText()
+	function UpdateButtonText(): Void
 	{
-		if (this.InventoryLists_mc.ItemsList.selectedEntry != undefined) 
-		{
-			var __reg3 = (this.InventoryLists_mc.ItemsList.selectedEntry.filterFlag & this.InventoryLists_mc.CategoriesList.entryList[0].flag) == 0 ? "$Favorite" : "$Unfavorite";
-			var __reg2 = this.ItemCard_mc.itemInfo.showUnlocked == true ? "$Unlock" : "";
-			if ((this.InventoryLists_mc.ItemsList.selectedEntry.filterFlag & this.iHideButtonFlag) != 0) 
-			{
-				this.BottomBar_mc.HideButtons();
+		if (InventoryLists_mc.ItemsList.selectedEntry != undefined) {
+			var favoriteStr: String = (InventoryLists_mc.ItemsList.selectedEntry.filterFlag & InventoryLists_mc.CategoriesList.entryList[0].flag) == 0 ? "$Favorite" : "$Unfavorite";
+			var unlockStr: String = ItemCard_mc.itemInfo.showUnlocked == true ? "$Unlock" : "";
+			if ((InventoryLists_mc.ItemsList.selectedEntry.filterFlag & iHideButtonFlag) != 0) {
+				BottomBar_mc.HideButtons();
 				return;
 			}
-			this.BottomBar_mc.SetButtonsText("$Equip", __reg3, __reg2);
+			BottomBar_mc.SetButtonsText("$Equip", favoriteStr, unlockStr);
 		}
 	}
 
-	function onHideItemsList(event)
+	function onHideItemsList(event: Object): Void
 	{
 		super.onHideItemsList(event);
-		this.BottomBar_mc.UpdatePerItemInfo({type: InventoryDefines.ICT_SPELL_DEFAULT});
+		BottomBar_mc.UpdatePerItemInfo({type: InventoryDefines.ICT_SPELL_DEFAULT});
 	}
 
-	function AttemptEquip(aiSlot)
+	function AttemptEquip(aiSlot: Number): Void
 	{
-		if (this.ShouldProcessItemsListInput(true)) 
-		{
-			gfx.io.GameDelegate.call("ItemSelect", [aiSlot]);
+		if (ShouldProcessItemsListInput(true)) {
+			GameDelegate.call("ItemSelect", [aiSlot]);
 		}
 	}
 
-	function onItemSelect(event)
+	function onItemSelect(event: Object): Void
 	{
-		if (event.entry.enabled) 
-		{
-			if (event.keyboardOrMouse != 0) 
-			{
-				gfx.io.GameDelegate.call("ItemSelect", []);
+		if (event.entry.enabled) {
+			if (event.keyboardOrMouse != 0) {
+				GameDelegate.call("ItemSelect", []);
 			}
 			return;
 		}
-		gfx.io.GameDelegate.call("ShowShoutFail", []);
+		GameDelegate.call("ShowShoutFail", []);
 	}
 
 }

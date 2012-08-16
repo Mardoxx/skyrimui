@@ -1,78 +1,74 @@
-dynamic class GiftMenu extends ItemMenu
+import gfx.io.GameDelegate;
+import Shared.GlobalFunc;
+
+class GiftMenu extends ItemMenu
 {
 	var bPCControlsReady: Boolean = true;
-	var BottomBar_mc;
-	var GiftLabel_mc;
-	var InventoryLists_mc;
-	var bGivingGifts;
+	var BottomBar_mc: MovieClip;
+	var GiftLabel_mc: MovieClip;
+	var InventoryLists_mc: MovieClip;
+	var bGivingGifts: Boolean;
 
 	function GiftMenu()
 	{
 		super();
-		this.bGivingGifts = true;
+		bGivingGifts = true;
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
 		super.InitExtensions();
-		gfx.io.GameDelegate.addCallBack("SetMenuInfo", this, "SetMenuInfo");
-		this.BottomBar_mc.SetButtonArt({PCArt: "Tab", XBoxArt: "360_B", PS3Art: "PS3_B"}, 1);
-		this.GiftLabel_mc = this.InventoryLists_mc.CategoriesList._parent.CategoryLabel;
-		Shared.GlobalFunc.SetLockFunction();
-		this.GiftLabel_mc.Lock("T");
+		GameDelegate.addCallBack("SetMenuInfo", this, "SetMenuInfo");
+		BottomBar_mc.SetButtonArt({PCArt: "Tab", XBoxArt: "360_B", PS3Art: "PS3_B"}, 1);
+		GiftLabel_mc = InventoryLists_mc.CategoriesList._parent.CategoryLabel;
+		GlobalFunc.SetLockFunction();
+		GiftLabel_mc.Lock("T");
 	}
 
-	function ShowItemsList()
+	function ShowItemsList(): Void
 	{
-		this.InventoryLists_mc.ShowItemsList(false);
+		InventoryLists_mc.ShowItemsList(false);
 	}
 
-	function UpdatePlayerInfo(aiFavorPoints)
+	function UpdatePlayerInfo(aiFavorPoints: Number): Void
 	{
-		this.BottomBar_mc.SetGiftInfo(aiFavorPoints);
+		BottomBar_mc.SetGiftInfo(aiFavorPoints);
 	}
 
-	function SetMenuInfo(abGivingGifts, abUseFavorPoints)
+	function SetMenuInfo(abGivingGifts: Boolean, abUseFavorPoints: Boolean): Void
 	{
-		this.bGivingGifts = abGivingGifts;
-		if (abGivingGifts) 
-		{
-			this.GiftLabel_mc.textField.SetText("$GIVE GIFT");
+		bGivingGifts = abGivingGifts;
+		if (abGivingGifts) {
+			GiftLabel_mc.textField.SetText("$GIVE GIFT");
+		} else {
+			GiftLabel_mc.textField.SetText("$TAKE GIFT");
 		}
-		else 
-		{
-			this.GiftLabel_mc.textField.SetText("$TAKE GIFT");
-		}
-		if (abUseFavorPoints) 
-		{
+		if (abUseFavorPoints) {
 			return;
 		}
-		this.BottomBar_mc.HidePlayerInfo();
+		BottomBar_mc.HidePlayerInfo();
 	}
 
-	function onShowItemsList(event)
+	function onShowItemsList(event: Object): Void
 	{
-		if (this.bGivingGifts) 
-		{
-			this.BottomBar_mc.SetButtonsText("$Give", "$Exit");
-		}
-		else 
-		{
-			this.BottomBar_mc.SetButtonsText("$Take", "$Exit");
+		if (bGivingGifts) {
+			BottomBar_mc.SetButtonsText("$Give", "$Exit");
+		} else {
+			BottomBar_mc.SetButtonsText("$Take", "$Exit");
 		}
 		super.onShowItemsList(event);
 	}
 
-	function onHideItemsList(event)
+	function onHideItemsList(event: Object): Void
 	{
 		super.onHideItemsList(event);
-		this.BottomBar_mc.SetButtonsText("", "$Exit");
+		BottomBar_mc.SetButtonsText("", "$Exit");
 	}
 	
-	function onItemCardSubMenuAction(event)
+	function onItemCardSubMenuAction(event: Object): Void
 	{
 		super.onItemCardSubMenuAction(event);
-		gfx.io.GameDelegate.call("QuantitySliderOpen", [event.opening]);
+		GameDelegate.call("QuantitySliderOpen", [event.opening]);
 	}
 
 }

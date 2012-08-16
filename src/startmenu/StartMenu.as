@@ -1,5 +1,6 @@
 import gfx.io.GameDelegate;
 import gfx.managers.FocusHandler;
+import Components.CrossPlatformButtons
 
 class StartMenu extends MovieClip
 {
@@ -22,13 +23,13 @@ class StartMenu extends MovieClip
 	var ConfirmPanel_mc: MovieClip;
 	var DLCList_mc: MovieClip;
 	var DLCPanel: MovieClip;
-	var DeleteButton: Components.CrossPlatformButtons;
-	var DeleteSaveButton: Components.CrossPlatformButtons;
+	var DeleteButton: CrossPlatformButtons;
+	var DeleteSaveButton: CrossPlatformButtons;
 	var LoadingContentMessage: MovieClip;
 	var Logo_mc: MovieClip;
 	var MainList: MovieClip;
 	var MainListHolder: MovieClip;
-	var MarketplaceButton: MovieClip;
+	var MarketplaceButton: CrossPlatformButtons;
 	var SaveLoadConfirmText: TextField;
 	var SaveLoadListHolder: MovieClip;
 	var SaveLoadPanel_mc: MovieClip;
@@ -88,19 +89,19 @@ class StartMenu extends MovieClip
 
 	function setupMainMenu(): Void
 	{
-		var ALLOW_QUIT: Number = 0;
-		var ALLOW_LOAD: Number = 1;
-		var VERSION: Number = 2;
-		var IS_CONSOLE: Number = 3;
-		var ALLOW_DLC: Number = 4;
-        
+		var allowQuitIdx: Number = 0;
+		var hasSaveGameIdx: Number = 1;
+		var versionIdx: Number = 2;
+		var isConsoleIdx: Number = 3;
+		var allowDLCIdx: Number = 4;
+		
 		var icurrentIndex: Number = StartMenu.NEW_INDEX;
 		if (MainList.entryList.length > 0) {
 			icurrentIndex = MainList.centeredEntry.index;
 		}
 		
 		MainList.ClearList();
-		if (arguments[ALLOW_LOAD]) {
+		if (arguments[hasSaveGameIdx]) {
 			MainList.entryList.push({text: "$CONTINUE", index: StartMenu.CONTINUE_INDEX, disabled: false});
 			if (icurrentIndex == StartMenu.NEW_INDEX) {
 				icurrentIndex = StartMenu.CONTINUE_INDEX;
@@ -108,15 +109,15 @@ class StartMenu extends MovieClip
 		}
 		
 		MainList.entryList.push({text: "$NEW", index: StartMenu.NEW_INDEX, disabled: false});
-		MainList.entryList.push({text: "$LOAD", disabled: !arguments[ALLOW_LOAD], index: StartMenu.LOAD_INDEX});
+		MainList.entryList.push({text: "$LOAD", disabled: !arguments[hasSaveGameIdx], index: StartMenu.LOAD_INDEX});
 		
-		if (arguments[ALLOW_DLC]) {
+		if (arguments[allowDLCIdx]) {
 			MainList.entryList.push({text: "$DOWNLOADABLE CONTENT", index: StartMenu.DLC_INDEX, disabled: false});
 		}
 		
 		MainList.entryList.push({text: "$CREDITS", index: StartMenu.CREDITS_INDEX, disabled: false});
 		
-		if (arguments[ALLOW_QUIT]) {
+		if (arguments[allowQuitIdx]) {
 			MainList.entryList.push({text: "$QUIT", index: StartMenu.QUIT_INDEX, disabled: false});
 		}
 		
@@ -129,7 +130,7 @@ class StartMenu extends MovieClip
 		MainList.InvalidateData();
 		
 		if (currentState == undefined) {
-			if (arguments[IS_CONSOLE]) {
+			if (arguments[isConsoleIdx]) {
 				StartState(StartMenu.PRESS_START_STATE);
 			} else {
 				StartState(StartMenu.MAIN_STATE);
@@ -139,8 +140,8 @@ class StartMenu extends MovieClip
 			StartState(StartMenu.MAIN_STATE);
 		}
 		
-		if (arguments[VERSION] != undefined) {
-			VersionText.SetText("v " + arguments[VERSION]);
+		if (arguments[versionIdx] != undefined) {
+			VersionText.SetText("v " + arguments[versionIdx]);
 		} else {
 			VersionText.SetText(" ");
 		}

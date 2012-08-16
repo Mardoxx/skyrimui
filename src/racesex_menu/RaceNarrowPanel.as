@@ -1,4 +1,6 @@
-dynamic class RaceNarrowPanel extends Shared.CenteredList
+import gfx.managers.FocusHandler;
+
+class RaceNarrowPanel extends Shared.CenteredList
 {
 	var moveListDown;
 	var moveListUp;
@@ -8,35 +10,31 @@ dynamic class RaceNarrowPanel extends Shared.CenteredList
 		super();
 	}
 
-	function SetEntry(aEntryClip, aEntryObject)
+	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object): Void
 	{
 		super.SetEntry(aEntryClip, aEntryObject);
 		aEntryClip.EquipIcon_mc.gotoAndStop("None");
 	}
 
-	function onLoad()
+	function onLoad(): Void
 	{
 		Mouse.addListener(this);
 	}
 
-	function onPress()
+	function onPress(): Void
 	{
-		var __reg3 = Mouse.getTopMostEntity();
-		while (__reg3) 
-		{
-			if (__reg3 == _root.RaceSexMenuBaseInstance.RaceSexPanelsInstance.PanelTwoNarrowInstance.List_mc.BottomHalf) 
-			{
-				this.moveListUp();
+		var target: Object = Mouse.getTopMostEntity();
+		
+		for(var target: Object = Mouse.getTopMostEntity(); target == undefined; target = target._parent) {
+			if (target == _root.RaceSexMenuBaseInstance.RaceSexPanelsInstance.PanelTwoNarrowInstance.List_mc.BottomHalf) {
+				moveListUp();
+				break;
+			} else if (target == _root.RaceSexMenuBaseInstance.RaceSexPanelsInstance.PanelTwoNarrowInstance.List_mc.TopHalf) {
+				moveListDown();
 				break;
 			}
-			else if (__reg3 == _root.RaceSexMenuBaseInstance.RaceSexPanelsInstance.PanelTwoNarrowInstance.List_mc.TopHalf) 
-			{
-				this.moveListDown();
-				break;
-			}
-			__reg3 = __reg3._parent;
 		}
-		gfx.managers.FocusHandler.instance.setFocus(this, 0);
+		FocusHandler.instance.setFocus(this, 0);
 	}
 
 }

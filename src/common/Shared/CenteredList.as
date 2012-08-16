@@ -30,12 +30,14 @@ class Shared.CenteredList extends MovieClip
 		bRepositionEntries = true;
 		
 		iMaxEntriesTopHalf = 0;
-		while (TopHalf["Entry" + iMaxEntriesTopHalf] != undefined)
+		while (TopHalf["Entry" + iMaxEntriesTopHalf] != undefined) {
 			++iMaxEntriesTopHalf;
+		}
 		
 		iMaxEntriesBottomHalf = 0;
-		while (BottomHalf["Entry" + iMaxEntriesBottomHalf] != undefined)
+		while (BottomHalf["Entry" + iMaxEntriesBottomHalf] != undefined) {
 			++iMaxEntriesBottomHalf;
+		}
 	}
 
 	function ClearList()
@@ -63,28 +65,35 @@ class Shared.CenteredList extends MovieClip
 
 	function onMouseWheel(delta: Number): Void
 	{
-		for (var item: Object = Mouse.getTopMostEntity(); item && item != undefined && FocusHandler.instance.getFocus(0) == this; item = item._parent)
-			if (item == this) {
-				if (delta < 0)
+		for (var target: Object = Mouse.getTopMostEntity(); target && target != undefined && FocusHandler.instance.getFocus(0) == this; target = target._parent) {
+			if (target == this) {
+				if (delta < 0) {
 					moveListUp();
-				else if (delta > 0)
+				} else if (delta > 0) {
 					moveListDown();
+				}
 			}
+		}
 	}
 
 	function onPress(aiMouseIndex: Number, aiKeyboardOrMouse: Number): Void
 	{
-		for (var item: Object = Mouse.getTopMostEntity(); item && item != undefined; item = item._parent)
-			if (item == SelectedEntry) 
+		for (var target: Object = Mouse.getTopMostEntity(); target && target != undefined; target = target._parent) {
+			if (target == SelectedEntry) {
 				dispatchEvent({type: "itemPress", index: iSelectedIndex, entry: EntriesA[iSelectedIndex], keyboardOrMouse: aiKeyboardOrMouse});
+			}
+		}
 	}
 
 	function onPressAux(aiMouseIndex: Number, aiKeyboardOrMouse: Number, aiButtonIndex: Number): Void
 	{
-		if (aiButtonIndex == 1)
-			for (var item: Object = Mouse.getTopMostEntity(); item && item != undefined; item = item._parent)
-				if (item == SelectedEntry) 
+		if (aiButtonIndex == 1) {
+			for (var target: Object = Mouse.getTopMostEntity(); target && target != undefined; target = target._parent) {
+				if (target == SelectedEntry) {
 					dispatchEvent({type: "itemPressAux", index: iSelectedIndex, entry: EntriesA[iSelectedIndex], keyboardOrMouse: aiKeyboardOrMouse});
+				}
+			}
+		}
 	}
 
 	function get selectedTextString(): String
@@ -139,17 +148,19 @@ class Shared.CenteredList extends MovieClip
 	{
 		iSelectedIndex = Math.min(Math.max(iSelectedIndex, 0), EntriesA.length - 1);
 		
-		if (iSelectedIndex > 0) 
+		if (iSelectedIndex > 0) {
 			UpdateTopHalf(EntriesA.slice(0, iSelectedIndex));
-		else 
+		} else {
 			UpdateTopHalf();
+		}
 			
 		SetEntry(SelectedEntry, EntriesA[iSelectedIndex]);
 		
-		if (iSelectedIndex < EntriesA.length - 1) 
+		if (iSelectedIndex < EntriesA.length - 1) {
 			UpdateBottomHalf(EntriesA.slice(iSelectedIndex + 1));
-		else 
+		} else {
 			UpdateBottomHalf();
+		}
 			
 		RepositionEntries();
 	}
@@ -158,34 +169,39 @@ class Shared.CenteredList extends MovieClip
 	{
 		for (var i: Number =  iMaxEntriesTopHalf - 1; i > 0; i--) {
 			var iEntryIndex: Number = i - (iMaxEntriesTopHalf - aEntryArray.length);
-			if (iEntryIndex >= 0 && iEntryIndex < aEntryArray.length) 
+			if (iEntryIndex >= 0 && iEntryIndex < aEntryArray.length) {
 				SetEntry(TopHalf["Entry" + i], aEntryArray[iEntryIndex]);
-			else 
+			} else {
 				SetEntry(TopHalf["Entry" + i]);
+			}
 		}
 	}
 
 	function UpdateBottomHalf(aTextArray: Array): Void
 	{
 		for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++) {
-			if (i < aTextArray.length) 
+			if (i < aTextArray.length) {
 				SetEntry(BottomHalf["Entry" + i], aTextArray[i]);
-			else 
+			} else {
 				SetEntry(BottomHalf["Entry" + i]);
+			}
 		}
 	}
 
 	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object): Void
 	{
-		if (bMultilineList == true) 
+		if (bMultilineList == true) {
 			aEntryClip.textField.verticalAutoSize = "top";
-		if (bToFitList == true) 
+		}
+		if (bToFitList == true) {
 			aEntryClip.textField.textAutoSize = "shrink";
+		}
 		if (aEntryObject.text != undefined) {
-			if (aEntryObject.count > 1) 
+			if (aEntryObject.count > 1) {
 				aEntryClip.textField.SetText(aEntryObject.text + " (" + aEntryObject.count + ")");
-			else 
+			} else {
 				aEntryClip.textField.SetText(aEntryObject.text);
+			}
 			return;
 		}
 		aEntryClip.textField.SetText(" ");
@@ -195,25 +211,31 @@ class Shared.CenteredList extends MovieClip
 	{
 		bMultilineList = true;
 		
-		for (var i: Number = 0; i < iMaxEntriesTopHalf; i++)
+		for (var i: Number = 0; i < iMaxEntriesTopHalf; i++) {
 			TopHalf["Entry" + i].textField.verticalAutoSize = "top";
+		}
 
-		for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++)
+		for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++) {
 			BottomHalf["Entry" + i].textField.verticalAutoSize = "top";
+		}
 		
-		if (SelectedEntry != undefined) 
+		if (SelectedEntry != undefined) {
 			SelectedEntry.textField.verticalAutoSize = "top";
+		}
 	}
 
 	function SetupToFitList(): Void
 	{
 		bToFitList = true;
-		for (var i: Number = 0; i < iMaxEntriesTopHalf; i++)
+		for (var i: Number = 0; i < iMaxEntriesTopHalf; i++) {
 			TopHalf["Entry" + i].textField.verticalAutoSize = "shrink";
-		for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++)
+		}
+		for (var i: Number = 0; i < iMaxEntriesBottomHalf; i++) {
 			BottomHalf["Entry" + i].textField.verticalAutoSize = "shrink";
-		if (SelectedEntry != undefined) 
+		}
+		if (SelectedEntry != undefined) {
 			SelectedEntry.textField.textAutoSize = "shrink";
+		}
 	}
 
 	function RepositionEntries(): Void

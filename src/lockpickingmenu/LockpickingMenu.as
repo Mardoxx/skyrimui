@@ -1,125 +1,126 @@
-dynamic class LockpickingMenu extends MovieClip
+import Shared.GlobalFunc;
+import gfx.io.GameDelegate;
+import Components.Meter;
+
+class LockpickingMenu extends MovieClip
 {
-	var BottomBar_mc;
-	var ButtonRect_mc;
-	var DebugDisplay_mc;
-	var InfoRect_mc;
-	var LockAngleText;
-	var PickAngleText;
-	var PickIndicator_mc;
-	var SkillMeter;
-	var SweetSpotHolder_mc;
-	var fPickMaxAngle;
-	var fPickMinAngle;
-	var iDebugRectBaseWidth;
+	var BottomBar_mc: MovieClip;
+	var ButtonRect_mc MovieClip;
+	var DebugDisplay_mc MovieClip;
+	var InfoRect_mc MovieClip;
+	var LockAngleText: TextField;
+	var PickAngleText: TextField;
+	var PickIndicator_mc: MovieClip;
+	var SkillMeter: Meter;
+	var SweetSpotHolder_mc: MovieClip;
+	var fPickMaxAngle: Number;
+	var fPickMinAngle: Number;
+	var iDebugRectBaseWidth: Number;
 
 	function LockpickingMenu()
 	{
 		super();
-		this.PickAngleText = this.DebugDisplay_mc.PickAngleText;
-		this.LockAngleText = this.DebugDisplay_mc.LockAngleText;
-		this.PickIndicator_mc = this.DebugDisplay_mc.PickIndicator_mc;
-		this.SweetSpotHolder_mc = this.DebugDisplay_mc.SweetSpotRects_mc;
-		this.iDebugRectBaseWidth = 1000;
-		this.ButtonRect_mc = this.BottomBar_mc.ButtonRect_mc;
-		this.InfoRect_mc = this.BottomBar_mc.InfoRect_mc;
-		this.SkillMeter = new Components.Meter(this.BottomBar_mc.InfoRect_mc.LevelMeterInstance.Meter_mc);
-		this.fPickMinAngle = 0;
-		this.fPickMaxAngle = 0;
+		PickAngleText = DebugDisplay_mc.PickAngleText;
+		LockAngleText = DebugDisplay_mc.LockAngleText;
+		PickIndicator_mc = DebugDisplay_mc.PickIndicator_mc;
+		SweetSpotHolder_mc = DebugDisplay_mc.SweetSpotRects_mc;
+		iDebugRectBaseWidth = 1000;
+		ButtonRect_mc = BottomBar_mc.ButtonRect_mc;
+		InfoRect_mc = BottomBar_mc.InfoRect_mc;
+		SkillMeter = new Meter(BottomBar_mc.InfoRect_mc.LevelMeterInstance.Meter_mc);
+		fPickMinAngle = 0;
+		fPickMaxAngle = 0;
 	}
 
-	function InitExtensions()
+	function InitExtensions(): Void
 	{
-		Shared.GlobalFunc.SetLockFunction();
-		this.BottomBar_mc.Lock("B");
-		this.InfoRect_mc.Lock("R");
-		this.ButtonRect_mc.Lock("L");
-		gfx.io.GameDelegate.addCallBack("UpdatePickAngle", this, "UpdatePickAngle");
-		gfx.io.GameDelegate.addCallBack("UpdateLockAngle", this, "UpdateLockAngle");
-		gfx.io.GameDelegate.addCallBack("UpdateSweetSpot", this, "UpdateSweetSpot");
-		gfx.io.GameDelegate.addCallBack("UpdatePickHealth", this, "UpdatePickHealth");
-		gfx.io.GameDelegate.addCallBack("SetLockInfo", this, "SetLockInfo");
-		gfx.io.GameDelegate.addCallBack("SetPickMinMax", this, "SetPickMinMax");
-		gfx.io.GameDelegate.addCallBack("ToggleDebugMode", this, "ToggleDebugMode");
-		this.DebugDisplay_mc._visible = false;
-		this.BottomBar_mc._visible = false;
-		this.InfoRect_mc.LockLevelText.textAutoSize = "shrink";
-		this.InfoRect_mc.NumLockpicksText.textAutoSize = "shrink";
+		GlobalFunc.SetLockFunction();
+		BottomBar_mc.Lock("B");
+		InfoRect_mc.Lock("R");
+		ButtonRect_mc.Lock("L");
+		GameDelegate.addCallBack("UpdatePickAngle", this, "UpdatePickAngle");
+		GameDelegate.addCallBack("UpdateLockAngle", this, "UpdateLockAngle");
+		GameDelegate.addCallBack("UpdateSweetSpot", this, "UpdateSweetSpot");
+		GameDelegate.addCallBack("UpdatePickHealth", this, "UpdatePickHealth");
+		GameDelegate.addCallBack("SetLockInfo", this, "SetLockInfo");
+		GameDelegate.addCallBack("SetPickMinMax", this, "SetPickMinMax");
+		GameDelegate.addCallBack("ToggleDebugMode", this, "ToggleDebugMode");
+		DebugDisplay_mc._visible = false;
+		BottomBar_mc._visible = false;
+		InfoRect_mc.LockLevelText.textAutoSize = "shrink";
+		InfoRect_mc.NumLockpicksText.textAutoSize = "shrink";
 	}
 
-	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean)
+	function SetPlatform(aiPlatform: Number, abPS3Switch: Boolean): Void
 	{
-		var __reg2 = 20;
-		this.ButtonRect_mc.RotatePickButton.SetPlatform(aiPlatform, abPS3Switch);
-		this.ButtonRect_mc.RotateLockButton.SetPlatform(aiPlatform, abPS3Switch);
-		this.ButtonRect_mc.ExitButton.SetPlatform(aiPlatform, abPS3Switch);
-		this.ButtonRect_mc.RotateLockButton._x = this.ButtonRect_mc.RotatePickButton._x + this.ButtonRect_mc.RotatePickButton.textField.getLineMetrics(0).width + __reg2 + this.ButtonRect_mc.RotateLockButton.ButtonArt._width;
-		this.ButtonRect_mc.ExitButton._x = this.ButtonRect_mc.RotateLockButton._x + this.ButtonRect_mc.RotateLockButton.textField.getLineMetrics(0).width + __reg2 + this.ButtonRect_mc.ExitButton.ButtonArt._width;
+		var xOffset: Number = 20;
+		ButtonRect_mc.RotatePickButton.SetPlatform(aiPlatform, abPS3Switch);
+		ButtonRect_mc.RotateLockButton.SetPlatform(aiPlatform, abPS3Switch);
+		ButtonRect_mc.ExitButton.SetPlatform(aiPlatform, abPS3Switch);
+		ButtonRect_mc.RotateLockButton._x = ButtonRect_mc.RotatePickButton._x + ButtonRect_mc.RotatePickButton.textField.getLineMetrics(0).width + xOffset + ButtonRect_mc.RotateLockButton.ButtonArt._width;
+		ButtonRect_mc.ExitButton._x = ButtonRect_mc.RotateLockButton._x + ButtonRect_mc.RotateLockButton.textField.getLineMetrics(0).width + xOffset + ButtonRect_mc.ExitButton.ButtonArt._width;
 	}
 
-	function ToggleDebugMode()
+	function ToggleDebugMode(): Void
 	{
-		this.DebugDisplay_mc._visible = !this.DebugDisplay_mc._visible;
+		DebugDisplay_mc._visible = !DebugDisplay_mc._visible;
 	}
 
-	function UpdatePickAngle(afAngle)
+	function UpdatePickAngle(afAngle): Void
 	{
-		this.PickAngleText.SetText("PICK ANGLE: " + Math.floor(afAngle) + "°");
-		this.PickIndicator_mc._x = this.PickAngleToX(afAngle);
+		PickAngleText.SetText("PICK ANGLE: " + Math.floor(afAngle) + "°");
+		PickIndicator_mc._x = PickAngleToX(afAngle);
 	}
 
-	function PickAngleToX(afAngle)
+	function PickAngleToX(afAngle: Number): Number
 	{
-		var __reg2 = (afAngle - this.fPickMinAngle) / (this.fPickMaxAngle - this.fPickMinAngle);
-		return this.SweetSpotHolder_mc._x + this.iDebugRectBaseWidth * __reg2;
+		var __reg2 = (afAngle - fPickMinAngle) / (fPickMaxAngle - fPickMinAngle);
+		return SweetSpotHolder_mc._x + iDebugRectBaseWidth * __reg2;
 	}
 
-	function UpdateLockAngle(afAngle)
+	function UpdateLockAngle(afAngle: Number): Void
 	{
-		this.LockAngleText.SetText("LOCK ANGLE: " + Math.floor(afAngle) + "°");
+		LockAngleText.SetText("LOCK ANGLE: " + Math.floor(afAngle) + "°");
 	}
 
-	function UpdatePickHealth(afHealth)
+	function UpdatePickHealth(afHealth: Number): Void
 	{
-		this.DebugDisplay_mc.PickHealthText.SetText("PICK HEALTH: " + Math.floor(afHealth) + "%");
+		DebugDisplay_mc.PickHealthText.SetText("PICK HEALTH: " + Math.floor(afHealth) + "%");
 	}
 
-	function UpdateSweetSpot(afSweetSpotCenter, afSweetSpotLength, afPartialPickLength)
+	function UpdateSweetSpot(afSweetSpotCenter: Number, afSweetSpotLength: Number, afPartialPickLength: Number): Void
 	{
-		this.SweetSpotHolder_mc.SweetSpotRect._x = this.PickAngleToX(afSweetSpotCenter - afSweetSpotLength / 2);
-		this.SweetSpotHolder_mc.SweetSpotRect._width = this.PickAngleToX(afSweetSpotCenter + afSweetSpotLength / 2) - this.SweetSpotHolder_mc.SweetSpotRect._x;
-		this.SweetSpotHolder_mc.PartialPickRect._x = this.PickAngleToX(afSweetSpotCenter - afSweetSpotLength / 2 - afPartialPickLength);
-		this.SweetSpotHolder_mc.PartialPickRect._width = this.PickAngleToX(afSweetSpotCenter + afSweetSpotLength / 2 + afPartialPickLength) - this.SweetSpotHolder_mc.PartialPickRect._x;
-		this.DebugDisplay_mc.SweetSpotText.SetText("SWEET SPOT: " + afSweetSpotLength + "°");
-		this.DebugDisplay_mc.PartialPickText.SetText("PARTIAL PICK: " + afPartialPickLength + "°");
+		SweetSpotHolder_mc.SweetSpotRect._x = PickAngleToX(afSweetSpotCenter - afSweetSpotLength / 2);
+		SweetSpotHolder_mc.SweetSpotRect._width = PickAngleToX(afSweetSpotCenter + afSweetSpotLength / 2) - SweetSpotHolder_mc.SweetSpotRect._x;
+		SweetSpotHolder_mc.PartialPickRect._x = PickAngleToX(afSweetSpotCenter - afSweetSpotLength / 2 - afPartialPickLength);
+		SweetSpotHolder_mc.PartialPickRect._width = PickAngleToX(afSweetSpotCenter + afSweetSpotLength / 2 + afPartialPickLength) - SweetSpotHolder_mc.PartialPickRect._x;
+		DebugDisplay_mc.SweetSpotText.SetText("SWEET SPOT: " + afSweetSpotLength + "°");
+		DebugDisplay_mc.PartialPickText.SetText("PARTIAL PICK: " + afPartialPickLength + "°");
 	}
 
-	function SetPickMinMax(afPickMinAngle, afPickMaxAngle)
+	function SetPickMinMax(afPickMinAngle: Number, afPickMaxAngle: Number): Void
 	{
-		this.fPickMinAngle = afPickMinAngle;
-		this.fPickMaxAngle = afPickMaxAngle;
+		fPickMinAngle = afPickMinAngle;
+		fPickMaxAngle = afPickMaxAngle;
 	}
 
-	function SetLockInfo()
+	function SetLockInfo(): Void
 	{
-		this.InfoRect_mc.SkillLevelCurrent.SetText(arguments[0]);
-		this.InfoRect_mc.SkillLevelNext.SetText(arguments[1]);
-		this.InfoRect_mc.LevelMeterInstance.gotoAndStop("Pause");
-		this.SkillMeter.SetPercent(arguments[2]);
-		var __reg4 = this.InfoRect_mc.LockLevelText;
-		__reg4.SetText("$Lock Level");
-		__reg4.SetText(__reg4.text + ": " + arguments[3]);
-		var __reg3 = this.InfoRect_mc.NumLockpicksText;
-		__reg3.SetText("$Lockpicks Left");
-		if (arguments[4] < 99) 
-		{
-			__reg3.SetText(__reg3.text + ": " + arguments[4]);
+		InfoRect_mc.SkillLevelCurrent.SetText(arguments[0]);
+		InfoRect_mc.SkillLevelNext.SetText(arguments[1]);
+		InfoRect_mc.LevelMeterInstance.gotoAndStop("Pause");
+		SkillMeter.SetPercent(arguments[2]);
+		var lockLevelTextField: TextField = InfoRect_mc.LockLevelText;
+		lockLevelTextField.SetText("$Lock Level");
+		lockLevelTextField.SetText(lockLevelTextField.text + ": " + arguments[3]);
+		var numLockPicksTextField: TextField = InfoRect_mc.NumLockpicksText;
+		numLockPicksTextField.SetText("$Lockpicks Left");
+		if (arguments[4] < 99) {
+			numLockPicksTextField.SetText(numLockPicksTextField.text + ": " + arguments[4]);
+		} else {
+			numLockPicksTextField.SetText(numLockPicksTextField.text + ": 99+");
 		}
-		else 
-		{
-			__reg3.SetText(__reg3.text + ": 99+");
-		}
-		this.BottomBar_mc._visible = true;
+		BottomBar_mc._visible = true;
 	}
 
 }

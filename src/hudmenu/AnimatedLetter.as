@@ -8,7 +8,7 @@
 	var Start: Number = 0;
 	var LetterSpacing: Number = 0;
 	var OldWidth: Number = 0;
-    var EndPosition: Number = 104;
+	var EndPosition: Number = 104;
 	
 	function AnimatedLetter() {
 		super();
@@ -26,7 +26,7 @@
 		
 		Start = 0;
 		
-        for (var LetterIndex: Number = 0; LetterIndex < QuestName.length; LetterIndex++) {
+		for (var LetterIndex: Number = 0; LetterIndex < QuestName.length; LetterIndex++) {
 			AnimationBase_mc.Letter_mc.LetterTextInstance.SetText(QuestName.substr(LetterIndex, 1));
 			var LetterWidth: Number = AnimationBase_mc.Letter_mc.LetterTextInstance.getLineMetrics(0).width - 5;
 			Start = Start + (LetterWidth <= 0 ? AnimatedLetter.SpaceWidth : LetterWidth);

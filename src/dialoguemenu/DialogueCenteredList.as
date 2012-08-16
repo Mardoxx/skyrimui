@@ -5,8 +5,6 @@
 	var bDisableInput: Boolean;
 	var bRecenterSelection: Boolean;
 	
-	var doSetSelectedIndex: Function;
-	
 	var fCenterY: Number;
 	var fListHeight: Number;
 	var iListItemsShown: Number;
@@ -22,16 +20,15 @@
 		fCenterY = GetClipByIndex(iNumTopHalfEntries)._y + GetClipByIndex(iNumTopHalfEntries)._height / 2;
 	}
 
-	function SetEntryText(aEntryClip, aEntryObject)
+	function SetEntryText(aEntryClip: MovieClip, aEntryObject: Object): Void
 	{
 		super.SetEntryText(aEntryClip, aEntryObject);
-		if (aEntryClip.textField != undefined) 
-		{
+		if (aEntryClip.textField != undefined) {
 			aEntryClip.textField.textColor = aEntryObject.topicIsNew == undefined || aEntryObject.topicIsNew ? 0xFFFFFF : 0x606060;
 		}
 	}
 
-	function UpdateList()
+	function UpdateList(): Void
 	{
 		var listItemSpacing = 0;
 		var listCumulativeHeight = 0;
@@ -42,16 +39,13 @@
 		
 		for (var i: Number = 0;  i < iNumTopHalfEntries; i++) {
 			var listItem: MovieClip = GetClipByIndex(i);
-			if (iScrollPosition - iNumTopHalfEntries + i >= 0) 
-			{
+			if (iScrollPosition - iNumTopHalfEntries + i >= 0) {
 				SetEntry(listItem, EntriesA[centerIndex]);
 				listItem._visible = true;
 				listItem.itemIndex = centerIndex;
 				EntriesA[centerIndex].clipIndex = i;
 				++centerIndex;
-			}
-			else 
-			{
+			} else {
 				SetEntry(listItem, {text: " "});
 				listItem._visible = false;
 				listItem.itemIndex = undefined;
@@ -61,13 +55,11 @@
 			++iListItemsShown;
 		}
 		
-		if (bRecenterSelection || iPlatform != 0) 
-		{
+		if (bRecenterSelection || iPlatform != 0) {
 			iSelectedIndex = centerIndex;
 		}
 		
-		for (var i = centerIndex; i < EntriesA.length && iListItemsShown < iMaxItemsShown && listCumulativeHeight <= fListHeight; i++)
-		{
+		for (var i = centerIndex; i < EntriesA.length && iListItemsShown < iMaxItemsShown && listCumulativeHeight <= fListHeight; i++) {
 			listItem = GetClipByIndex(iListItemsShown);
 			SetEntry(listItem, EntriesA[i]);
 			EntriesA[i].clipIndex = iListItemsShown;
@@ -75,8 +67,7 @@
 			listItem._y = listItemSpacing + listCumulativeHeight;
 			listItem._visible = true;
 			listCumulativeHeight += listItem._height;
-			if (listCumulativeHeight <= fListHeight && iListItemsShown < iMaxItemsShown) 
-			{
+			if (listCumulativeHeight <= fListHeight && iListItemsShown < iMaxItemsShown) {
 				++iListItemsShown;
 			}
 		}
@@ -88,9 +79,9 @@
 		
 		
 		if (!bRecenterSelection) {
-			for (var e = Mouse.getTopMostEntity(); e != undefined; e = e._parent) {
-				if (e._parent == this && e._visible && e.itemIndex != undefined) {
-					doSetSelectedIndex(e.itemIndex,0);
+			for (var target: Object = Mouse.getTopMostEntity(); target != undefined; target = target._parent) {
+				if (target._parent == this && target._visible && target.itemIndex != undefined) {
+					doSetSelectedIndex(target.itemIndex,0);
 				}
 			}
 		}
@@ -107,59 +98,51 @@
 		var item_yOffset = GetClipByIndex(iNumTopHalfEntries)._y + GetClipByIndex(iNumTopHalfEntries)._height / 2;
 		var item_yPosition = fCenterY - item_yOffset;
 
-		for (var i: Number = 0; i < iMaxItemsShown; i++) 
-		{
+		for (var i: Number = 0; i < iMaxItemsShown; i++) {
 			GetClipByIndex(i)._y += item_yPosition;
 		}
 		
 		return;
 	}
 
-	function onMouseWheel(delta)
+	function onMouseWheel(delta: Number): Void
 	{
-		if (bDisableInput) 
-		{
+		if (bDisableInput) {
 			return;
 		}
 		
 		iSelectedIndex = -1;
 		bRecenterSelection = true;
 		
-		for (var target = Mouse.getTopMostEntity(); target && target != undefined; target = target._parent) {
-			{
+		for (var target: Object = Mouse.getTopMostEntity(); target && target != undefined; target = target._parent) {
+			if (target == this) {
 				bRecenterSelection = false;
 			}
 		}
 		
 		var listItem: MovieClip
 		
-		if (delta < 0) 
-		{
+		if (delta < 0) {
 			listItem = GetClipByIndex(iNumTopHalfEntries + 1);
-			if (listItem._visible == true) 
-			{
+			if (listItem._visible == true) {
 				scrollPosition = scrollPosition + 1;
 			}
-			
 		} else {
 			listItem = GetClipByIndex(iNumTopHalfEntries - 1);
-			if (listItem._visible == true) 
-			{
+			if (listItem._visible == true) {
 				scrollPosition = scrollPosition - 1;
 			}
 		}
 		return;
 	}
 
-	function SetSelectedTopic(aiTopicIndex)
+	function SetSelectedTopic(aiTopicIndex: Number): Void
 	{
 		iSelectedIndex = 0;
 		iScrollPosition = 0;
 		
-		for (var i: Number = 0; i < EntriesA.length; i++) 
-		{
-			if (EntriesA[i].topicIndex == aiTopicIndex) 
-			{
+		for (var i: Number = 0; i < EntriesA.length; i++) {
+			if (EntriesA[i].topicIndex == aiTopicIndex) {
 				iScrollPosition = i;
 			}
 		}
