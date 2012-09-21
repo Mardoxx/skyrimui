@@ -1,21 +1,21 @@
 class gfx.ui.InputDetails
 {
-	var code;
-	var controllerIdx: Number;
-	var navEquivalent;
-	var type;
-	var value;
+	public var code: Number;
+	public var controllerIdx: Number;
+	public var navEquivalent: String;
+	public var type: String;
+	public var value; //Can be any type
 
-	function InputDetails(type, code, value, navEquivalent, controllerIdx)
+	public function InputDetails(a_type: String, a_code: Number, a_value, a_navEquivalent: String, a_controllerIdx: Number)
 	{
-		type = type;
-		code = code;
-		value = value;
-		navEquivalent = navEquivalent;
-		controllerIdx = controllerIdx;
+		type = a_type;
+		code = a_code;
+		value = a_value;
+		navEquivalent = a_navEquivalent;
+		controllerIdx = a_controllerIdx;
 	}
 
-	function toString()
+	public function toString()
 	{
 		return ["[InputDelegate", "code=" + code, "type=" + type, "value=" + value, "navEquivalent=" + navEquivalent, "controllerIdx=" + controllerIdx + "]"].toString();
 	}
