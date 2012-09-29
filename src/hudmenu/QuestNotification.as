@@ -1,4 +1,6 @@
-﻿class QuestNotification extends MovieClip
+﻿import Components.UniformTimeMeter;
+
+class QuestNotification extends MovieClip
 {
 	static var QuestNotificationIntervalIndex: Number = 0;
 	static var AnimationCount: Number = 0;
@@ -13,7 +15,7 @@
 	
 	var AnimatedLetter_mc: AnimatedLetter;
 	var LevelMeterBaseInstance: MovieClip;
-	var LevelUpMeter: Components.UniformTimeMeter;
+	var LevelUpMeter: UniformTimeMeter;
 	var ObjText: ObjectiveText;
 	var ObjectiveLineInstance: ObjectiveText;
 	var ObjectivesA: Array;
@@ -35,7 +37,7 @@
 		QuestNotification.ShoutLetter = ShoutAnimatedLetter;
 		QuestNotification.ShoutLetter.AnimationBase_mc = ShoutAnimatedLetter;
 		ObjText = ObjectiveLineInstance;
-		LevelUpMeter = new Components.UniformTimeMeter(LevelMeterBaseInstance.LevelUpMeterInstance, "UILevelUp", LevelMeterBaseInstance.LevelUpMeterInstance.FlashInstance, "StartFlash");
+		LevelUpMeter = new UniformTimeMeter(LevelMeterBaseInstance.LevelUpMeterInstance, "UILevelUp", LevelMeterBaseInstance.LevelUpMeterInstance.FlashInstance, "StartFlash");
 		LevelUpMeter.FillSpeed = 0.2;
 		LevelMeterBaseInstance.gotoAndStop("FadeIn");
 		QuestNotification.LevelUpMeterIntervalIndex = 0;
@@ -142,9 +144,9 @@
 	static function RestartAnimations(): Void
 	{
 		var aQuestUpdateBase: MovieClip = QuestNotification.Instance.AnimLetter._parent;
-		for (var i: String in aQuestUpdateBase) {
-			if (aQuestUpdateBase[i] instanceof AnimatedLetter && aQuestUpdateBase[i] != QuestNotification.Instance.AnimLetter) {
-				aQuestUpdateBase[i].gotoAndPlay(aQuestUpdateBase[i]._currentFrame);
+		for (var s: String in aQuestUpdateBase) {
+			if (aQuestUpdateBase[s] instanceof AnimatedLetter && aQuestUpdateBase[s] != QuestNotification.Instance.AnimLetter) {
+				aQuestUpdateBase[s].gotoAndPlay(aQuestUpdateBase[s]._currentFrame);
 			}
 		}
 	}

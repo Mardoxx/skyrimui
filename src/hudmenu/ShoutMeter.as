@@ -1,3 +1,5 @@
+import Shared.GlobalFunc;
+
 class ShoutMeter
 {
 	var FlashClip: MovieClip;
@@ -23,7 +25,7 @@ class ShoutMeter
 			return;
 		}
 		var aPercent: Number = Math.min(100, Math.max(aPercent, 0));
-		var aPercentFrame: Number = Math.floor(Shared.GlobalFunc.Lerp(MeterEmtpy, MeterFull, 0, 100, aPercent));
+		var aPercentFrame: Number = Math.floor(GlobalFunc.Lerp(MeterEmtpy, MeterFull, 0, 100, aPercent));
 		ProgressClip.gotoAndStop(aPercentFrame);
 	}
 
