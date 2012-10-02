@@ -160,10 +160,9 @@ class RaceSexPanels extends MovieClip
 		var CAT_STRIDE: Number = 2;
 		_CategoriesList.entryList.splice(0, _CategoriesList.entryList.length);
 		
-		for (var i: Number = 0; i < arguments.length; i++) {
+		for (var i: Number = 0; i < arguments.length; i += CAT_STRIDE) {
 			var entryObject: Object = {text: arguments[i + CAT_TEXT], flag: arguments[i + CAT_FLAG], savedItemIndex: -1};
 			_CategoriesList.entryList.push(entryObject);
-			i = i + CAT_STRIDE;
 		}
 		
 		if (bLimitedMenu) {
@@ -180,14 +179,13 @@ class RaceSexPanels extends MovieClip
 		var RACE_STRIDE: Number = 3;
 		_SubList1.entryList.splice(0, _SubList1.entryList.length);
 		
-		for (var i: Number = 0; i < arguments.length; i++) {
+		for (var i: Number = 0; i < arguments.length; i += RACE_STRIDE) {
 			var entryObject: Object = {text: arguments[i + RACE_NAME], flag: bLimitedMenu ? RaceSexPanels.BODY_CATEGORY : RaceSexPanels.RACE_CATEGORY, raceDescription: arguments[i + RACE_DESCRIPTION].length <= 0 ? "No race description for " + arguments[i + RACE_NAME] : arguments[i + RACE_DESCRIPTION], equipState: arguments[i + RACE_EQUIPSTATE]};
 			if (entryObject.equipState > 0) {
 				_CategoriesList.entryList[entryObject.flag].savedItemIndex = i / RACE_STRIDE;
 				SetRaceText(entryObject.text);
 			}
 			_SubList1.entryList.push(entryObject);
-			i = i + RACE_STRIDE;
 		}
 		
 		_SubList1.UpdateList();
@@ -213,10 +211,9 @@ class RaceSexPanels extends MovieClip
 		
 		_SubList2.entryList.splice(0, _SubList2.entryList.length);
 		
-		for (var i: Number = 0; i < arguments.length; i++) {
+		for (var i: Number = 0; i < arguments.length; i += SLIDER_STRIDE) {
 			var entryObject: Object = {text: arguments[i + SLIDER_NAME], filterFlag: arguments[i + SLIDER_FILTERFLAG], callbackName: arguments[i + SLIDER_CALLBACKNAME], sliderMin: arguments[i + SLIDER_MIN], sliderMax: arguments[i + SLIDER_MAX], sliderID: arguments[i + SLIDER_ID], position: arguments[i + SLIDER_POSITION], interval: arguments[i + SLIDER_INTERVAL]};
 			_SubList2.entryList.push(entryObject);
-			i = i + SLIDER_STRIDE;
 		}
 		_SubList2.UpdateList();
 	}
