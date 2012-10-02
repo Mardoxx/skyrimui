@@ -95,7 +95,7 @@ class FilteredList extends Shared.CenteredList
 	{
 		var prevIdx = undefined;
 		
-		for (var i: Number = aiStartIndex - 1; i > 0 && prevIdx == undefined; i--) {
+		for (var i: Number = aiStartIndex - 1; i >= 0 && prevIdx == undefined; i--) {
 			if (EntryMatchesFunc(i)) {
 				prevIdx = i;
 			}
