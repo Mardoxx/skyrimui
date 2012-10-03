@@ -1,5 +1,8 @@
 Related repositories
 --------------------
+### Unofficial UI SDK
+https://github.com/Mardoxx/skyrimui
+
 ### SkyUI
 https://github.com/schlangster/skyui
 
