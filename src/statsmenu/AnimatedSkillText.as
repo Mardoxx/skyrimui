@@ -1,4 +1,5 @@
 import Shared.GlobalFunc;
+import Components.Meter;
 
 class AnimatedSkillText extends MovieClip
 {
@@ -17,14 +18,13 @@ class AnimatedSkillText extends MovieClip
 	{
 		GlobalFunc.MaintainTextFormat();
 		var arrayStride: Number = 4;
-		for (var i: Number = 0; i < aSkillTextA.length; i++) {
+		for (var i: Number = 0; i < aSkillTextA.length; i += arrayStride) {
 			var SkillText = attachMovie("SkillText_mc", "SkillText" + i / arrayStride, getNextHighestDepth());
 			SkillText.LabelInstance.html = true;
 			SkillText.LabelInstance.htmlText = aSkillTextA[i + 1].toString().toUpperCase() + " <font face=\'$EverywhereBoldFont\' size=\'24\' color=\'" + aSkillTextA[i + 3].toString() + "\'>" + aSkillTextA[i].toString() + "</font>";
-			var ShortBar: Components.Meter = new Components.Meter(SkillText.ShortBar);
+			var ShortBar: Meter = new Meter(SkillText.ShortBar);
 			ShortBar.SetPercent(aSkillTextA[i + 2]);
 			SkillText._x = LocationsA[0];
-			i += arrayStride;
 		}
 	}
 
