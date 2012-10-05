@@ -2,11 +2,12 @@ import Shared.ButtonChange;
 import Components.Meter;
 import gfx.io.GameDelegate;
 import Shared.GlobalFunc;
+import mx.utils.Delegate;
 
 class StatsMenu extends MovieClip
 {
-	static var StatsMenuInstance = null;
-	
+	static var StatsMenuInstance: StatsMenu = null;
+
 	static var MAGICKA_METER: Number = 0;
 	static var HEALTH_METER: Number = 1;
 	static var STAMINA_METER: Number = 2;
@@ -30,19 +31,29 @@ class StatsMenu extends MovieClip
 	static var BLOCK: Number = 15;
 	static var SMITHING: Number = 16;
 	static var HEAVY_ARMOR: Number = 17;
-	
 	static var SkillStatsA = new Array();
 	static var PerkNamesA = new Array();
 	static var BeginAnimation: Number = 0;
 	static var EndAnimation: Number = 1000;
 	static var STATS: Number = 0;
 	static var LEVEL_UP: Number = 1;
+
 	static var MaxPerkNameHeight: Number = 115;
 	static var MaxPerkNameHeightLevelMode: Number = 175;
 	static var MaxPerkNamesDisplayed: Number = 64;
-	
+
+	static var SkillsA: Array;
+	static var SkillRing_mc: MovieClip;
+	static var MagickaMeterBase: MovieClip;
+	static var HealthMeterBase: MovieClip;
+	static var StaminaMeterBase: MovieClip;
+	static var MagickaMeter: Meter;
+	static var HealthMeter: Meter;
+	static var StaminaMeter: Meter;
+	static var MeterText: Array;
+
 	var CameraUpdateInterval: Number = 0;
-	
+
 	var AddPerkButtonInstance: MovieClip;
 	var AddPerkTextInstance: MovieClip;
 	var BottomBarInstance: MovieClip;
@@ -57,17 +68,10 @@ class StatsMenu extends MovieClip
 	var SkillsListInstance: MovieClip;
 	var State: Number;
 	var TopPlayerInfo: MovieClip;
-	
-	static var SkillsA: Array;
-	static var SkillRing_mc: MovieClip;
-	static var MagickaMeterBase: MovieClip;
-	static var HealthMeterBase: MovieClip;
-	static var StaminaMeterBase: MovieClip;
 
-	static var MagickaMeter: Meter;
-	static var HealthMeter: Meter;
-	static var StaminaMeter: Meter;
-	static var MeterText: Array;
+
+	var DescriptionCardInstance: MovieClip;
+	var AnimatingSkillTextInstance: AnimatedSkillText;
 
 	function StatsMenu()
 	{
@@ -77,26 +81,28 @@ class StatsMenu extends MovieClip
 		StatsMenu.SkillsA = new Array();
 		StatsMenu.SkillRing_mc = SkillsListInstance;
 		SetDirection(0);
-		var infoCard: MovieClip = BottomBarInstance.BottomBarPlayerInfoInstance.PlayerInfoCardInstance;
-		StatsMenu.MagickaMeterBase = infoCard.MagickaMeterInstance;
-		StatsMenu.HealthMeterBase = infoCard.HealthMeterInstance;
-		StatsMenu.StaminaMeterBase = infoCard.StaminaMeterInstance;
+		var playerInfoCard: MovieClip = BottomBarInstance.BottomBarPlayerInfoInstance.PlayerInfoCardInstance;
+		StatsMenu.MagickaMeterBase = playerInfoCard.MagickaMeterInstance;
+		StatsMenu.HealthMeterBase = playerInfoCard.HealthMeterInstance;
+		StatsMenu.StaminaMeterBase = playerInfoCard.StaminaMeterInstance;
 		StatsMenu.MagickaMeter = new Meter(StatsMenu.MagickaMeterBase.MagickaMeter_mc);
 		StatsMenu.HealthMeter = new Meter(StatsMenu.HealthMeterBase.HealthMeter_mc);
 		StatsMenu.StaminaMeter = new Meter(StatsMenu.StaminaMeterBase.StaminaMeter_mc);
 		StatsMenu.MagickaMeterBase.Magicka.gotoAndStop("Pause");
 		StatsMenu.HealthMeterBase.Health.gotoAndStop("Pause");
 		StatsMenu.StaminaMeterBase.Stamina.gotoAndStop("Pause");
-		StatsMenu.MeterText = [infoCard.magicValue, infoCard.healthValue, infoCard.enduranceValue];
+		StatsMenu.MeterText = [playerInfoCard.magicValue, playerInfoCard.healthValue, playerInfoCard.enduranceValue];
 		SetMeter(StatsMenu.MAGICKA_METER, 50, 100);
 		SetMeter(StatsMenu.HEALTH_METER, 75, 100);
 		SetMeter(StatsMenu.STAMINA_METER, 25, 100);
 		Platform = ButtonChange.PLATFORM_PC;
 		AddPerkButtonInstance._alpha = 0;
+
 		for (var i: Number = 0; i < StatsMenu.MaxPerkNamesDisplayed; i++) {
 			var perkName: MovieClip = attachMovie("PerkName", "PerkName" + i, getNextHighestDepth());
 			perkName._x = -100 - _x;
 		}
+
 		TopPlayerInfo.swapDepths(getNextHighestDepth());
 		SetStatsMode(true, 0);
 		CurrentPerkFrame = 0;
@@ -113,46 +119,51 @@ class StatsMenu extends MovieClip
 	function UpdatePerkText(abShow: Boolean): Void
 	{
 		if (abShow == true || abShow == undefined) {
-			var i = 0;
-			for (var j: Number = 0; j < StatsMenu.PerkNamesA.length; j += 3) {
-				var perkCreated: Boolean = false;
-				if (StatsMenu.PerkNamesA[j] == undefined) {
-					if (!perkCreated && this["PerkName" + i] != undefined) {
-						this["PerkName" + i].gotoAndStop("Invisible");
+			var perkIdx: Number = 0;
+			var perkAdded: Boolean = false;
+			for (var i: Number = 0; i < StatsMenu.PerkNamesA.length; i += 3) {
+				
+				if (StatsMenu.PerkNamesA[i] == undefined) {
+					if (!perkAdded && this["PerkName" + perkIdx] != undefined) {
+						this["PerkName" + perkIdx].gotoAndStop("Invisible");
 					}
-				} else if (GlobalFunc.Lerp(0, 720, 0, 1, StatsMenu.PerkNamesA[j + 2]) > (State == StatsMenu.LEVEL_UP ? StatsMenu.MaxPerkNameHeightLevelMode : StatsMenu.MaxPerkNameHeight)) {
-					this["PerkName" + i].PerkNameClipInstance.NameText.html = true;
-					this["PerkName" + i].PerkNameClipInstance.NameText.SetText(StatsMenu.PerkNamesA[j], true);
-					this["PerkName" + i]._xscale = StatsMenu.PerkNamesA[j + 2] * 165 + 10;
-					this["PerkName" + i]._yscale = StatsMenu.PerkNamesA[j + 2] * 165 + 10;
-					this["PerkName" + i]._x = Shared.GlobalFunc.Lerp(0, 1280, 0, 1, StatsMenu.PerkNamesA[j + 1]) - _x;
-					this["PerkName" + i]._y = Shared.GlobalFunc.Lerp(0, 720, 0, 1, StatsMenu.PerkNamesA[j + 2]) - _y;
-					this["PerkName" + i].bPlaying = true;
-					if (this["PerkName" + i] != undefined) {
-						this["PerkName" + i].gotoAndStop(CurrentPerkFrame);
+				} else if (GlobalFunc.Lerp(0, 720, 0, 1, StatsMenu.PerkNamesA[i + 2]) > (State == StatsMenu.LEVEL_UP ? StatsMenu.MaxPerkNameHeightLevelMode : StatsMenu.MaxPerkNameHeight)) {
+					this["PerkName" + perkIdx].PerkNameClipInstance.NameText.html = true;
+					this["PerkName" + perkIdx].PerkNameClipInstance.NameText.SetText(StatsMenu.PerkNamesA[i], true);
+					this["PerkName" + perkIdx]._xscale = StatsMenu.PerkNamesA[i + 2] * 165 + 10;
+					this["PerkName" + perkIdx]._yscale = StatsMenu.PerkNamesA[i + 2] * 165 + 10;
+					this["PerkName" + perkIdx]._x = GlobalFunc.Lerp(0, 1280, 0, 1, StatsMenu.PerkNamesA[i + 1]) - _x;
+					this["PerkName" + perkIdx]._y = GlobalFunc.Lerp(0, 720, 0, 1, StatsMenu.PerkNamesA[i + 2]) - _y;
+					this["PerkName" + perkIdx].bPlaying = true;
+					if (this["PerkName" + perkIdx] != undefined) {
+						this["PerkName" + perkIdx].gotoAndStop(CurrentPerkFrame);
 					}
-					++i;
-					perkCreated = true;
+					perkIdx++;
+					perkAdded = true;
+				}
+
+			}
+
+			for (var j: Number = perkIdx; j <= StatsMenu.MaxPerkNamesDisplayed; j++) {
+				if (this["PerkName" + j] != undefined) {
+					this["PerkName" + j].gotoAndStop("Invisible");
 				}
 			}
-			
-			for (var k: Number = i; k <= StatsMenu.MaxPerkNamesDisplayed; k++) {
-				if (this["PerkName" + k] != undefined) {
-					this["PerkName" + k].gotoAndStop("Invisible");
-				}
-			}
-			
+
 			if (CurrentPerkFrame <= PerkEndFrame) {
-				++CurrentPerkFrame;
+				CurrentPerkFrame++;
 			}
+
 			return;
 		}
-		
+
+
+
 		if (abShow == false) {
 			CurrentPerkFrame = 0;
 			for (var i: Number = 0; i < StatsMenu.MaxPerkNamesDisplayed; i++) {
-				if (this["PerkName" + j] != undefined) {
-					this["PerkName" + j].gotoAndStop("Invisible");
+				if (this["PerkName" + i] != undefined) {
+					this["PerkName" + i].gotoAndStop("Invisible");
 				}
 			}
 		}
@@ -199,9 +210,9 @@ class StatsMenu extends MovieClip
 	function UpdateCamera(): Void
 	{
 		if (StatsMenu.StatsMenuInstance.CameraMovementInstance._currentFrame < 100) {
-			var NextFrame: Number = StatsMenu.StatsMenuInstance.CameraMovementInstance._currentFrame + 8;
-			if (NextFrame > 100) {
-				NextFrame = 100;
+			var nextFrame: Number = StatsMenu.StatsMenuInstance.CameraMovementInstance._currentFrame + 8;
+			if (nextFrame > 100) {
+				nextFrame = 100;
 			}
 			GameDelegate.call("MoveCamera", [CameraMovementInstance.CameraPositionAlpha._alpha / 100]);
 			return;
@@ -214,7 +225,7 @@ class StatsMenu extends MovieClip
 	{
 		clearInterval(StatsMenu.StatsMenuInstance.CameraUpdateInterval);
 		GameDelegate.call("MoveCamera", [0]);
-		StatsMenu.StatsMenuInstance.CameraUpdateInterval = setInterval(mx.utils.Delegate.create(StatsMenu.StatsMenuInstance, StatsMenu.StatsMenuInstance.UpdateCamera), 41);
+		StatsMenu.StatsMenuInstance.CameraUpdateInterval = setInterval(Delegate.create(StatsMenu.StatsMenuInstance, StatsMenu.StatsMenuInstance.UpdateCamera), 41);
 	}
 
 	function UpdateSkillList(): Void
@@ -292,7 +303,7 @@ class StatsMenu extends MovieClip
 		}
 		descriptionCard.CardNameTextInstance.SetText("");
 		descriptionCard.SkillRequirementText.html = true;
-		descriptionCard.SkillRequirementText.htmlText = aSkill.toUpperCase() + "          " + aRequirements.toUpperCase();
+		descriptionCard.SkillRequirementText.htmlText = aSkill.toUpperCase() + "          " + aRequirements.toUpperCase(); //10 spaces
 		if (PerksLeft != undefined) {
 			SetPerkCount(PerksLeft);
 		}
