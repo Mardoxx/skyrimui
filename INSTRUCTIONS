@@ -10,3 +10,6 @@ Copy ./bin/* to <Skyrim Dir>/Data/Interface
 	build directory
 ./src
 	source directory
+
+Notes
+	racesex_menu depends on textentry
