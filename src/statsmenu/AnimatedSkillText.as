@@ -32,7 +32,6 @@ class AnimatedSkillText extends MovieClip
 	{
 		for (var i: Number = 0; i < SKILLS; i++) {
 			ThisInstance["SkillText" + i]._x = LocationsA[0];
-			++i;
 		}
 	}
 
@@ -41,18 +40,19 @@ class AnimatedSkillText extends MovieClip
 		var skillAngle: Number = Math.floor(aAngle / SKILL_ANGLE);
 		var __reg10: Number = aAngle % SKILL_ANGLE / SKILL_ANGLE;
 		for (var i: Number = 0; i < SKILLS; i++) {
-			var __reg11: Number = LocationsA.length - 2; //9
-			var __reg5: Number  = Math.floor(__reg11 / 2) + 1; //5
+			var __reg11: Number = LocationsA.length - 2;
+			var __reg5: Number  = Math.floor(__reg11 / 2) + 1;
 			var __reg4: Number  = (skillAngle - __reg5 < 0) ? (skillAngle - __reg5 + SKILLS) : (skillAngle - __reg5);
 			var __reg8: Number  = (skillAngle + __reg5 >= SKILLS) ? (skillAngle + __reg5 - SKILLS) : (skillAngle + __reg5);
 			var __reg7: Boolean  = __reg4 > __reg8;
 			if ((!__reg7 && (i > __reg4 && i <= __reg8)) || (__reg7 && (i > __reg4 || i <= __reg8))) {
 				var locationAngleIdx: Number = 0;
-				if (__reg7) 
+				if (__reg7) {
 					locationAngleIdx = (i <= __reg4) ? (i + (SKILLS - __reg4)) : (i - __reg4);
-				else 
+				} else {
 					locationAngleIdx = (i - __reg4);
-				--locationAngleIdx;
+				}
+				locationAngleIdx--;
 				ThisInstance["SkillText" + i]._x = GlobalFunc.Lerp(LocationsA[locationAngleIdx], LocationsA[locationAngleIdx + 1], 1, 0, __reg10);
 				var skillTextScale: Number = (locationAngleIdx == 4 ? (100 - __reg10) * 100 : (__reg10 * 100)) * 0.75 + 100;
 				ThisInstance["SkillText" + i]._xscale = (locationAngleIdx == 5 || locationAngleIdx == 4) ? skillTextScale : 100;
@@ -61,7 +61,6 @@ class AnimatedSkillText extends MovieClip
 			} else {
 				ThisInstance["SkillText" + i]._x = LocationsA[0];
 			}
-			++i;
 		}
 	}
 
