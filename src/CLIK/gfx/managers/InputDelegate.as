@@ -56,6 +56,10 @@ dynamic class gfx.managers.InputDelegate extends gfx.events.EventDispatcher
 			{
 				return gfx.ui.NavigationCode.ENTER;
 			}
+            else if (__reg0 === 32) // Added in 1.8.145.0
+            {
+                return gfx.ui.NavigationCode.ENTER;
+            }
 			else if (__reg0 === 8) 
 			{
 				return gfx.ui.NavigationCode.BACK;

@@ -37,9 +37,11 @@ class gfx.io.GameDelegate {
 		callBackHash[methodName] = [scope, callBack];
 	}
 	
+	/* // Removed in 1.8.145.0
 	static function removeCallBack(methodName: String): Void {
 		callBackHash[methodName] = null;
 	}
+	*/
 	
 	static function receiveCall(methodName: String): Void {
 		var thisCallBackHash = callBackHash[methodName];
