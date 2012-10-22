@@ -1,4 +1,4 @@
-import gfx.io.GameDelegate;
+﻿import gfx.io.GameDelegate;
 import gfx.controls.Button;
 
 class MessageBox extends MovieClip
@@ -84,7 +84,7 @@ class MessageBox extends MovieClip
 		}
 	}
 
-	function SetMessage(aText: String, abHTML: String): Void
+	function SetMessage(aText: String, abHTML: Boolean): Void
 	{
 		Message.autoSize = "center";
 		Message.setTextFormat(DefaultTextFormat);

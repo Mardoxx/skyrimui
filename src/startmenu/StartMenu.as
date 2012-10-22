@@ -112,7 +112,7 @@ class StartMenu extends MovieClip
 		MainList.entryList.push({text: "$LOAD", disabled: !arguments[hasSaveGameIdx], index: StartMenu.LOAD_INDEX});
 		
 		if (arguments[allowDLCIdx]) {
-			MainList.entryList.push({text: "$DOWNLOADABLE CONTENT", index: StartMenu.DLC_INDEX, disabled: false});
+			MainList.entryList.push({text: "$DOWNLOADABLE CONTENT" + (iPlatform == 3 ? "_PS3" : ""), index: StartMenu.DLC_INDEX, disabled: false});
 		}
 		
 		MainList.entryList.push({text: "$CREDITS", index: StartMenu.CREDITS_INDEX, disabled: false});
