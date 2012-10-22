@@ -25,7 +25,7 @@ class RaceNarrowPanel extends Shared.CenteredList
 	{
 		var target: Object = Mouse.getTopMostEntity();
 		
-		for(var target: Object = Mouse.getTopMostEntity(); target == undefined; target = target._parent) {
+		for(var target: Object = Mouse.getTopMostEntity(); target != undefined; target = target._parent) {
 			if (target == _root.RaceSexMenuBaseInstance.RaceSexPanelsInstance.PanelTwoNarrowInstance.List_mc.BottomHalf) {
 				moveListUp();
 				break;

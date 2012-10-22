@@ -3,6 +3,7 @@ class FilteredList extends Shared.CenteredList
 	var BottomHalf: Array;
 	var EntriesA: Array;
 	var EntryMatchesFunc: Function;
+	var RepositionEntries: Function;
 	var SelectedEntry: MovieClip;
 	var TopHalf: Array;
 	var bMultilineList: Boolean;
