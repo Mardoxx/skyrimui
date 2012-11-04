@@ -5,9 +5,9 @@ import Components.Meter;
 class LockpickingMenu extends MovieClip
 {
 	var BottomBar_mc: MovieClip;
-	var ButtonRect_mc MovieClip;
-	var DebugDisplay_mc MovieClip;
-	var InfoRect_mc MovieClip;
+	var ButtonRect_mc: MovieClip;
+	var DebugDisplay_mc: MovieClip;
+	var InfoRect_mc: MovieClip;
 	var LockAngleText: TextField;
 	var PickAngleText: TextField;
 	var PickIndicator_mc: MovieClip;
