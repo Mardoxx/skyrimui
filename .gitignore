@@ -2,3 +2,7 @@
 /src/.flashProjectProperties
 /src/common/skse.as
 /src/common/skyui
+
+# wip, random tests or notes that I don't want to version control
+__*
+
