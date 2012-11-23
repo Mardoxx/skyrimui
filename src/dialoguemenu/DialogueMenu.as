@@ -19,8 +19,6 @@ class DialogueMenu extends MovieClip
 	var ExitButton: CrossPlatformButtons;
 	var SpeakerName: TextField;
 	var SubtitleText: TextField;
-//faB++
-var DeebugText: TextField;
 	var TopicList: MovieClip;
 	var TopicListHolder: Object;
 	var bAllowProgress: Boolean;
