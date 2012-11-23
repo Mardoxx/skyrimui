@@ -3,9 +3,79 @@ class Shared.GlobalFunc
 	static var RegisteredTextFields: Object = new Object();
 	static var RegisteredMovieClips: Object = new Object();
 
-	function GlobalFunc()
+	private var debugWindow:MovieClip = null;
+	private var debugBg:MovieClip = null;
+	private var debugTxt:TextField = null;
+  
+	private var DEBUGLOG_HEIGHT:Number = 100;
+  
+	private static var inst:GlobalFunc = null;
+
+	public function GlobalFunc()
 	{
+		if (debugWindow != null) {
+			throw new Error("Woopsie doo.");
+		}
+		CreateDebugLog();
 	}
+
+	/**
+	 * Dynamically create a mini console for debugging.
+	 *
+	 */
+	public static function getInstance(): GlobalFunc
+	{
+		if (inst == null) {
+			inst = new GlobalFunc();
+		}
+		return inst;
+	}
+
+	private function CreateDebugLog(): Void
+	{
+		debugWindow = _root.createEmptyMovieClip("debugWindow", _root.getNextHighestDepth());
+		debugBg     = debugWindow.createEmptyMovieClip("debugBg", debugWindow.getNextHighestDepth());
+
+		debugBg.beginFill(0x000000);
+		debugBg.moveTo(0, 0);
+		debugBg.lineTo(Stage.width, 0);
+		debugBg.lineTo(Stage.width, DEBUGLOG_HEIGHT);
+		debugBg.lineTo(0, DEBUGLOG_HEIGHT);
+		debugBg.lineTo(0, 0);
+		debugBg.endFill();
+		debugBg._alpha = 50;
+
+		debugTxt = debugWindow.createTextField("debugTxt", debugWindow.getNextHighestDepth(), 10, 10, (Stage.width/2) - 20, DEBUGLOG_HEIGHT-20);
+		debugTxt.embedFonts = true;
+		debugTxt.multiline = true;
+		debugTxt.wordWrap = false;
+
+		debugWindow._x = 0;
+		debugWindow._y = 0;
+
+	  var format:TextFormat = new TextFormat("$ConsoleFont", 14, 0xCCCCCC);
+		//format.color = 0xFFFF00;
+		debugTxt.setNewTextFormat(format);
+	}
+
+	// Log debug text
+	public function Deebug(aText: String, ret:Boolean): Void
+	{
+		if (debugTxt.text == "") {
+			ret = false;
+		}
+
+		// newline by default
+		if (ret !== false) {
+			ret = true;
+		}
+						
+		debugTxt.text += (ret ? "\r" : "") + aText;
+		
+		if (debugTxt.textHeight > debugTxt._height) {
+			debugTxt.scroll = debugTxt.textHeight - debugTxt._height;
+    }
+  }
 
 	static function Lerp(aTargetMin: Number, aTargetMax: Number, aSourceMin: Number, aSourceMax: Number, aSource: Number, abClamp: Boolean): Number
 	{
