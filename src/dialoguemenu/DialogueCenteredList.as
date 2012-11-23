@@ -1,4 +1,7 @@
-﻿class DialogueCenteredList extends Shared.CenteredScrollingList
+﻿//faB++
+import Shared.GlobalFunc;
+
+class DialogueCenteredList extends Shared.CenteredScrollingList
 {
 	var EntriesA: Array;
 	
@@ -13,6 +16,10 @@
 	var iPlatform: Number;
 	var iScrollPosition: Number;
 	var iSelectedIndex: Number;
+
+//faB++
+static var lolcat: Number = 0;
+
 
 	function DialogueCenteredList()
 	{
@@ -57,6 +64,7 @@
 		
 		if (bRecenterSelection || iPlatform != 0) {
 			iSelectedIndex = centerIndex;
+			iHighlightedIndex = centerIndex; // faB++
 		}
 		
 		for (var i = centerIndex; i < EntriesA.length && iListItemsShown < iMaxItemsShown && listCumulativeHeight <= fListHeight; i++) {
@@ -77,20 +85,26 @@
 			GetClipByIndex(i).itemIndex = undefined;
 		}
 		
-		
 		if (!bRecenterSelection) {
-			for (var target: Object = Mouse.getTopMostEntity(); target != undefined; target = target._parent) {
-				if (target._parent == this && target._visible && target.itemIndex != undefined) {
-					doSetSelectedIndex(target.itemIndex,0);
-				}
-			}
+			// faB: moved to function below
+			SetSelectedIndexByMouse(true);
 		}
-		
+
 		bRecenterSelection = false;
 		RepositionEntries();
 		var imaxItemsBelowShown: Number = 3;
 		_parent.ScrollIndicators.Up._visible = scrollPosition > iNumTopHalfEntries;
 		_parent.ScrollIndicators.Down._visible = EntriesA.length - scrollPosition - 1 > imaxItemsBelowShown || listCumulativeHeight > fListHeight;
+	}
+
+	function SetSelectedIndexByMouse(abMouseHighlight: Boolean)
+	{
+		for (var target: Object = Mouse.getTopMostEntity(); target != undefined; target = target._parent) {
+			if (target._parent == this && target._visible && target.itemIndex != undefined) {
+GlobalFunc.getInstance().Deebug("SetSelectedIndexByMouse() " + target.itemIndex);
+					doSetSelectedIndex(target.itemIndex, 0, abMouseHighlight);
+			}
+		}
 	}
 
 	function RepositionEntries()
@@ -111,17 +125,29 @@
 			return;
 		}
 		
-		iSelectedIndex = -1;
-		bRecenterSelection = true;
+		// iSelectedIndex = -1;
+		// iHighlightedIndex = -1; //faB++
+		// bRecenterSelection = true;
 		
+		/*faB-- disabled because we always want the selection to be the center
 		for (var target: Object = Mouse.getTopMostEntity(); target && target != undefined; target = target._parent) {
 			if (target == this) {
 				bRecenterSelection = false;
 			}
-		}
+		}*/
+//GlobalFunc.getInstance().Deebug("bRecenterSelection = " + bRecenterSelection);
 		
 		var listItem: MovieClip
-		
+
+		// keep it simple, stupid
+		if (delta < 0) {
+			moveSelectionDown();
+		} else {
+			moveSelectionUp();
+		}
+
+		// Vanilla scroll wheel handling for reference
+		/*
 		if (delta < 0) {
 			listItem = GetClipByIndex(iNumTopHalfEntries + 1);
 			if (listItem._visible == true) {
@@ -132,7 +158,8 @@
 			if (listItem._visible == true) {
 				scrollPosition = scrollPosition - 1;
 			}
-		}
+		}*/
+
 		return;
 	}
 
