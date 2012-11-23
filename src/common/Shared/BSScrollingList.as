@@ -3,6 +3,50 @@ import gfx.ui.InputDetails;
 import gfx.ui.NavigationCode;
 import gfx.events.EventDispatcher;
 
+/*
+  Method summary:
+ 
+  function BSScrollingList()
+	function ClearList(): Void
+  function GetClipByIndex(aiIndex: Number): MovieClip
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
+	function set selectedIndex(aiNewIndex: Number): Void
+	function set listAnimating(abFlag: Boolean): Void
+	function doSetSelectedIndex(aiNewIndex:Number, aiKeyboardOrMouse: Number): Void
+	function set scrollPosition(aiNewPosition: Number): Void
+	function updateScrollPosition(aiPosition: Number): Void
+	function UpdateList(): Void
+	function InvalidateData(): Void
+	function SetScrollbarVisibility(): Void
+	function CalculateMaxScrollPosition(): Void
+	function GetEntryHeight(aiEntryIndex: Number): Number
+	function moveSelectionUp(): Void
+	function moveSelectionDown(): Void
+	
+	function onLoad(): Void
+	function onMouseWheel(delta: Number): Void
+	function onItemPress(aiKeyboardOrMouse: Number): Void
+	function onItemPressAux(aiKeyboardOrMouse: Number, aiButtonIndex: Number)
+	function onScroll(event: Object): Void
+
+	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object): Void
+	function SetEntryText(aEntryClip: MovieClip, aEntryObject: Object): Void
+	
+	Getters/Setters:
+	
+	function get selectedIndex(): Number
+	function get listAnimating(): Boolean
+	function get selectedEntry(): Object
+	function get scrollPosition(): Number
+	function get maxScrollPosition(): Number
+	function get entryList(): Array
+	function get disableSelection(): Boolean
+	function get disableInput(): Boolean
+	function get maxEntries(): Number
+	function get textOption(): Number
+  
+	*/
+
 class Shared.BSScrollingList extends MovieClip
 {
 	static var TEXT_OPTION_NONE: Number = 0;
