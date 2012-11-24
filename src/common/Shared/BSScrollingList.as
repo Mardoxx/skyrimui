@@ -108,7 +108,7 @@ class Shared.BSScrollingList extends MovieClip
 			item.onRollOver = function ()
 			{
 				if (!_parent.listAnimating && !_parent.bDisableInput && itemIndex != undefined) {
-GlobalFunc.getInstance().Deebug("onRollOver() doSetSelectedIndex " + itemIndex);
+//GlobalFunc.getInstance().Deebug("onRollOver() doSetSelectedIndex " + itemIndex);
 					_parent.doSetSelectedIndex(itemIndex, 0, true);
 					_parent.bMouseDrivenNav = true;
 				}
@@ -150,7 +150,7 @@ GlobalFunc.getInstance().Deebug("onRollOver() doSetSelectedIndex " + itemIndex);
 
 	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
-GlobalFunc.getInstance().Deebug("handleInput() BSScrollingList");
+//GlobalFunc.getInstance().Deebug("handleInput() BSScrollingList");
 		var bHandledInput: Boolean = false;
 		if (!bDisableInput) {
 			var item: MovieClip = GetClipByIndex(selectedIndex - scrollPosition);
@@ -206,10 +206,7 @@ GlobalFunc.getInstance().Deebug("handleInput() BSScrollingList");
 		bListAnimating = abFlag;
 	}
 
-	/**
-	 *
-	 *
-	 */
+	//fabd++ The function can now set mouse highlight (visual) separately from the selected state
 	function doSetSelectedIndex(aiNewIndex:Number, aiKeyboardOrMouse: Number, abMouseFocus: Boolean): Void
 	{
 		// current focus is selectedindex, or mouse highlighted index (decoupled from selection)
@@ -226,7 +223,7 @@ GlobalFunc.getInstance().Deebug("handleInput() BSScrollingList");
 				var iCurrentIndex: Number = iHighlightedIndex;
 
 				iHighlightedIndex = aiNewIndex;
-GlobalFunc.getInstance().Deebug("iHighlightedIndex = " + iHighlightedIndex);
+//GlobalFunc.getInstance().Deebug("iHighlightedIndex = " + iHighlightedIndex);
 				
 				if (iCurrentIndex != -1)
 					SetEntry(GetClipByIndex(EntriesA[iCurrentIndex].clipIndex), EntriesA[iCurrentIndex]);
@@ -251,13 +248,10 @@ GlobalFunc.getInstance().Deebug("iHighlightedIndex = " + iHighlightedIndex);
 		}
 	}
 
-	/**
-	 * If parameters are (-1, 0), clears the existing selected index.
-	 *
-	 
+	//fabd-- the old code for reference
+	/*
 	function doSetSelectedIndex(aiNewIndex:Number, aiKeyboardOrMouse: Number): Void
 	{
-GlobalFunc.getInstance().Deebug("doSetSelectedIndex("+aiNewIndex+") iSelectedIndex="+iSelectedIndex);
 		if (!bDisableSelection && aiNewIndex != iSelectedIndex) {
 			var iCurrentIndex: Number = iSelectedIndex;
 			iSelectedIndex = aiNewIndex;

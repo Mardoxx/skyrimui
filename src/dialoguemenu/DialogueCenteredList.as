@@ -1,5 +1,4 @@
-﻿//faB++
-import Shared.GlobalFunc;
+﻿import Shared.GlobalFunc;  //fabd++
 
 class DialogueCenteredList extends Shared.CenteredScrollingList
 {
@@ -39,7 +38,7 @@ class DialogueCenteredList extends Shared.CenteredScrollingList
 		
 		var centerIndex: Number = iScrollPosition - iNumTopHalfEntries < 0 ? 0 : iScrollPosition - iNumTopHalfEntries;
 		
-GlobalFunc.getInstance().Deebug("UpdateList() ci " + centerIndex + " iscroll " + iScrollPosition + " sel " + iSelectedIndex);
+//GlobalFunc.getInstance().Deebug("UpdateList() ci " + centerIndex + " iscroll " + iScrollPosition + " sel " + iSelectedIndex);
 
 		iListItemsShown = 0;
 		
@@ -63,7 +62,7 @@ GlobalFunc.getInstance().Deebug("UpdateList() ci " + centerIndex + " iscroll " +
 		
 		if (bRecenterSelection || iPlatform != 0) {
 			iSelectedIndex = centerIndex;
-			iHighlightedIndex = centerIndex; // faB++
+			iHighlightedIndex = centerIndex; //fabd++
 		}
 		
 		for (var i = centerIndex; i < EntriesA.length && iListItemsShown < iMaxItemsShown && listCumulativeHeight <= fListHeight; i++) {
@@ -84,9 +83,9 @@ GlobalFunc.getInstance().Deebug("UpdateList() ci " + centerIndex + " iscroll " +
 			GetClipByIndex(i).itemIndex = undefined;
 		}
 
-		// we no longer do this since we always scroll around the center item
+		//fabd-- we no longer do this since we always scroll around the center item
 		/*if (!bRecenterSelection) {
-			// faB: moved to function below
+			// moved to function below
 			SetSelectedIndexByMouse(true);
 		}*/
 
@@ -102,7 +101,7 @@ GlobalFunc.getInstance().Deebug("UpdateList() ci " + centerIndex + " iscroll " +
 	{
 		for (var target: Object = Mouse.getTopMostEntity(); target != undefined; target = target._parent) {
 			if (target._parent == this && target._visible && target.itemIndex != undefined) {
-GlobalFunc.getInstance().Deebug("SetSelectedIndexByMouse() " + target.itemIndex);
+//GlobalFunc.getInstance().Deebug("SetSelectedIndexByMouse() " + target.itemIndex);
 					doSetSelectedIndex(target.itemIndex, 0, abMouseHighlight);
 			}
 		}
@@ -127,10 +126,9 @@ GlobalFunc.getInstance().Deebug("SetSelectedIndexByMouse() " + target.itemIndex)
 		}
 		
 		// iSelectedIndex = -1;
-		// iHighlightedIndex = -1; //faB++
 		// bRecenterSelection = true;
 		
-		/*faB-- disabled because we always want the selection to be the center
+		/*fabd-- disabled because we always want the selection to be the center
 		for (var target: Object = Mouse.getTopMostEntity(); target && target != undefined; target = target._parent) {
 			if (target == this) {
 				bRecenterSelection = false;
@@ -166,7 +164,7 @@ GlobalFunc.getInstance().Deebug("SetSelectedIndexByMouse() " + target.itemIndex)
 
 	function SetSelectedTopic(aiTopicIndex: Number): Void
 	{
-GlobalFunc.getInstance().Deebug("SetSelectedTopic() " + aiTopicIndex);
+//GlobalFunc.getInstance().Deebug("SetSelectedTopic() " + aiTopicIndex);
 		iSelectedIndex = 0;
 		iScrollPosition = 0;
 		

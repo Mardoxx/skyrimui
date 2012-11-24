@@ -206,8 +206,8 @@ class Shared.CenteredScrollingList extends Shared.BSScrollingList
 		
 		if (itemIndex != undefined) {
 			iSelectedIndex = itemIndex;
-			iHighlightedIndex = itemIndex; //faB++
-			bRecenterSelection = true; //fab
+			iHighlightedIndex = itemIndex; //fabd++
+			bRecenterSelection = true; //fabd++
 
 			if (iScrollPosition > 0)
 				--iScrollPosition;
@@ -227,8 +227,8 @@ class Shared.CenteredScrollingList extends Shared.BSScrollingList
 		}
 		if (itemIndex != undefined) {
 			iSelectedIndex = itemIndex;
-			iHighlightedIndex = itemIndex; //faB++
-			bRecenterSelection = true; //fab
+			iHighlightedIndex = itemIndex; //fabd++
+			bRecenterSelection = true; //fabd++
 
 			if (iScrollPosition < iMaxScrollPosition)
 				++iScrollPosition;

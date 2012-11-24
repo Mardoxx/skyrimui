@@ -3,12 +3,14 @@ class Shared.GlobalFunc
 	static var RegisteredTextFields: Object = new Object();
 	static var RegisteredMovieClips: Object = new Object();
 
+	// mini console log for debugging
 	private var debugWindow:MovieClip = null;
 	private var debugBg:MovieClip = null;
 	private var debugTxt:TextField = null;
   
 	private var DEBUGLOG_HEIGHT:Number = 100;
   
+	// singleton instance
 	private static var inst:GlobalFunc = null;
 
 	public function GlobalFunc()
@@ -54,7 +56,6 @@ class Shared.GlobalFunc
 		debugWindow._y = 0;
 
 	  var format:TextFormat = new TextFormat("$ConsoleFont", 14, 0xCCCCCC);
-		//format.color = 0xFFFF00;
 		debugTxt.setNewTextFormat(format);
 	}
 

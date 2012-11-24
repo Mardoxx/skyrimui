@@ -74,7 +74,7 @@ class DialogueMenu extends MovieClip
 		SpeakerName.verticalAutoSize = "top";
 		SpeakerName.SetText(" ");
 		
-		GlobalFunc.getInstance().Deebug("DialogueMenu::InitExtensions() done.");
+//		GlobalFunc.getInstance().Deebug("DialogueMenu::InitExtensions() done.");
 	}
 
 	function AdjustForPALSD(): Void
@@ -95,7 +95,7 @@ class DialogueMenu extends MovieClip
 
 	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
-GlobalFunc.getInstance().Deebug("handleInput() DialogueMenu");
+//GlobalFunc.getInstance().Deebug("handleInput() DialogueMenu");
 		if (bFadedIn && GlobalFunc.IsKeyPressed(details)) {
 			if (details.navEquivalent == NavigationCode.TAB) {
 				onCancelPress();
@@ -259,7 +259,7 @@ GlobalFunc.getInstance().Deebug("handleInput() DialogueMenu");
 		// If it's a mouse click, set the selected index now
 		if (abMouseClick) {
 			TopicList.SetSelectedIndexByMouse(false);
-			GlobalFunc.getInstance().Deebug("now selectedIndex = " + TopicList.selectedIndex);
+//			GlobalFunc.getInstance().Deebug("now selectedIndex = " + TopicList.selectedIndex);
 		}
 
 		if (eMenuState == DialogueMenu.TOPIC_LIST_SHOWN) {
