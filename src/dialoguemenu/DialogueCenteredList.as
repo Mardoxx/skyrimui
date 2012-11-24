@@ -17,9 +17,6 @@ class DialogueCenteredList extends Shared.CenteredScrollingList
 	var iScrollPosition: Number;
 	var iSelectedIndex: Number;
 
-//faB++
-static var lolcat: Number = 0;
-
 
 	function DialogueCenteredList()
 	{
@@ -42,6 +39,8 @@ static var lolcat: Number = 0;
 		
 		var centerIndex: Number = iScrollPosition - iNumTopHalfEntries < 0 ? 0 : iScrollPosition - iNumTopHalfEntries;
 		
+GlobalFunc.getInstance().Deebug("UpdateList() ci " + centerIndex + " iscroll " + iScrollPosition + " sel " + iSelectedIndex);
+
 		iListItemsShown = 0;
 		
 		for (var i: Number = 0;  i < iNumTopHalfEntries; i++) {
@@ -84,11 +83,12 @@ static var lolcat: Number = 0;
 			GetClipByIndex(i)._visible = false;
 			GetClipByIndex(i).itemIndex = undefined;
 		}
-		
-		if (!bRecenterSelection) {
+
+		// we no longer do this since we always scroll around the center item
+		/*if (!bRecenterSelection) {
 			// faB: moved to function below
 			SetSelectedIndexByMouse(true);
-		}
+		}*/
 
 		bRecenterSelection = false;
 		RepositionEntries();
@@ -97,6 +97,7 @@ static var lolcat: Number = 0;
 		_parent.ScrollIndicators.Down._visible = EntriesA.length - scrollPosition - 1 > imaxItemsBelowShown || listCumulativeHeight > fListHeight;
 	}
 
+	// find the clicked dialog item, and make it the selected index
 	function SetSelectedIndexByMouse(abMouseHighlight: Boolean)
 	{
 		for (var target: Object = Mouse.getTopMostEntity(); target != undefined; target = target._parent) {
@@ -165,12 +166,15 @@ GlobalFunc.getInstance().Deebug("SetSelectedIndexByMouse() " + target.itemIndex)
 
 	function SetSelectedTopic(aiTopicIndex: Number): Void
 	{
+GlobalFunc.getInstance().Deebug("SetSelectedTopic() " + aiTopicIndex);
 		iSelectedIndex = 0;
 		iScrollPosition = 0;
 		
 		for (var i: Number = 0; i < EntriesA.length; i++) {
 			if (EntriesA[i].topicIndex == aiTopicIndex) {
 				iScrollPosition = i;
+				iSelectedIndex = i;
+				iHighlightedIndex = i;
 			}
 		}
 	}
