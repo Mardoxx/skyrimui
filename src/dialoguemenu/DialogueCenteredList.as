@@ -134,15 +134,19 @@ class DialogueCenteredList extends Shared.CenteredScrollingList
 				bRecenterSelection = false;
 			}
 		}*/
-//GlobalFunc.getInstance().Deebug("bRecenterSelection = " + bRecenterSelection);
 		
 		var listItem: MovieClip
 
-		// keep it simple, stupid
-		if (delta < 0) {
-			moveSelectionDown();
-		} else {
-			moveSelectionUp();
+		//fabd++ List_mc (this) => TopicListHolder => DialogueMenu_mc
+		var dialogueMenuObj: DialogueMenu = DialogueMenu(_parent._parent);
+//GlobalFunc.getInstance().Deebug("onMouseWheel() menuState == " + dialogueMenuObj.menuState);
+		if (dialogueMenuObj.menuState == DialogueMenu.TOPIC_LIST_SHOWN)
+		{
+			if (delta < 0) {
+				moveSelectionDown();
+			} else {
+				moveSelectionUp();
+			}
 		}
 
 		// Vanilla scroll wheel handling for reference
@@ -171,8 +175,8 @@ class DialogueCenteredList extends Shared.CenteredScrollingList
 		for (var i: Number = 0; i < EntriesA.length; i++) {
 			if (EntriesA[i].topicIndex == aiTopicIndex) {
 				iScrollPosition = i;
-				iSelectedIndex = i;
-				iHighlightedIndex = i;
+				iSelectedIndex = i; //fabd++
+				iHighlightedIndex = i; //fabd++
 			}
 		}
 	}
