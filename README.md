@@ -3,15 +3,12 @@ Related repositories
 ### SkyUI
 https://github.com/schlangster/skyui
 
-### SkyUI SKSE plugins, patches and additions
-https://github.com/schlangster/skyui.plugins
-
 
 Credits
 -------
-SkyUI team: snakster, T3T, Mardoxx
+Team: Mardoxx, snakster
 
-Contributors: ianpatt, behippo, gibbed, Gopher, GreatClone, Indie, Kratos, MisterPete, Psychosteve
+Contributors: ianpatt, Kratos, PurpleLunchBox, Scrivener07, T3T
 
 Thanks to Bethesda Game Studios for creating The Elder Scrolls V: Skyrim, providing the base content and allowing us to mod it.
 
@@ -29,9 +26,6 @@ You may not use non-trivial parts of SkyUI in your mod unless given explicit per
 Permission will likely be granted, if you made changes that are significant enough for your name to be on top of the result instead of ours.
 Permission will likely be refused, if you just made a minor/superficial change, or if you are just reuploading our mod without any further contribution.
 We do want others to extend and learn from our work, but we do not want them to just copy and rebrand it.
-
-### SkyUI plugin sources (*/skyui.plugins)
-Refer to the SKSE permission instructions.
 
 
 Disclaimer
