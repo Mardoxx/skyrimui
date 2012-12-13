@@ -1,5 +1,6 @@
-import gfx.managers.FocusHandler;
+﻿import gfx.managers.FocusHandler;
 import gfx.io.GameDelegate;
+import gfx.ui.NavigationCode;
 
 class SleepWaitMenu extends MovieClip
 {
@@ -49,7 +50,7 @@ class SleepWaitMenu extends MovieClip
 					onOKPress();
 					break;
 				case NavigationCode.PAGE_UP:
-				case NavigationCode.GAMEPAD_R1;
+				case NavigationCode.GAMEPAD_R1:
 					if (!disableControls) {
 						modifySliderValue(4);
 					}
