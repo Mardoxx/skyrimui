@@ -67,12 +67,14 @@ class DialogueMenu extends MovieClip
 		TopicListHolder.PanelCopy_mc._visible = false;
 		
 		FocusHandler.instance.setFocus(TopicList, 0);
-		
+
 		SubtitleText.verticalAutoSize = "top";
 		SubtitleText.SetText(" ");
 		
 		SpeakerName.verticalAutoSize = "top";
 		SpeakerName.SetText(" ");
+		
+//		GlobalFunc.getInstance().Deebug("DialogueMenu::InitExtensions() done.");
 	}
 
 	function AdjustForPALSD(): Void
@@ -93,6 +95,7 @@ class DialogueMenu extends MovieClip
 
 	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
+//GlobalFunc.getInstance().Deebug("handleInput() DialogueMenu");
 		if (bFadedIn && GlobalFunc.IsKeyPressed(details)) {
 			if (details.navEquivalent == NavigationCode.TAB) {
 				onCancelPress();
@@ -179,11 +182,17 @@ class DialogueMenu extends MovieClip
 		TopicListHolder.PanelCopy_mc._visible = abCopyVisible;
 	}
 
+	/**
+	 * onPress() from MovieClip has event.keyboardOrMouse == 0.
+	 *
+	 * If mouse or keyboard (handleInput), keyboardOrMouse is undefined.
+	 *
+	 */
 	function onItemSelect(event: Object): Void
 	{
 		if (bAllowProgress && event.keyboardOrMouse != 0) {
 			if (eMenuState == DialogueMenu.TOPIC_LIST_SHOWN) {
-				onSelectionClick();
+				onSelectionClick(event && event.mouseClick);
 			} else if (eMenuState == DialogueMenu.TOPIC_CLICKED || eMenuState == DialogueMenu.SHOW_GREETING) {
 				SkipText();
 			}
@@ -199,11 +208,16 @@ class DialogueMenu extends MovieClip
 		}
 	}
 
+	/**
+	 * Responds to clicks at the DialogueMenu MovieClip level (whole screen).
+	 * 
+	 * Does not result in selection because aiKeyboardOrMouse is undefined.
+	 */
 	function onMouseDown(): Void
 	{
 		++DialogueMenu.iMouseDownExecutionCount;
 		if (DialogueMenu.iMouseDownExecutionCount % 2 != 0) {
-			onItemSelect();
+			onItemSelect({mouseClick: true});
 		}
 	}
 
@@ -240,8 +254,14 @@ class DialogueMenu extends MovieClip
 		}
 	}
 
-	function onSelectionClick(): Void
+	function onSelectionClick(abMouseClick: Boolean): Void
 	{
+		// If it's a mouse click, set the selected index now
+		if (abMouseClick) {
+			TopicList.SetSelectedIndexByMouse(false);
+//			GlobalFunc.getInstance().Deebug("now selectedIndex = " + TopicList.selectedIndex);
+		}
+
 		if (eMenuState == DialogueMenu.TOPIC_LIST_SHOWN) {
 			eMenuState = DialogueMenu.TOPIC_CLICKED;
 		}

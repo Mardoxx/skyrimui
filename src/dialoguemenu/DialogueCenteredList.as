@@ -1,4 +1,6 @@
-﻿class DialogueCenteredList extends Shared.CenteredScrollingList
+﻿import Shared.GlobalFunc;  //fabd++
+
+class DialogueCenteredList extends Shared.CenteredScrollingList
 {
 	var EntriesA: Array;
 	
@@ -13,6 +15,7 @@
 	var iPlatform: Number;
 	var iScrollPosition: Number;
 	var iSelectedIndex: Number;
+
 
 	function DialogueCenteredList()
 	{
@@ -35,6 +38,8 @@
 		
 		var centerIndex: Number = iScrollPosition - iNumTopHalfEntries < 0 ? 0 : iScrollPosition - iNumTopHalfEntries;
 		
+//GlobalFunc.getInstance().Deebug("UpdateList() ci " + centerIndex + " iscroll " + iScrollPosition + " sel " + iSelectedIndex);
+
 		iListItemsShown = 0;
 		
 		for (var i: Number = 0;  i < iNumTopHalfEntries; i++) {
@@ -57,6 +62,7 @@
 		
 		if (bRecenterSelection || iPlatform != 0) {
 			iSelectedIndex = centerIndex;
+			iHighlightedIndex = centerIndex; //fabd++
 		}
 		
 		for (var i = centerIndex; i < EntriesA.length && iListItemsShown < iMaxItemsShown && listCumulativeHeight <= fListHeight; i++) {
@@ -76,21 +82,29 @@
 			GetClipByIndex(i)._visible = false;
 			GetClipByIndex(i).itemIndex = undefined;
 		}
-		
-		
-		if (!bRecenterSelection) {
-			for (var target: Object = Mouse.getTopMostEntity(); target != undefined; target = target._parent) {
-				if (target._parent == this && target._visible && target.itemIndex != undefined) {
-					doSetSelectedIndex(target.itemIndex,0);
-				}
-			}
-		}
-		
+
+		//fabd-- we no longer do this since we always scroll around the center item
+		/*if (!bRecenterSelection) {
+			// moved to function below
+			SetSelectedIndexByMouse(true);
+		}*/
+
 		bRecenterSelection = false;
 		RepositionEntries();
 		var imaxItemsBelowShown: Number = 3;
 		_parent.ScrollIndicators.Up._visible = scrollPosition > iNumTopHalfEntries;
 		_parent.ScrollIndicators.Down._visible = EntriesA.length - scrollPosition - 1 > imaxItemsBelowShown || listCumulativeHeight > fListHeight;
+	}
+
+	// find the clicked dialog item, and make it the selected index
+	function SetSelectedIndexByMouse(abMouseHighlight: Boolean)
+	{
+		for (var target: Object = Mouse.getTopMostEntity(); target != undefined; target = target._parent) {
+			if (target._parent == this && target._visible && target.itemIndex != undefined) {
+//GlobalFunc.getInstance().Deebug("SetSelectedIndexByMouse() " + target.itemIndex);
+					doSetSelectedIndex(target.itemIndex, 0, abMouseHighlight);
+			}
+		}
 	}
 
 	function RepositionEntries()
@@ -111,17 +125,32 @@
 			return;
 		}
 		
-		iSelectedIndex = -1;
-		bRecenterSelection = true;
+		// iSelectedIndex = -1;
+		// bRecenterSelection = true;
 		
+		/*fabd-- disabled because we always want the selection to be the center
 		for (var target: Object = Mouse.getTopMostEntity(); target && target != undefined; target = target._parent) {
 			if (target == this) {
 				bRecenterSelection = false;
 			}
-		}
+		}*/
 		
 		var listItem: MovieClip
-		
+
+		//fabd++ List_mc (this) => TopicListHolder => DialogueMenu_mc
+		var dialogueMenuObj: DialogueMenu = DialogueMenu(_parent._parent);
+//GlobalFunc.getInstance().Deebug("onMouseWheel() menuState == " + dialogueMenuObj.menuState);
+		if (dialogueMenuObj.menuState == DialogueMenu.TOPIC_LIST_SHOWN)
+		{
+			if (delta < 0) {
+				moveSelectionDown();
+			} else {
+				moveSelectionUp();
+			}
+		}
+
+		// Vanilla scroll wheel handling for reference
+		/*
 		if (delta < 0) {
 			listItem = GetClipByIndex(iNumTopHalfEntries + 1);
 			if (listItem._visible == true) {
@@ -132,18 +161,22 @@
 			if (listItem._visible == true) {
 				scrollPosition = scrollPosition - 1;
 			}
-		}
+		}*/
+
 		return;
 	}
 
 	function SetSelectedTopic(aiTopicIndex: Number): Void
 	{
+//GlobalFunc.getInstance().Deebug("SetSelectedTopic() " + aiTopicIndex);
 		iSelectedIndex = 0;
 		iScrollPosition = 0;
 		
 		for (var i: Number = 0; i < EntriesA.length; i++) {
 			if (EntriesA[i].topicIndex == aiTopicIndex) {
 				iScrollPosition = i;
+				iSelectedIndex = i; //fabd++
+				iHighlightedIndex = i; //fabd++
 			}
 		}
 	}

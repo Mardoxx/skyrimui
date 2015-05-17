@@ -3,6 +3,50 @@ import gfx.ui.InputDetails;
 import gfx.ui.NavigationCode;
 import gfx.events.EventDispatcher;
 
+/*
+  Method summary:
+ 
+  function BSScrollingList()
+	function ClearList(): Void
+  function GetClipByIndex(aiIndex: Number): MovieClip
+	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
+	function set selectedIndex(aiNewIndex: Number): Void
+	function set listAnimating(abFlag: Boolean): Void
+	function doSetSelectedIndex(aiNewIndex:Number, aiKeyboardOrMouse: Number): Void
+	function set scrollPosition(aiNewPosition: Number): Void
+	function updateScrollPosition(aiPosition: Number): Void
+	function UpdateList(): Void
+	function InvalidateData(): Void
+	function SetScrollbarVisibility(): Void
+	function CalculateMaxScrollPosition(): Void
+	function GetEntryHeight(aiEntryIndex: Number): Number
+	function moveSelectionUp(): Void
+	function moveSelectionDown(): Void
+	
+	function onLoad(): Void
+	function onMouseWheel(delta: Number): Void
+	function onItemPress(aiKeyboardOrMouse: Number): Void
+	function onItemPressAux(aiKeyboardOrMouse: Number, aiButtonIndex: Number)
+	function onScroll(event: Object): Void
+
+	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object): Void
+	function SetEntryText(aEntryClip: MovieClip, aEntryObject: Object): Void
+	
+	Getters/Setters:
+	
+	function get selectedIndex(): Number
+	function get listAnimating(): Boolean
+	function get selectedEntry(): Object
+	function get scrollPosition(): Number
+	function get maxScrollPosition(): Number
+	function get entryList(): Array
+	function get disableSelection(): Boolean
+	function get disableInput(): Boolean
+	function get maxEntries(): Number
+	function get textOption(): Number
+  
+	*/
+
 class Shared.BSScrollingList extends MovieClip
 {
 	static var TEXT_OPTION_NONE: Number = 0;
@@ -34,6 +78,7 @@ class Shared.BSScrollingList extends MovieClip
 	var iScrollPosition: Number;
 	var iScrollbarDrawTimerID: Number;
 	var iSelectedIndex: Number;
+	var iHighlightedIndex: Number;  // new
 	var iTextOption: Number;
 	var itemIndex: Number;
 	
@@ -48,6 +93,7 @@ class Shared.BSScrollingList extends MovieClip
 		Mouse.addListener(this);
 		
 		iSelectedIndex = -1;
+		iHighlightedIndex = -1;
 		iScrollPosition = 0;
 		iMaxScrollPosition = 0;
 		iListItemsShown = 0;
@@ -58,16 +104,19 @@ class Shared.BSScrollingList extends MovieClip
 		
 		for (var item: MovieClip = GetClipByIndex(iMaxItemsShown); item != undefined; item = GetClipByIndex(++iMaxItemsShown)) {
 			item.clipIndex = iMaxItemsShown;
+
 			item.onRollOver = function ()
 			{
 				if (!_parent.listAnimating && !_parent.bDisableInput && itemIndex != undefined) {
-					_parent.doSetSelectedIndex(itemIndex, 0);
+//GlobalFunc.getInstance().Deebug("onRollOver() doSetSelectedIndex " + itemIndex);
+					_parent.doSetSelectedIndex(itemIndex, 0, true);
 					_parent.bMouseDrivenNav = true;
 				}
 			};
 			item.onPress = function (aiMouseIndex, aiKeyboardOrMouse)
 			{
 				if (itemIndex != undefined) {
+//GlobalFunc.getInstance().Deebug("item::onPress() " + aiKeyboardOrMouse);
 					_parent.onItemPress(aiKeyboardOrMouse);
 					if (!_parent.bDisableInput && onMousePress != undefined)
 						onMousePress();
@@ -101,6 +150,7 @@ class Shared.BSScrollingList extends MovieClip
 
 	function handleInput(details: InputDetails, pathToFocus: Array): Boolean
 	{
+//GlobalFunc.getInstance().Deebug("handleInput() BSScrollingList");
 		var bHandledInput: Boolean = false;
 		if (!bDisableInput) {
 			var item: MovieClip = GetClipByIndex(selectedIndex - scrollPosition);
@@ -156,6 +206,50 @@ class Shared.BSScrollingList extends MovieClip
 		bListAnimating = abFlag;
 	}
 
+	//fabd++ The function can now set mouse highlight (visual) separately from the selected state
+	function doSetSelectedIndex(aiNewIndex:Number, aiKeyboardOrMouse: Number, abMouseFocus: Boolean): Void
+	{
+		// current focus is selectedindex, or mouse highlighted index (decoupled from selection)
+		var iCurHighlightIndex = iHighlightedIndex; //  abMouseFocus ? iHighlightedIndex : iSelectedIndex;
+
+		if (!bDisableSelection) {
+
+			// change selectedIndex, unless explicitly doing the mouse highlighting
+			if  (abMouseFocus !== true) {
+				iSelectedIndex = aiNewIndex;
+			}
+
+			if (aiNewIndex != iCurHighlightIndex) {
+				var iCurrentIndex: Number = iHighlightedIndex;
+
+				iHighlightedIndex = aiNewIndex;
+//GlobalFunc.getInstance().Deebug("iHighlightedIndex = " + iHighlightedIndex);
+				
+				if (iCurrentIndex != -1)
+					SetEntry(GetClipByIndex(EntriesA[iCurrentIndex].clipIndex), EntriesA[iCurrentIndex]);
+
+				if (iHighlightedIndex != -1) {
+					if (iPlatform != 0) {
+						if (iHighlightedIndex < iScrollPosition)
+							scrollPosition = iHighlightedIndex;
+						else if (iHighlightedIndex >= iScrollPosition + iListItemsShown)
+							scrollPosition = Math.min(iHighlightedIndex - iListItemsShown + 1, iMaxScrollPosition);
+						else
+							SetEntry(GetClipByIndex(EntriesA[iHighlightedIndex].clipIndex),EntriesA[iHighlightedIndex]);
+					} else {
+						SetEntry(GetClipByIndex(EntriesA[iHighlightedIndex].clipIndex),EntriesA[iHighlightedIndex]);
+					}
+				}
+
+				// note: this could have unwanted effects here, since highlighted is not always *selected*
+				// note: OR... dispatch only when selectedIndex changes... usually would want highlight change
+				dispatchEvent({type:"selectionChange", index:iHighlightedIndex, keyboardOrMouse:aiKeyboardOrMouse});
+			}
+		}
+	}
+
+	//fabd-- the old code for reference
+	/*
 	function doSetSelectedIndex(aiNewIndex:Number, aiKeyboardOrMouse: Number): Void
 	{
 		if (!bDisableSelection && aiNewIndex != iSelectedIndex) {
@@ -180,6 +274,7 @@ class Shared.BSScrollingList extends MovieClip
 			dispatchEvent({type:"selectionChange", index:iSelectedIndex, keyboardOrMouse:aiKeyboardOrMouse});
 		}
 	}
+	*/
 
 	function get scrollPosition(): Number
 	{
@@ -266,24 +361,24 @@ class Shared.BSScrollingList extends MovieClip
 	{
 		var iFirstItemy: Number = GetClipByIndex(0)._y;
 		var iItemHeightSum: Number = 0;
-		var iLastItemShownIndex: Number = 0;
-		while (iLastItemShownIndex < iScrollPosition) {
-			EntriesA[iLastItemShownIndex].clipIndex = undefined;
-			++iLastItemShownIndex;
+		var i: Number = 0;
+		while (i < iScrollPosition) {
+			EntriesA[i].clipIndex = undefined;
+			++i;
 		}
 		iListItemsShown = 0;
-		iLastItemShownIndex = iScrollPosition;
-		while (iLastItemShownIndex < EntriesA.length && iListItemsShown < iMaxItemsShown && iItemHeightSum <= fListHeight) {
+		i = iScrollPosition;
+		while (i < EntriesA.length && iListItemsShown < iMaxItemsShown && iItemHeightSum <= fListHeight) {
 			var item: MovieClip = GetClipByIndex(iListItemsShown);
-			SetEntry(item, EntriesA[iLastItemShownIndex]);
-			EntriesA[iLastItemShownIndex].clipIndex = iListItemsShown;
-			item.itemIndex = iLastItemShownIndex;
+			SetEntry(item, EntriesA[i]);
+			EntriesA[i].clipIndex = iListItemsShown;
+			item.itemIndex = i;
 			item._y = iFirstItemy + iItemHeightSum;
 			item._visible = true;
 			iItemHeightSum += item._height;
 			if (iItemHeightSum <= fListHeight && iListItemsShown < iMaxItemsShown) 
 				++iListItemsShown;
-			++iLastItemShownIndex;
+			++i;
 		}
 		var iLastItemIndex: Number = iListItemsShown;
 		while (iLastItemIndex < iMaxItemsShown) {
@@ -365,9 +460,16 @@ class Shared.BSScrollingList extends MovieClip
 		scrollPosition = scrollPosition + 1;
 	}
 
+	/**
+	 * MovieClip onPress() aiKeyboardOrMouse == 0
+	 *
+	 * If keyboard (handleInput), aiKeyboardOrMouse is undefined.
+	 *
+	 */
 	function onItemPress(aiKeyboardOrMouse: Number): Void
 	{
 		if (!bDisableInput && !bDisableSelection && iSelectedIndex != -1) {
+//GlobalFunc.getInstance().Deebug("onItemPress() aiKeyboardOrMouse = " + aiKeyboardOrMouse);
 			dispatchEvent({type: "itemPress", index: iSelectedIndex, entry: EntriesA[iSelectedIndex], keyboardOrMouse: aiKeyboardOrMouse});
 			return;
 		}
@@ -380,10 +482,13 @@ class Shared.BSScrollingList extends MovieClip
 			dispatchEvent({type: "itemPressAux", index: iSelectedIndex, entry: EntriesA[iSelectedIndex], keyboardOrMouse: aiKeyboardOrMouse});
 	}
 
+	// New: aSelectedEntry is based on highlighted index, which is not always selected index
 	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object): Void
 	{
+		var aSelectedEntry: Object = EntriesA[iHighlightedIndex];
+
 		if (aEntryClip != undefined) {
-			if (aEntryObject == selectedEntry) 
+			if (aEntryObject == aSelectedEntry) 
 				aEntryClip.gotoAndStop("Selected");
 			else 
 				aEntryClip.gotoAndStop("Normal");

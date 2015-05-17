@@ -206,6 +206,9 @@ class Shared.CenteredScrollingList extends Shared.BSScrollingList
 		
 		if (itemIndex != undefined) {
 			iSelectedIndex = itemIndex;
+			iHighlightedIndex = itemIndex; //fabd++
+			bRecenterSelection = true; //fabd++
+
 			if (iScrollPosition > 0)
 				--iScrollPosition;
 			bMouseDrivenNav = false;
@@ -224,6 +227,9 @@ class Shared.CenteredScrollingList extends Shared.BSScrollingList
 		}
 		if (itemIndex != undefined) {
 			iSelectedIndex = itemIndex;
+			iHighlightedIndex = itemIndex; //fabd++
+			bRecenterSelection = true; //fabd++
+
 			if (iScrollPosition < iMaxScrollPosition)
 				++iScrollPosition;
 			bMouseDrivenNav = false;
@@ -273,6 +279,8 @@ class Shared.CenteredScrollingList extends Shared.BSScrollingList
 
 	function SetEntry(aEntryClip: MovieClip, aEntryObject: Object): Void
 	{
+		var aSelectedEntry: Object = EntriesA[iHighlightedIndex];
+
 		if (aEntryClip != undefined) {
 			if (IsDivider(aEntryObject) == true)
 				aEntryClip.gotoAndStop("Divider");
@@ -280,7 +288,7 @@ class Shared.CenteredScrollingList extends Shared.BSScrollingList
 				aEntryClip.gotoAndStop("Normal");
 				
 			if (iPlatform == 0) {
-				aEntryClip._alpha = aEntryObject == selectedEntry ? 100 : 60;
+				aEntryClip._alpha = aEntryObject == aSelectedEntry ? 100 : 60;
 			} else {
 				var iAlphaMulti: Number = 4;
 				if (aEntryClip.clipIndex < iNumTopHalfEntries)
